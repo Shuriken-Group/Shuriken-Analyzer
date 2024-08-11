@@ -14,6 +14,12 @@
 
 
 #include <vector>
+#include <sstream>
+#include <iostream>
+#include <fstream>
+#include <memory>
+#include <cstdio>  // for std::tmpfile
+#include <stdexcept>
 
 void show_help(std::string &prog_name) {
     fmt::println("USAGE: {} <dex/apk file to analyze> [-h] [-c] [-f] [-m] [-b]", prog_name);
@@ -47,6 +53,7 @@ bool blocks = false;
 bool running_time = false;
 bool xrefs = false;
 bool no_print = false;
+bool td_in = false;
 
 std::unique_ptr<shuriken::parser::apk::Apk> parsed_apk = nullptr;
 std::unique_ptr<shuriken::parser::dex::Parser> parsed_dex = nullptr;
@@ -76,6 +83,7 @@ int main(int argc, char **argv) {
             {"-x", [&]() { xrefs = true; }},
             {"-T", [&]() { running_time = true; }},
             {"-N", [&]() { no_print = true; }}
+	    {"-i", [&]() { td_in = true; }},
     };
 
     for (const auto &s: args) {
@@ -84,16 +92,40 @@ int main(int argc, char **argv) {
         }
     }
 
+    std::string dex_input;
+
     try {
         if (args[1].ends_with(".dex")) { // manage dex file :)
             parse_dex(args[1]);
         } else if (args[1].ends_with(".apk")) {
             parse_apk(args[1]);
-        }
+    
+       }
     } catch (std::runtime_error &re) {
         fmt::println("Exception: {}", re.what());
     }
 
+    if (td_in) {
+	// Read data from stdin and write to a temporary file
+        std::stringstream buffer;
+        buffer << std::cin.rdbuf();
+
+        char temp_filename[L_tmpnam];
+        std::tmpnam(temp_filename);
+
+        std::ofstream temp_file(temp_filename);
+        if (!temp_file) {
+            std::cerr << "Error: Could not create temporary file" << std::endl;
+            return -1;
+        }
+        temp_file << buffer.str();
+        temp_file.close();
+        dex_input = temp_filename;
+    } else {
+
+       	dex_input = args[1];
+    }
+ 
     auto end_time = std::chrono::high_resolution_clock::now();
 
     if (running_time) {
