@@ -47,11 +47,17 @@ if(NOT WIN32)
 endif()
 ##############################################################
 
+
+##############################################################
 # options for compilation, Shuriken will be intended to provide the user
 # with the options to compile only part of the project
 option(DEX "Disable the DEX analysis from the library (enable by default)" ON)
 option(DEX_TESTS "Compile all the tests for DEX files" OFF)
 option(SANITIZE "Enable sanitizers for the project" OFF)
+option(MJOLNIR "Enable the compilation of MjolnIR, it needs LLVM and MLIR on the system" OFF)
+
+##############################################################
+
 
 if ((CMAKE_BUILD_TYPE STREQUAL "Debug" ) AND SANITIZE)
     message(STATUS "Debug build")
