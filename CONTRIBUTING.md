@@ -21,9 +21,17 @@ We will follow some of the recommendations from the [LLVM Coding Standards](http
 The project uses CMake for building.
 
 ### Configuring the project
+
+For building without Mjolnir (MLIR lifting and lowering of DVM).
 ```bash
-cmake -S . -B build -DDEX_TESTS=ON -DCMAKE_BUILD_TYPE=Debug  
+cmake -S . -B build -DDEX_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
 ```
+
+If you wish to develop Mjolnir on top of the default build
+```bash
+cmake -S . -B build -DDEX_TESTS=ON -DMJOLNIR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
+```
+
 Due to different development environments, sanitizers are not enabled by default.
 You can enable them by appending -DSANITIZE=ON
 
