@@ -149,6 +149,15 @@ target_include_directories(shuriken
         "${CMAKE_SOURCE_DIR}/shuriken/include/"
 )
 
+# MJOLNIR 
+#############################################################
+
+if(MJOLNIR)
+    add_subdirectory(mjolnir)
+endif(MJOLNIR)
+
+
+
 
 #############################################################
 include(CTest)
