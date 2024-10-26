@@ -1,1 +1,1 @@
-add_subdirectory(mjolnir/dialect)
+add_subdirectory(mjolnir/dalvik)
