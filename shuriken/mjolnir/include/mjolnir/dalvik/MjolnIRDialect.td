@@ -1,9 +1,10 @@
 //------------------------------------------------------------------- -*- tablegen -*-
-// Shuriken-Analyzer: library for bytecode analysis.
+// Kunai-static-analyzer: library for doing analysis of dalvik files
 // @author Farenain <kunai.static.analysis@gmail.com>
-//         Jasmine Tang <tanghocle456@gmail.com>
-// @file mjolnir.td
-// @brief Global definitions from MjolnIR Dialect
+//
+// @file MjolnIRDialect.td
+// @brief Main file for the Dialect of Dalvik with MLIR, here we will find basic
+// definitions of main components, for example the dialect itself.
 
 #ifndef SHURIKENPROJECT_MJOLNIR_TD
 #define SHURIKENPROJECT_MJOLNIR_TD
@@ -11,35 +12,35 @@
 include "mlir/IR/OpBase.td"
 include "mlir/IR/EnumAttr.td"
 
-//===-----------------------------------------------------===//
-// MjolnIR dialect definition, it will be used as the definition
-// of the global namespace
-//===-----------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+// MjolnIR dialect definition.
+//===----------------------------------------------------------------------===//
 
 def MjolnIR_Dialect : Dialect
 {
-    // Namespace of the dialect. It is used to encapsulate the
-    // sub-components of the dialect.
     let name = "MjolnIR";
-    let summary = "Dialect for supporting the analysis of bytecode";
+    let summary = "Dialect for the instructions of Dalvik Virtual Machine";
     let description = [{
-        Dialect for the analysis of bytecode, right now mostly
-        targeted to an analysis of Java.
+      This dialect tries to represent the instructions from the Dalvik Virtual Machine
+      together with the instruction we will find also the different types found on
+      this bytecode (Fields, Methods, Classes).
     }];
 
-    // Namespace used in the C++ code
-    let cppNamespace = "mlir::shuriken::MjolnIR";
+    let cppNamespace = "::mlir::shuriken::MjolnIR";
 
-    // Use the provided printer parser
     let useDefaultTypePrinterParser = 1;
-    // Other declarations to add code to
     let extraClassDeclaration = [{
-
-    }]
+        void registerTypes();
+    }];
 }
 
-// Class (in mlir) is for defining a blueprint
-class MjolnIR_Op<string mnemonic, list<Trait> traits=  []> : Op<MjorlnIR_Dialect, mnemonic, traits>;
+// Base class for the operations of MjolnIR. Operations will
+// inherit from base `Op` class from MLIR. It provides:
+//      * Parent dialect of operation
+//      * Mnemonic for the operation, or name without dialect prefix
+//      * List of traits for the operation
+class MjolnIR_Op<string mnemonic, list<Trait> traits = []> :
+    Op<MjolnIR_Dialect, mnemonic, traits>;
 
 //===----------------------------------------------------------------------===//
 // MjolnIR_FieldType

@@ -9,21 +9,20 @@ on:
       - main
 jobs:
   mlir-pipe-line:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - name: Invoking the action 
-      uses: setup-llvm-toolings  # Refers to the action in the current repository
-      # If you plan to use this, replace it by setup-llvm-toolings 
+      uses: badumbatish/setup_llvm_tools@v0.0.0
       with:
         download_path: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz"
         destination: "/usr/local"
     - name: Setup compiler on Linux
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-13 g++-13
-        echo "CC=gcc-13" >> $GITHUB_ENV
-        echo "CXX=g++-13" >> $GITHUB_ENV
+        sudo apt-get install -y gcc g++ libtinfo5
+        echo "CC=gcc" >> $GITHUB_ENV
+        echo "CXX=g++" >> $GITHUB_ENV
     - name: Display compiler version
       run: $CC --version
     - name: Install cmake
@@ -33,7 +32,7 @@ jobs:
     - name: Install JDK
       run: sudo apt install default-jdk
     - name: Create build in CMake
-      run: cmake --build build/ -j -DDEX_TESTS=ON -DMJOLNIR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
+      run: cmake -S . -B build -DGITHUB_ACTION=ON -DDEX_TESTS=ON -DMJOLNIR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
     - name: Build with cmake
       run: cmake --build build/ -j
     - name: Install with cmake

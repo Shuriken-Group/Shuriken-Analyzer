@@ -37,6 +37,8 @@
 # CMake
 build/
 
+# Cache
+.cache/
 # CLion (IntelliJ) folders
 .idea/
 cmake-build-debug/
