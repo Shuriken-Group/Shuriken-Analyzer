@@ -95,16 +95,6 @@ int main(int argc, char **argv) {
     std::string dex_input;
     char temp_filename[L_tmpnam];
 
-    try {
-        if (args[1].ends_with(".dex")) { // manage dex file :)
-            parse_dex(args[1]);
-        } else if (args[1].ends_with(".apk")) {
-            parse_apk(args[1]);
-       }
-    } catch (std::runtime_error &re) {
-        fmt::println("Exception: {}", re.what());
-    }
-
     if (td_in) {
 	// Read data from stdin and write to a temporary file
         std::stringstream buffer;
@@ -120,11 +110,21 @@ int main(int argc, char **argv) {
         temp_file << buffer.str();
         temp_file.close();
         dex_input = temp_filename;
-    } else {
+    } 
 
-       	dex_input = args[1];
+    try {
+	if (td_in) {
+	    parse_dex(dex_input); // manage dex from stdin
+	} else if (args[1].ends_with(".dex")) { // manage dex file :)
+            parse_dex(args[1]);
+        } else if (args[1].ends_with(".apk")) {
+            parse_apk(args[1]);
+       }
+    } catch (std::runtime_error &re) {
+        fmt::println("Exception: {}", re.what());
     }
- 
+
+
     auto end_time = std::chrono::high_resolution_clock::now();
 
     if (running_time) {
