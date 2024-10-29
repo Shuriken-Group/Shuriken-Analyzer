@@ -1,0 +1,68 @@
+name: MLIR on ubuntu 
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  mlir-pipe-line:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Invoking the action 
+      uses: setup-llvm-toolings  # Refers to the action in the current repository
+      # If you plan to use this, replace it by setup-llvm-toolings 
+      with:
+        download_path: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz"
+        destination: "/usr/local"
+    - name: Setup compiler on Linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y gcc-13 g++-13
+        echo "CC=gcc-13" >> $GITHUB_ENV
+        echo "CXX=g++-13" >> $GITHUB_ENV
+    - name: Display compiler version
+      run: $CC --version
+    - name: Install cmake
+      run: sudo apt-get install cmake
+    - name: Install git
+      run: sudo apt install git
+    - name: Install JDK
+      run: sudo apt install default-jdk
+    - name: Create build in CMake
+      run: cmake --build build/ -j -DDEX_TESTS=ON -DMJOLNIR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
+    - name: Build with cmake
+      run: cmake --build build/ -j
+    - name: Install with cmake
+      run: sudo cmake --install build/
+    - name : Run tests
+      run: ctest --test-dir build/ --output-on-failure
+    - name: Verify shuriken-dump exit code
+      run: |
+        set +e # Prevent the script from exiting immediately on error
+        shuriken-dump
+        exit_code=$?
+        set -e # Re-enable immediate script exit on error
+        if [ $exit_code -eq 255 ]; then
+          echo "shuriken-dump exited with the expected exit code."
+        else
+          echo "Unexpected exit code from shuriken-dump: $exit_code"
+          exit 1
+        fi
+    - name: Uninstall target and verify uninstall target works
+      run: |
+        set +e 
+        sudo cmake --build build/ --target uninstall   
+        ls /usr/local/ -R | grep "shuriken" 
+        if [ $? -eq 1 ]; then 
+          echo "Uninstall target worked as expected"  
+          exit 0  
+        else  \ 
+          echo "Uninstall target did not work as expected" 
+          exit 1  
+        fi
+        set -e
+
