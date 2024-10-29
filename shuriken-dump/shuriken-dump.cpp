@@ -94,7 +94,6 @@ int main(int argc, char **argv) {
 
     std::string dex_input;
     char temp_filename[L_tmpnam];
-
     if (td_in) {
 	// Read data from stdin and write to a temporary file
         std::stringstream buffer;
