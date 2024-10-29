@@ -213,6 +213,17 @@ SHURIKENCOREAPI hdvmmethodanalysis_t *get_analyzed_method_by_hdvmmethod_from_apk
 /// @return pointer to hdvmmethodanalysis_t structure
 SHURIKENCOREAPI hdvmmethodanalysis_t *get_analyzed_method_from_apk(hApkContext context, const char *method_full_name);
 
+/// @brief Obtain the number of methodanalysis objects in the APK
+/// @param context APK context from the CORE API
+/// @return number of MethodAnalysis in the APK
+SHURIKENCOREAPI size_t get_number_of_methodanalysis_objects(hApkContext context);
+
+/// @brief Obtain a methodanalysis object from the APK by idx
+/// @param context APK context from the CORE API
+/// @param idx index of the MethodAnalysis to retrieve
+/// @return pointer to hdvmmethodanalysis_t
+SHURIKENCOREAPI hdvmmethodanalysis_t * get_analyzed_method_by_idx(hApkContext context, size_t idx);
+
 /// @brief Obtain a hdvmstringanalysis_t given a string
 /// @param context APK context from the CORE API
 /// @param string string to get its analysis

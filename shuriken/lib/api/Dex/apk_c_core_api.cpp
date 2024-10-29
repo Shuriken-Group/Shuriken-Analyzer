@@ -38,6 +38,7 @@ namespace {
         std::unordered_map<std::string, hdvmclassanalysis_t *> class_analyses;
         /// @brief all the method analysis by name
         std::unordered_map<std::string, hdvmmethodanalysis_t *> method_analyses;
+        std::vector<hdvmmethodanalysis_t *> method_analyses_v;
         /// @brief all the field analysis by name
         std::unordered_map<std::string, hdvmfieldanalysis_t *> field_analyses;
         /// @brief all the string analysis
@@ -452,6 +453,18 @@ namespace {
         return cls;
     }
 
+    /// @brief return the vector of all hdvmmethodanalysis_t, or create it and return it
+    std::vector<hdvmmethodanalysis_t *>& get_all_method_analysis(apk_opaque_struct_t *opaque_struct) {
+        if (!opaque_struct->method_analyses_v.empty()) return opaque_struct->method_analyses_v;
+        auto & all_method_analysis = opaque_struct->apk->get_global_analysis()->get_methods();
+        for (auto & name_method : all_method_analysis) {
+            auto & m_analysis = name_method.second.get();
+            auto hdvmmethodanalysis = get_method_analysis(opaque_struct, &m_analysis);
+            opaque_struct->method_analyses_v.emplace_back(hdvmmethodanalysis);
+        }
+        return opaque_struct->method_analyses_v;
+    }
+
     // Methods for the hdvm*
 
     /// @brief From an EncodedMethod fills the data of a method structure
@@ -843,4 +856,19 @@ hdvmstringanalysis_t *get_analyzed_string_from_apk(hApkContext context, const ch
     if (string == nullptr) return nullptr;
     std::string cpp_str(string);
     return ::get_string_analysis(opaque_struct, cpp_str);
+}
+
+size_t get_number_of_methodanalysis_objects(hApkContext context) {
+    auto *opaque_struct = reinterpret_cast<apk_opaque_struct_t *>(context);
+    if (!opaque_struct || opaque_struct->tag != APK_TAG) return -1;
+    size_t value = get_all_method_analysis(opaque_struct).size();
+    return value;
+}
+
+hdvmmethodanalysis_t * get_analyzed_method_by_idx(hApkContext context, size_t idx) {
+    auto *opaque_struct = reinterpret_cast<apk_opaque_struct_t *>(context);
+    if (!opaque_struct || opaque_struct->tag != APK_TAG) return nullptr;
+    auto & all_methods = get_all_method_analysis(opaque_struct);
+    if (idx >= all_methods.size()) return nullptr;
+    return all_methods[idx];
 }

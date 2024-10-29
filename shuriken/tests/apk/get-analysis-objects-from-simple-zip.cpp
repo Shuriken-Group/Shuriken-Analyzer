@@ -24,6 +24,9 @@ int main() {
 
         size_t number_of_strings = get_number_of_strings_from_dex(apk_context, dex_file);
 
+        /**
+         * Get the strings
+         */
         for (size_t j = 0;
                  j < number_of_strings;
              j++) {
@@ -40,6 +43,9 @@ int main() {
             }
         }
 
+        /**
+         * Get the classes and methods by hdvmmethod_t
+         */
         for (int j = 0,
                 n_of_classes = get_number_of_classes_for_dex_file(apk_context, dex_file);
              j < n_of_classes;
@@ -100,6 +106,23 @@ int main() {
             }
         }
     }
+
+    [[maybe_unused]] size_t num_of_method_analyses = get_number_of_methodanalysis_objects(apk_context);
+
+    assert(num_of_method_analyses > 0 && "The call get_number_of_methodanalysis_objects didn't work");
+
+    int num_of_externals = 0;
+
+    for (size_t i = 0; i < num_of_method_analyses; i++) {
+        hdvmmethodanalysis_t * m_analysis = get_analyzed_method_by_idx(apk_context, i);
+
+        assert(m_analysis != nullptr && "Retrieved method analysis is null");
+
+        if (m_analysis->external)
+            num_of_externals++;
+    }
+
+    assert(num_of_externals > 0 && "Weird, there's not external methods...");
 
     destroy_apk(apk_context);
 }
