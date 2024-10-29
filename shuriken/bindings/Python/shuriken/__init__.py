@@ -525,6 +525,30 @@ class Apk(object):
         self.method_analysis_by_name[method_name] = ptr.contents
         return self.method_analysis_by_name[method_name]
 
+    def get_number_of_methodanalysis_objects(self) -> ctypes.c_size_t:
+        """
+        :return: Number of methodanalysis objects
+        """
+        _shuriken.get_number_of_methodanalysis_objects.restype = ctypes.c_size_t
+        _shuriken.get_number_of_methodanalysis_objects.argtypes = [ctypes.c_void_p]
+        return _shuriken.get_number_of_methodanalysis_objects(self.apk_context_object)
+
+    def get_analyzed_method_by_idx(self, idx: int) -> hdvmmethodanalysis_t | None:
+        """
+        :param idx: Index of method to retrieve its analysis
+        :return: :class:`hdvmmethodanalysis_t` structure
+        """
+        _shuriken.get_analyzed_method_by_idx.restype = ctypes.POINTER(hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method_by_idx.argtypes = [ctypes.c_void_p, ctypes.c_size_t]
+        ptr = ctypes.cast(_shuriken.get_analyzed_method_by_idx(self.apk_context_object, idx),
+                          ctypes.POINTER(hdvmmethodanalysis_t))
+        if not ptr:
+            return None
+        method_name = ptr.contents.full_name
+        if method_name not in self.method_analysis_by_name:
+            self.method_analysis_by_name[method_name] = ptr.contents
+        return self.method_analysis_by_name[method_name]
+
     def get_analyzed_string_from_apk(self, string: str) -> hdvmstringanalysis_t | None:
         """
         :param string: string to retrieve its analysis

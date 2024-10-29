@@ -111,7 +111,7 @@ int main() {
 
     assert(num_of_method_analyses > 0 && "The call get_number_of_methodanalysis_objects didn't work");
 
-    int num_of_externals = 0;
+    [[maybe_unused]] int num_of_externals = 0;
 
     for (size_t i = 0; i < num_of_method_analyses; i++) {
         hdvmmethodanalysis_t * m_analysis = get_analyzed_method_by_idx(apk_context, i);
