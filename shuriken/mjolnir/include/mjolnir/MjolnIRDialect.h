@@ -13,6 +13,6 @@
 
 
 #define GET_DIALECT_CLASSES
-#include "MjolnIRDialect.h.inc"
+#include "mjolnir/MjolnIROpsDialect.h.inc"
 
 #endif// DALVIK_MJOLNIRDIALECT_HPP

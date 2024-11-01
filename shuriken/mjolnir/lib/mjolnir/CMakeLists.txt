@@ -1,10 +1,12 @@
+message(hello ${PROJECT_SOURCE_DIR})
 add_mlir_dialect_library(MjolnIRLib
     MjolnIRTypes.cpp
     MjolnIRDialect.cpp
     MjolnIROps.cpp
 
     ADDITIONAL_HEADER_DIRS
-    ${PROJECT_BINARY_DIR}/mjolnir/include/mjolnir/include
+    ${PROJECT_SOURCE_DIR}/include/
+    ${PROJECT_BINARY_DIR}/include/
 
     DEPENDS
     ShurikenTblGen
@@ -19,3 +21,5 @@ add_mlir_dialect_library(MjolnIRLib
     MLIRParser
     MLIRTransforms
 )
+target_include_directories(MjolnIRLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(MjolnIRLib PRIVATE ${PROJECT_BINARY_DIR}/include/)

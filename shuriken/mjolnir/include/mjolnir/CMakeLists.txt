@@ -1,6 +1,5 @@
 set(LLVM_TARGET_DEFINITIONS MjolnIROps.td)
 
-
 # Deals with the dialect decl and def
 mlir_tablegen(MjolnIRDialect.h.inc -gen-dialect-decls)
 mlir_tablegen(MjolnIRDialect.cpp.inc -gen-dialect-defs)
