@@ -860,7 +860,7 @@ hdvmstringanalysis_t *get_analyzed_string_from_apk(hApkContext context, const ch
 
 size_t get_number_of_methodanalysis_objects(hApkContext context) {
     auto *opaque_struct = reinterpret_cast<apk_opaque_struct_t *>(context);
-    if (!opaque_struct || opaque_struct->tag != APK_TAG) return -1;
+    if (!opaque_struct || opaque_struct->tag != APK_TAG) return (size_t)-1;
     size_t value = get_all_method_analysis(opaque_struct).size();
     return value;
 }
