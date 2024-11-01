@@ -100,6 +100,35 @@ FetchContent_MakeAvailable(fmt)
 
 
 # ------------------------------------
+# Download the zlib library
+# ------------------------------------
+FetchContent_Declare(
+        zlib
+
+        GIT_REPOSITORY https://github.com/madler/zlib
+        GIT_TAG v1.3.1
+)
+
+FetchContent_GetProperties(zlib)
+
+if(NOT zlib_POPULATED)
+    message(STATUS "Cloning zlib")
+    FetchContent_Populate(zlib)
+    add_subdirectory(
+            ${zlib_SOURCE_DIR}
+            ${zlib_BINARY_DIR}
+    )
+    set_target_properties(zlibstatic PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
+
+# Make the project available
+FetchContent_MakeAvailable(zlib)
+add_library(ZLIB::ZLIB ALIAS zlibstatic)
+set(ZLIB_LIBRARY zlibstatic)
+set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+
+
+# ------------------------------------
 # Download the zip libary
 # ------------------------------------
 
@@ -115,6 +144,8 @@ if(NOT libzip_POPULATED)
     message(STATUS "Cloning libzip")
     set(BUILD_SHARED_LIBS ON)
     option(BUILD_SHARED_LIBS ON)
+    set(ZLIB_LIBRARY ZLIB::ZLIB)
+    set(ZLIB_INCLUDE_DIR ${zlib_SOURCE_DIR})
     FetchContent_Populate(libzip)
     add_subdirectory(
             ${libzip_SOURCE_DIR}
