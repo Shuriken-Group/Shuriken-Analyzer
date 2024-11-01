@@ -31,12 +31,8 @@ add_executable(shuriken-opt src/shuriken_opt.cpp)
 target_link_libraries(shuriken-opt
   PRIVATE
   ${llvm_libs} LLVMSupport
-    MLIRAnalysis
-    MLIRFunctionInterfaces
-    MLIRIR
-    MLIRParser
-    MLIRSideEffectInterfaces
-    MLIRTransforms)
+    MjolnIRLib
+  )
 add_dependencies(shuriken-opt ShurikenTblGen)
 target_include_directories(shuriken-opt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/mjolnir/)
 target_include_directories(shuriken-opt PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include/mjolnir/)
