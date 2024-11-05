@@ -67,6 +67,20 @@ sudo cmake --build build/ --target uninstall
 
 to uninstall the project. Again, since we are remove files from /usr/local/, sudo permissions are needed.
 
+## Step-by-Step Install on Ubuntu Jammy
+
+# Install required packages
+sudo apt install sudo git vim build-essential cmake inetutils-ping python3-pip
+
+# Clone the Shuriken Analyzer repository
+git clone https://github.com/Shuriken-Group/Shuriken-Analyzer.git
+cd Shuriken-Analyzer/
+
+# Install Python bindings
+pip install git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/
+
+# Test the installation
+python3 -c "from shuriken import *"
 
 
 ## APIs In Other Programming Languages
