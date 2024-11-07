@@ -17,6 +17,15 @@ jobs:
       with:
         download_path: "https://github.com/llvm/llvm-project/releases/download/llvmorg-18.1.8/clang+llvm-18.1.8-x86_64-linux-gnu-ubuntu-18.04.tar.xz"
         destination: "/usr/local"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'  # Replace with your Python version 
+    - name: Install python dependencies 
+      run: |
+        python -m pip install --upgrade pip
+        pip install lit
+
     - name: Setup compiler on Linux
       run: |
         sudo apt-get update
