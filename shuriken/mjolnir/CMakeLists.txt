@@ -1,8 +1,8 @@
 
 project(MJOLNIR)
 
-find_package(MLIR REQUIRED CONFIG)
 find_package(LLVM REQUIRED CONFIG)
+find_package(MLIR REQUIRED CONFIG)
 
 # Set this so we dont run into problems including help scripts from mlir and llvm
 list(APPEND CMAKE_MODULE_PATH "${MLIR_CMAKE_DIR}")
