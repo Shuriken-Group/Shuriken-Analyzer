@@ -8,6 +8,8 @@
 #ifndef DALVIK_MJOLNIROPS_H
 #define DALVIK_MJOLNIROPS_H
 
+#include "mlir/Bytecode/BytecodeOpInterface.h"
+#include "mlir/IR/Dialect.h"
 #include <mlir/IR/BuiltinTypes.h>
 #include <mlir/IR/SymbolTable.h>
 #include <mlir/Interfaces/CallInterfaces.h>
