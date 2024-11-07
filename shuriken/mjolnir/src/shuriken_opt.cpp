@@ -16,6 +16,41 @@
 
 
 #include <vector>
+void show_help(std::string &prog_name);
+bool acquire_input(std::vector<std::string> &args, std::map<std::string, std::string> options);
+
+
+int main(int argc, char **argv) {
+    // list of arguments
+    std::vector<std::string> args{argv, argv + argc};
+
+    const std::map<std::string, std::string> options{
+            {"-f", ""},
+            {"--file", ""},
+
+    };
+
+
+    // INFO: Check if we need to print out help
+    bool need_help = std::find_if(args.begin(), args.end(), [](auto &arg) { return arg == "-h" || arg == "--help"; }) != args.end();
+
+    // INFO: Error is true if something is wrong with input
+    bool error = acquire_input(args, options);
+
+
+    if (need_help || error) {
+        show_help(args[0]);
+    }
+
+
+    if (error)
+        return -1;
+
+    if (options.at("-f") != "" || options.at("--file") != "") {
+        std::string file_name = options.at("-f") != "" ? options.at("-f") : options.at("--file");
+    }
+    return 0;
+}
 
 void show_help(std::string &prog_name) {
     fmt::print(fg(fmt::color::green), "USAGE: {} [-f|--file file_name]\n", prog_name);
@@ -35,44 +70,9 @@ bool acquire_input(std::vector<std::string> &args, std::map<std::string, std::st
             } else {
                 fmt::print(fg(fmt::color::red),
                            "ERROR: Provide input for {}\n", it->first);
-                // INFO: Turns need_help on because something went wrong.
                 error = true;
             }
         }
     }
     return error;
-}
-int main(int argc, char **argv) {
-    // list of arguments
-    std::vector<std::string> args{argv, argv + argc};
-
-    std::map<std::string, std::string> options{
-            {"-f", ""},
-            {"--file", ""},
-
-    };
-
-
-    bool need_help = false;
-    bool error = acquire_input(args, options);
-
-
-    // INFO: Check if we need to print out help
-    for (auto &arg: args) {
-        if (arg == "-h" or arg == "--help") need_help = true;
-    }
-
-
-    if (need_help || error) {
-        show_help(args[0]);
-    }
-
-
-    if (error)
-        return -1;
-
-    if (options["-f"] != "" || options["--file"] != "") {
-        std::string file_name = options["-f"] != "" ? options["-f"] : options["--file"];
-    }
-    return 0;
 }
