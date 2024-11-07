@@ -30,6 +30,7 @@ add_subdirectory(lib)
 add_executable(shuriken-opt src/shuriken_opt.cpp)
 target_link_libraries(shuriken-opt
   PRIVATE
+  fmt::fmt
   ${llvm_libs} LLVMSupport
     MLIRArithDialect
     MLIRControlFlowInterfaces
