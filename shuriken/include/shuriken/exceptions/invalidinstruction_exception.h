@@ -39,6 +39,18 @@ namespace exceptions {
             return _inst_size;
         }
     };
+    class LifterException : public std::exception {
+    public:
+        LifterException(const std::string &msg) : _msg(msg) {}
+
+        virtual const char *what() const noexcept override {
+            return _msg.c_str();
+        }
+
+    private:
+        std::string _msg;
+    };
+
 }// namespace exceptions
 
 #endif//SHURIKENLIB_INVALIDINSTRUCTION_EXCEPTION_H

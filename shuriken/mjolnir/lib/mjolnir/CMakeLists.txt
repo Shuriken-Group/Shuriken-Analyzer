@@ -12,6 +12,7 @@ add_mlir_dialect_library(MjolnIRLib
     ShurikenTblGen
 
     LINK_LIBS PUBLIC
+    LLVMSupport
     MLIRArithDialect
     MLIRControlFlowInterfaces
     MLIRSideEffectInterfaces

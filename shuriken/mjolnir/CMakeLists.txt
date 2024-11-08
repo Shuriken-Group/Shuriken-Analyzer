@@ -20,6 +20,7 @@ include_directories(${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 llvm_map_components_to_libnames(llvm_libs native orcjit core support irreader option)
 
+message("LLVM dir is ${LLVM_DIR}")
 message("MLIR dir is ${MLIR_DIR}")
 message(${CMAKE_CURRENT_SOURCE_DIR})
 message(${CMAKE_CURRENT_BINARY_DIR})
