@@ -14,7 +14,6 @@ add_mlir_dialect_library(MjolnIRLib
     LINK_LIBS PUBLIC
     MLIRArithDialect
     MLIRControlFlowInterfaces
-    MLIRIR
     MLIRSideEffectInterfaces
     MLIRAnalysis
     MLIRFunctionInterfaces
