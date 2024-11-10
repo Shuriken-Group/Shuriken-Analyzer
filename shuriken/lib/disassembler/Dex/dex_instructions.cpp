@@ -8,6 +8,7 @@
 #include "shuriken/exceptions/invalidinstruction_exception.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <sstream>
 
 using namespace shuriken::disassembler::dex;
@@ -1442,6 +1443,8 @@ Instruction35c::Instruction35c(std::span<uint8_t> bytecode, std::size_t index, s
 
     for (size_t I = 0; I < array_size; ++I)
         registers.push_back(reg[I]);
+
+    if (parser == nullptr) return;
 
     switch (get_kind()) {
         case shuriken::dex::TYPES::kind::TYPE:
