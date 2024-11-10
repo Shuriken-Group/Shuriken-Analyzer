@@ -1,5 +1,7 @@
 
+#include "shuriken/analysis/Dex/dex_analysis.h"
 #include <algorithm>
+#include <functional>
 #include <iostream>
 
 
@@ -9,6 +11,7 @@
 #include <shuriken/analysis/Dex/analysis.h>
 #include <utility>
 #include <variant>
+using shuriken::analysis::dex::MethodAnalysis;
 void show_help(std::string &prog_name);
 bool acquire_input(std::vector<std::string> &args, std::map<std::string, std::string> &options);
 
@@ -19,4 +22,4 @@ enum OptError {
 };
 auto getAnalysis(const std::string &file_name) -> std::variant<std::unique_ptr<AnalysisClass>, OptError>;
 
-auto getMethods(std::unique_ptr<AnalysisClass> analysis) -> MethodMap;
+auto lift_ir(std::reference_wrapper<MethodAnalysis> mm, const bool LOGGING) -> void;

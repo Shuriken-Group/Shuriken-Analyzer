@@ -9,6 +9,7 @@
 #ifndef SHURIKENLIB_INVALIDINSTRUCTION_EXCEPTION_H
 #define SHURIKENLIB_INVALIDINSTRUCTION_EXCEPTION_H
 
+#include <cstdint>
 #include <iostream>
 
 namespace exceptions {

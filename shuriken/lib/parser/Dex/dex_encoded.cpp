@@ -7,6 +7,7 @@
 
 #include "shuriken/parser/Dex/dex_encoded.h"
 #include "shuriken/common/logger.h"
+#include <cassert>
 #include <sstream>
 
 using namespace shuriken::parser::dex;
@@ -491,7 +492,9 @@ CodeItemStruct::encoded_catch_handlers_s_t &CodeItemStruct::get_encoded_catch_ha
 }
 
 EncodedMethod::EncodedMethod(MethodID *method_id, shuriken::dex::TYPES::access_flags access_flags)
-    : method_id(method_id), access_flags(access_flags) {}
+    : method_id(method_id), access_flags(access_flags) {
+    assert(method_id && "Method ID pointer should not be nullptr");
+}
 
 void EncodedMethod::parse_encoded_method(common::ShurikenStream &stream,
                                          std::uint64_t code_off,

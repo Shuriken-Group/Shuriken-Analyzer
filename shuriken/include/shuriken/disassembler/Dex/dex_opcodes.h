@@ -10,6 +10,7 @@
 #ifndef SHURIKENLIB_DEX_INSTRUCTION_H
 #define SHURIKENLIB_DEX_INSTRUCTION_H
 
+#include <cstdint>
 #include <iostream>
 #include <unordered_map>
 
@@ -24,6 +25,7 @@ namespace shuriken::disassembler::dex {
     ID = VAL,
 #include "shuriken/disassembler/Dex/definitions/dvm_types.def"
         };
+
 
         /// @brief Type of dex instruction, this can be used to check
         /// what kind of instruction is the current one, in order to avoid

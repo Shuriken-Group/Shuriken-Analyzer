@@ -85,6 +85,8 @@ namespace shuriken::parser::dex {
         DexClasses &get_classes();
 
         const DexClasses &get_classes() const;
+
+        // TODO: Do we need some kind of error checking for correctly parsing or not?
     };
 
 }// namespace shuriken::parser::dex

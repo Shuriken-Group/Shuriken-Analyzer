@@ -12,8 +12,35 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
+#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/parser/Dex/dex_fields.h"
+#include "shuriken/parser/Dex/dex_methods.h"
+#include "shuriken/parser/Dex/dex_protos.h"
+#include "shuriken/parser/Dex/dex_types.h"
 
 
+#include <mlir/Dialect/Arith/IR/Arith.h>
+#include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
+#include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
+
+using namespace mlir::shuriken::MjolnIR;
+using shuriken::analysis::dex::BasicBlocks;
+using shuriken::analysis::dex::DVMBasicBlock;
+using shuriken::analysis::dex::MethodAnalysis;
+using shuriken::disassembler::dex::DexOpcodes;
+using shuriken::disassembler::dex::InstructionUtils;
+using shuriken::parser::dex::ARRAY;
+using shuriken::parser::dex::CLASS;
+using shuriken::parser::dex::DVMArray;
+using shuriken::parser::dex::DVMClass;
+using shuriken::parser::dex::DVMFundamental;
+using shuriken::parser::dex::DVMType;
+using shuriken::parser::dex::FieldID;
+using shuriken::parser::dex::FUNDAMENTAL;
+using shuriken::parser::dex::fundamental_e;
+using shuriken::parser::dex::MethodID;
+using shuriken::parser::dex::ProtoID;
 namespace shuriken {
     namespace MjolnIR {
         class Lifter {
@@ -63,7 +90,7 @@ namespace shuriken {
             /// @param Reg register to retrieve its Value
             /// @return value generated from an instruction.
             mlir::Value readLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                          shuriken::analysis::dex::BasicBlocks &BBs,
+                                          shuriken::analysis::dex::BasicBlocks *BBs,
                                           std::uint32_t Reg) {
                 assert(BB && "Basic Block does not exist");
                 auto Val = CurrentDef[BB].Defs.find(Reg);
@@ -76,7 +103,7 @@ namespace shuriken {
             }
 
             mlir::Value readLocalVariableRecursive(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                                   shuriken::analysis::dex::BasicBlocks &BBs,
+                                                   shuriken::analysis::dex::BasicBlocks *BBs,
                                                    std::uint32_t Reg);
 
             /// @brief Reference to an MLIR Context
@@ -94,6 +121,8 @@ namespace shuriken {
             /// generate an exception or generate a NOP instruction
             bool gen_exception;
 
+            /// @brief Enable primitive logging for lifter
+            const bool LOGGING;
             /// @brief Method currently analyzed, must be updated for each analyzed method
             shuriken::analysis::dex::MethodAnalysis *current_method;
             /// @brief Basic block currently analyzed, must be updated for each basic
@@ -113,6 +142,7 @@ namespace shuriken {
             ::mlir::shuriken::MjolnIR::DVMFloatType floatType;
             ::mlir::shuriken::MjolnIR::DVMDoubleType doubleType;
             ::mlir::shuriken::MjolnIR::DVMObjectType strObjectType;
+
 
             //===----------------------------------------------------------------------===//
             // Some generators methods
@@ -228,8 +258,8 @@ namespace shuriken {
             /// @brief Constructor of Lifter
             /// @param context context from MjolnIR
             /// @param gen_exception generate a exception or nop instruction
-            Lifter(mlir::MLIRContext &context, bool gen_exception)
-                : context(context), builder(&context), gen_exception(gen_exception) {
+            Lifter(mlir::MLIRContext &context, bool gen_exception, bool LOGGING)
+                : context(context), builder(&context), gen_exception(gen_exception), LOGGING(LOGGING) {
                 init();
             }
 

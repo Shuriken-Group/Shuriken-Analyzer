@@ -2,8 +2,11 @@
 #include "transform/lifter.h"
 #include "mjolnir/MjolnIRDialect.h"
 #include "shuriken/analysis/Dex/dex_analysis.h"
+#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/logger.h"
 #include "shuriken/disassembler/Dex/dex_instructions.h"
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/disassembler/Dex/internal_disassembler.h"
 #include "shuriken/exceptions/invalidinstruction_exception.h"
 #include "shuriken/parser/Dex/dex_protos.h"
 #include "shuriken/parser/Dex/dex_types.h"
@@ -25,6 +28,7 @@ using namespace shuriken::MjolnIR;
 using shuriken::analysis::dex::BasicBlocks;
 using shuriken::analysis::dex::DVMBasicBlock;
 using shuriken::analysis::dex::MethodAnalysis;
+using namespace shuriken::disassembler::dex;
 using shuriken::disassembler::dex::InstructionUtils;
 using shuriken::parser::dex::ARRAY;
 using shuriken::parser::dex::CLASS;
@@ -128,8 +132,7 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto) {
 
     /// declare the register parameters, these are used during the
     /// program
-    auto params = proto->get_parameters();
-    auto number_of_params = std::distance(params.begin(), params.end());
+    auto number_of_params = std::ranges::distance(proto->get_parameters());
 
     auto number_of_registers = encoded_method->get_code_item()->get_registers_size();
 
@@ -152,14 +155,14 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto) {
 }
 
 mlir::Value Lifter::readLocalVariableRecursive(analysis::dex::DVMBasicBlock *BB,
-                                               analysis::dex::BasicBlocks &BBs,
+                                               analysis::dex::BasicBlocks *BBs,
                                                std::uint32_t Reg) {
     mlir::Value new_value;
 
     /// because block doesn't have it add it to required.
     CurrentDef[BB].required.insert(Reg);
-
-    for (auto pred: BBs.predecessors(BB)) {
+    std::cerr << "Processing readLVR: " << BB->get_name() << std::endl;
+    for (auto pred: BBs->predecessors(BB)) {
         if (!CurrentDef[pred].Analyzed)
             gen_block(pred);
         auto Val = readLocalVariable(pred, BBs, Reg);
@@ -194,6 +197,7 @@ void Lifter::gen_method(MethodAnalysis *method) {
     auto bb_nodes = bbs->nodes();
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
         auto bb = *it;
+        // TODO: Need Edu for code review
         if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
             continue;
         if (bb->get_first_address() == 0)// if it's the first block
@@ -206,6 +210,7 @@ void Lifter::gen_method(MethodAnalysis *method) {
     /// now traverse each node for generating instructions
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
         auto bb = *it;
+        // TODO: Need Edu for code review
         if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
             continue;
         /// set as the insertion point of the instructions
@@ -215,6 +220,7 @@ void Lifter::gen_method(MethodAnalysis *method) {
     }
 
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
+        // TODO: Need Edu for code review
         auto bb = *it;
         if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
             continue;
@@ -229,7 +235,7 @@ void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
 
     for (auto instr: bb->get_instructions()) {
         try {
-            auto operation = InstructionUtils::get_operation_type_from_opcode(static_cast<disassembler::dex::DexOpcodes::opcodes>(instr->get_instruction_opcode()));
+            auto operation = InstructionUtils::get_operation_type_from_opcode(static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode()));
             /// we will generate terminators later
             if (instr->is_terminator() &&
                 operation != shuriken::disassembler::dex::DexOpcodes::RET_BRANCH_DVM_OPCODE)
@@ -298,4 +304,80 @@ mlir::OwningOpRef<mlir::ModuleOp> Lifter::mlirGen(MethodAnalysis *methodAnalysis
     gen_method(methodAnalysis);
 
     return Module;
+}
+
+
+void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction *instr) {
+    using namespace shuriken::disassembler::dex;
+    using shuriken::disassembler::dex::Instruction;
+    switch (instr->get_instruction_type()) {
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION23X:
+            gen_instruction(reinterpret_cast<Instruction23x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION12X:
+            gen_instruction(reinterpret_cast<Instruction12x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION11X:
+            gen_instruction(reinterpret_cast<Instruction11x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22C:
+            gen_instruction(reinterpret_cast<Instruction22c *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22T:
+            gen_instruction(reinterpret_cast<Instruction22t *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21T:
+            gen_instruction(reinterpret_cast<Instruction21t *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION10T:
+            gen_instruction(reinterpret_cast<Instruction10t *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION20T:
+            gen_instruction(reinterpret_cast<Instruction20t *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION30T:
+            gen_instruction(reinterpret_cast<Instruction30t *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION10X:
+            gen_instruction(reinterpret_cast<Instruction10x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION11N:
+            gen_instruction(reinterpret_cast<Instruction11n *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21S:
+            gen_instruction(reinterpret_cast<Instruction21s *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21H:
+            gen_instruction(reinterpret_cast<Instruction21h *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION51L:
+            gen_instruction(reinterpret_cast<Instruction51l *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION35C:
+            gen_instruction(reinterpret_cast<Instruction35c *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21C:
+            gen_instruction(reinterpret_cast<Instruction21c *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22X:
+            gen_instruction(reinterpret_cast<Instruction22x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION32X:
+            gen_instruction(reinterpret_cast<Instruction32x *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION31I:
+            gen_instruction(reinterpret_cast<Instruction31i *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION31C:
+            gen_instruction(reinterpret_cast<Instruction31c *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22S:
+            gen_instruction(reinterpret_cast<Instruction22s *>(instr));
+            break;
+        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22B:
+            gen_instruction(reinterpret_cast<Instruction22b *>(instr));
+            break;
+        default:
+            throw exceptions::LifterException("MjolnIRLifter::gen_instruction: InstructionType not implemented");
+    }
 }

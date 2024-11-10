@@ -15,6 +15,7 @@
 #include <mlir/IR/BuiltinTypes.h>
 #include <mlir/IR/DialectImplementation.h>
 #include <mlir/IR/OpImplementation.h>
+#include <mlir/IR/ValueRange.h>
 #include <mlir/Interfaces/ControlFlowInterfaces.h>
 #include <mlir/Interfaces/FunctionImplementation.h>
 #include <mlir/Support/LLVM.h>
@@ -134,6 +135,10 @@ void MethodOp::print(mlir::OpAsmPrinter &p) {
 /// Returns the region on the function operation that is callable.
 mlir::Region *MethodOp::getCallableRegion() { return &getBody(); }
 
+ArrayRef<Type> MethodOp::getArgumentTypes() { return getFunctionType().getInputs(); }
+
+/// Returns the result types of this function.
+ArrayRef<Type> MethodOp::getResultTypes() { return getFunctionType().getResults(); }
 
 //===----------------------------------------------------------------------===//
 // InvokeOp
@@ -153,10 +158,15 @@ CallInterfaceCallable InvokeOp::getCallableForCallee() {
     return (*this)->getAttrOfType<SymbolRefAttr>("callee");
 }
 
+void InvokeOp::setCalleeFromCallable(CallInterfaceCallable callee) {
+    (*this)->setAttr("callee", callee.get<SymbolRefAttr>());
+}
+
 /// Get the argument operands to the called function, this is required by the
 /// call interface.
 Operation::operand_range InvokeOp::getArgOperands() { return getInputs(); }
 
+::mlir::MutableOperandRange InvokeOp::getArgOperandsMutable() { return getInputsMutable(); }
 //===----------------------------------------------------------------------===//
 // FallthroughOp
 //===----------------------------------------------------------------------===//

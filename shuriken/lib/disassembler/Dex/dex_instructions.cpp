@@ -5,6 +5,7 @@
 // @file dex_instructions.cpp
 
 #include "shuriken/disassembler/Dex/dex_instructions.h"
+#include "shuriken/disassembler/Dex/dex_opcodes.h"
 #include "shuriken/exceptions/invalidinstruction_exception.h"
 
 #include <algorithm>
@@ -253,7 +254,12 @@ std::span<std::uint8_t> Instruction::get_opcodes() {
 }
 
 bool Instruction::is_terminator() {
-    auto operation = opcodes_instruction_operation.at(static_cast<DexOpcodes::opcodes>(op));
+    // INFO: If the op code is not in opcodes_instruction_operation, then it is not terminator
+    const auto dex_op = static_cast<DexOpcodes::opcodes>(op);
+    if (!opcodes_instruction_operation.contains(dex_op)) {
+        return false;
+    }
+    auto operation = opcodes_instruction_operation.at(dex_op);
 
     if (operation == DexOpcodes::operation_type::CONDITIONAL_BRANCH_DVM_OPCODE ||
         operation == DexOpcodes::operation_type::UNCONDITIONAL_BRANCH_DVM_OPCODE ||

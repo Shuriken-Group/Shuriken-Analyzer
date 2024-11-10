@@ -28,7 +28,7 @@ add_subdirectory(include)
 add_subdirectory(lib)
 
 
-add_executable(shuriken-opt src/shuriken_opt.cpp)
+add_executable(shuriken-opt src/shuriken_opt.cpp lib/shuriken_opt_lib.cpp)
 target_link_libraries(shuriken-opt
   PUBLIC
   fmt::fmt
