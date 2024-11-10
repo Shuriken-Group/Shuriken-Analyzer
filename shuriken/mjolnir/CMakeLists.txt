@@ -48,5 +48,7 @@ target_link_libraries(shuriken-opt
   add_dependencies(shuriken-opt ShurikenTblGen)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_BINARY_DIR}/include/)
+target_compile_options(shuriken-opt PRIVATE -fexceptions)
+
 
 llvm_update_compile_flags(shuriken-opt)
