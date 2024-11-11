@@ -56,6 +56,9 @@ namespace shuriken {
 
                 mlir::DenseMap<edge_t, mlir::SmallVector<mlir::Value, 4>> jmpParameters;
 
+                /// TODO: Does Analyzed mean filled or sealed? We need to update the docs
+                /// As well as terminology to follow closely to the paper.
+                ///
                 /// Block is sealed, means no more predecessors will be
                 /// added nor analyzed.
                 unsigned Analyzed : 1;
@@ -74,17 +77,31 @@ namespace shuriken {
 
             /// @brief Write a declaration of a local register, this will be
             /// used for local value analysis
+            ///
+            /// Verbatim from braun13cc.pdf:
+            /// writeVariable(variable, block, value):
+            ///   currentDef[variable][block] <- value
+            ///
             /// @param BB block where we find the assignment
             /// @param Reg register written
             /// @param Val
-            void writeLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg,
-                                    mlir::Value Val) {
+            void writeLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
+                // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
                 assert(Val && "Value does not exist");
                 CurrentDef[BB].Defs[Reg] = Val;
             }
 
             /// @brief Read a local variable from the current basic block
+            ///
+            /// Verbatim from braun13cc.pdf:
+            /// readVariable(variable, block):
+            ///   if currentDef[variable] contains block:
+            ///     # local value numbering
+            ///     return currentDef[variable][block]
+            ///   # global value numbering
+            ///   return readVariableRecursive(variable, block)
+            ///
             /// @param BB basic block where to retrieve the data
             /// @param BBs basic blocks to retrieve the predecessors and successors
             /// @param Reg register to retrieve its Value
@@ -92,7 +109,14 @@ namespace shuriken {
             mlir::Value readLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
                                           shuriken::analysis::dex::BasicBlocks *BBs,
                                           std::uint32_t Reg) {
+                // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
+                // INFO: Mismatch between algorithm paper and algorithm implementaiton:
+                // The paper queries for block, the implementation queries for variable.
+                //
+                // INFO: Mismatch of number of arguments, we happen to also include the CFG.
+
+                // TODO: Refactor Val into if expr
                 auto Val = CurrentDef[BB].Defs.find(Reg);
                 /// if the block has the value, return it
                 if (Val != CurrentDef[BB].Defs.end())
@@ -102,6 +126,24 @@ namespace shuriken {
                 return readLocalVariableRecursive(BB, BBs, Reg);
             }
 
+            // TODO: The name should reflect the method in the paper, rename
+            //
+            // Verbatim from braun13cc.pdf
+            //
+            // readVariableRecursive(variable, block):
+            //  if block not in sealedBlocks:
+            //    val <- new Phi(block)
+            //    incompletePhis[block][variable] <- val
+            //  else if |block.preds| = 1
+            //    # Optimize the common case of one pred: no phi
+            //    val <- readVariable(variable, block.preds[0])
+            //  else:
+            //    # Break potential cycles with operandless phi
+            //    val <- new Phi(block)
+            //    writeVariable(variable, block, val)
+            //    val <- addPhiOperands(variable, val)
+            //  writeVariable(variable, block, val)
+            //  return val
             mlir::Value readLocalVariableRecursive(shuriken::analysis::dex::DVMBasicBlock *BB,
                                                    shuriken::analysis::dex::BasicBlocks *BBs,
                                                    std::uint32_t Reg);
