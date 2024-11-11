@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
         shuriken_opt_log(fmt::format("Printing method names\n"));
         for (auto &[method_name, method_analysis]: mm) {
             shuriken_opt_log(fmt::format("Method name: {}\n", method_name));
-            // lift_ir(method_analysis, LOGGING);
+            lift_ir(method_analysis, LOGGING);
         }
     }
     return 0;

@@ -208,7 +208,7 @@ namespace shuriken {
             /// @brief Given a prototype generate the types in MLIR
             /// @param proto prototype of the method
             /// @return vector with the generated types from the parameters
-            llvm::SmallVector<mlir::Type> gen_prototype(parser::dex::ProtoID *proto);
+            llvm::SmallVector<mlir::Type> gen_prototype(parser::dex::ProtoID *proto, bool is_static, DVMType *cls);
 
             /// @brief Generate a MethodOp from a EncodedMethod given
             /// @param method pointer to an encoded method to generate a MethodOp

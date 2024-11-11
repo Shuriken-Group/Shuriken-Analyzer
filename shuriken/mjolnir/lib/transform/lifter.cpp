@@ -93,12 +93,15 @@ mlir::Type Lifter::get_type(DVMType *type) {
         throw exceptions::LifterException("MjolnIRLifter::get_type: that type is unknown or I don't know what it is...");
 }
 
-llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto) {
+llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_static, DVMType *cls) {
     llvm::SmallVector<mlir::Type, 4> argTypes;
 
     /// as much space as parameters
     // TODO: redundant for now, since get_parameters() returns a range now.
     // argTypes.reserve(proto->get_parameters().size());
+
+    if (!is_static)
+        argTypes.push_back(get_type(cls));
 
     /// since we have a vector of parameters
     /// it is easy peasy
@@ -120,7 +123,8 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto) {
 
     // now let's create a MethodOp, for that we will need first to retrieve
     // the type of the parameters
-    auto paramTypes = gen_prototype(proto);
+    bool is_static = (encoded_method->get_flags() | shuriken::dex::TYPES::access_flags::ACC_STATIC) == shuriken::dex::TYPES::access_flags::ACC_STATIC;
+    auto paramTypes = gen_prototype(proto, is_static, method->get_class());
 
     // now retrieve the return type
     mlir::Type retType = get_type(proto->get_return_type());
@@ -133,6 +137,7 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto) {
     /// declare the register parameters, these are used during the
     /// program
     auto number_of_params = std::ranges::distance(proto->get_parameters());
+    if (!is_static) number_of_params += 1;
 
     auto number_of_registers = encoded_method->get_code_item()->get_registers_size();
 

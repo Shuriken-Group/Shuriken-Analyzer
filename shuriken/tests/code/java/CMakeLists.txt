@@ -22,6 +22,7 @@ if(DEX AND DEX_TESTS AND COMPILE_DEX_FILES)
             _pi
             _switch
             _xrefs
+            _test_lifter
             DexParserTest
     )
 
