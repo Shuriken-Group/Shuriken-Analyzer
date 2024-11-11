@@ -26,7 +26,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
-            break;
+            [[fallthrough]];
         }
         case DexOpcodes::opcodes::OP_IF_NE: {
             if (!cmp_value) {
@@ -36,7 +36,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
-            break;
+            [[fallthrough]];
         }
         case DexOpcodes::opcodes::OP_IF_LT: {
             if (!cmp_value) {
@@ -46,7 +46,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
-            break;
+            [[fallthrough]];
         }
         case DexOpcodes::opcodes::OP_IF_GE: {
             if (!cmp_value) {
@@ -56,7 +56,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
-            break;
+            [[fallthrough]];
         }
         case DexOpcodes::opcodes::OP_IF_GT: {
             if (!cmp_value) {
@@ -66,7 +66,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
-            break;
+            [[fallthrough]];
         }
         case DexOpcodes::opcodes::OP_IF_LE: {
             if (!cmp_value) {

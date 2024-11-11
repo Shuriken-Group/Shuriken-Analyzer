@@ -20,15 +20,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_ADD_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_ADD_LONG:
             if (!dest_type)
                 dest_type = longType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_ADD_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_ADD_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
@@ -49,15 +49,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_SUB_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_SUB_LONG:
             if (!dest_type)
                 dest_type = longType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_SUB_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_SUB_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
@@ -78,15 +78,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_MUL_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_MUL_LONG:
             if (!dest_type)
                 dest_type = longType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_MUL_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_MUL_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
@@ -107,15 +107,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_DIV_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_DIV_LONG:
             if (!dest_type)
                 dest_type = longType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_DIV_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_DIV_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
@@ -136,15 +136,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_REM_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_REM_LONG:
             if (!dest_type)
                 dest_type = longType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_REM_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_REM_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
@@ -166,7 +166,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_AND_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AND_LONG:
             if (!dest_type)
                 dest_type = longType;
@@ -188,7 +188,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_OR_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_OR_LONG:
             if (!dest_type)
                 dest_type = longType;
@@ -210,7 +210,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_XOR_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_XOR_LONG:
             if (!dest_type)
                 dest_type = longType;
@@ -232,7 +232,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_SHL_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_SHL_LONG:
             if (!dest_type)
                 dest_type = longType;
@@ -254,7 +254,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_SHR_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_SHR_LONG:
             if (!dest_type)
                 dest_type = longType;
@@ -276,7 +276,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_USHR_INT:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_USHR_LONG:
             if (!dest_type)
                 dest_type = longType;

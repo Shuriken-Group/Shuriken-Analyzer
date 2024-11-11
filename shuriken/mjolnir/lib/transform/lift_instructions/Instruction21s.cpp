@@ -18,7 +18,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21s *instr)
         case DexOpcodes::opcodes::OP_CONST_16:
             if (!dest_type)
                 dest_type = intType;
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_CONST_WIDE_16:
             if (!dest_type)
                 dest_type = longType;

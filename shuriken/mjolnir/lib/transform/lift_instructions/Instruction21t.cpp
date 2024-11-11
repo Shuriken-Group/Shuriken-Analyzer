@@ -27,7 +27,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_NEZ:
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpNeqz>(
@@ -36,7 +36,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_LTZ:
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLtz>(
@@ -45,7 +45,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_GEZ:
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGez>(
@@ -54,7 +54,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_GTZ:
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGtz>(
@@ -63,7 +63,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                         readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
-            break;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_LEZ: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLez>(

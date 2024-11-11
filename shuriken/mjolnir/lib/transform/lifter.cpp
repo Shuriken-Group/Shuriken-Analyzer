@@ -198,8 +198,8 @@ void Lifter::gen_method(MethodAnalysis *method) {
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
         auto bb = *it;
         // TODO: Need Edu for code review
-        if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
-            continue;
+        // if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
+        //     continue;
         if (bb->get_first_address() == 0)// if it's the first block
         {
             auto &entryBlock = function.front();
@@ -211,8 +211,8 @@ void Lifter::gen_method(MethodAnalysis *method) {
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
         auto bb = *it;
         // TODO: Need Edu for code review
-        if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
-            continue;
+        // if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
+        //     continue;
         /// set as the insertion point of the instructions
         builder.setInsertionPointToStart(map_blocks[bb]);
 
@@ -222,8 +222,8 @@ void Lifter::gen_method(MethodAnalysis *method) {
     for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
         // TODO: Need Edu for code review
         auto bb = *it;
-        if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
-            continue;
+        // if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
+        //     continue;
 
         gen_terminators(bb);
     }

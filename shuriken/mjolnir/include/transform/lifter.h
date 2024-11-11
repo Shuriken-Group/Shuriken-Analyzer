@@ -2,6 +2,7 @@
 #ifndef LIFTER_MJOLNIR_LIFTER_HPP
 #define LIFTER_MJOLNIR_LIFTER_HPP
 
+#include "fmt/core.h"
 #include "mjolnir/MjolnIROps.h"
 #include "mjolnir/MjolnIRTypes.h"
 
@@ -295,6 +296,11 @@ namespace shuriken {
 
             /// @brief Initialize possible used types and other necessary stuff
             void init();
+
+            void log(const std::string &msg) {
+                if (LOGGING)
+                    fmt::print(stderr, "{}", msg);
+            }
 
         public:
             /// @brief Constructor of Lifter
