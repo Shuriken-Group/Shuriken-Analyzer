@@ -137,26 +137,18 @@ shuriken::iterator_range<BasicBlocks::reverseedgesiterator_t> BasicBlocks::rever
 }
 
 shuriken::iterator_range<BasicBlocks::nodesetiterator_t> BasicBlocks::successors(DVMBasicBlock *node) {
-    if (successors_.find(node) == successors_.end())
-        throw std::runtime_error("Given node has no successors");
     return make_range(successors_[node].begin(), successors_[node].end());
 }
 
 shuriken::iterator_range<BasicBlocks::nodesetiterator_t> BasicBlocks::predecessors(DVMBasicBlock *node) {
-    if (predecessors_.find(node) == predecessors_.end())
-        throw std::runtime_error("Given node has no predecessors");
     return make_range(predecessors_[node].begin(), predecessors_[node].end());
 }
 
 shuriken::iterator_range<BasicBlocks::reversenodesetiterator_t> BasicBlocks::reverse_successors(DVMBasicBlock *node) {
-    if (successors_.find(node) == successors_.end())
-        throw std::runtime_error("Given node has no successors");
     return make_range(successors_[node].rbegin(), successors_[node].rend());
 }
 
 shuriken::iterator_range<BasicBlocks::reversenodesetiterator_t> BasicBlocks::reverse_predecessors(DVMBasicBlock *node) {
-    if (predecessors_.find(node) == predecessors_.end())
-        throw std::runtime_error("Given node has no predecessors");
     return make_range(predecessors_[node].rbegin(), predecessors_[node].rend());
 }
 
