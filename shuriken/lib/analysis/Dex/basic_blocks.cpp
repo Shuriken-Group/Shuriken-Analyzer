@@ -212,7 +212,7 @@ void BasicBlocks::remove_node(DVMBasicBlock *node) {
     std::unique_ptr<DVMBasicBlock> const node_(node);
 
     if (std::find(nodes_.begin(), nodes_.end(), node) == nodes_.end())
-        throw std::runtime_error("remove_mode: given node does not exist in graph");
+        throw std::runtime_error("remove_node: given node does not exist in graph");
 
     auto node_type = get_node_type(node);
 
