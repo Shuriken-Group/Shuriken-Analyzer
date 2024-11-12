@@ -33,8 +33,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = doubleType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AddOp>(
                         location,
@@ -42,7 +42,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         /// Different Sub operations
@@ -62,8 +62,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = doubleType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::SubOp>(
                         location,
@@ -71,7 +71,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         /// Different Mul operations
@@ -91,8 +91,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = doubleType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::MulOp>(
                         location,
@@ -100,7 +100,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         /// Different Div operations
@@ -120,8 +120,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = doubleType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::DivOp>(
                         location,
@@ -129,7 +129,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         /// Different Rem operations
@@ -149,8 +149,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = doubleType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::RemOp>(
                         location,
@@ -158,7 +158,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -171,8 +171,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AndOp>(
                         location,
@@ -180,7 +180,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -193,8 +193,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::OrOp>(
                         location,
@@ -202,7 +202,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -215,8 +215,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::XorOp>(
                         location,
@@ -224,7 +224,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -237,8 +237,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::Shl>(
                         location,
@@ -246,7 +246,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -259,8 +259,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::Shr>(
                         location,
@@ -268,7 +268,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 
@@ -281,8 +281,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             if (!dest_type)
                 dest_type = longType;
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
-                auto src2_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::UShr>(
                         location,
@@ -290,7 +290,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                         src1_value,
                         src2_value);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
 

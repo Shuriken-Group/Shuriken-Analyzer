@@ -21,7 +21,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AddOp>(
                         location_1,
@@ -29,14 +29,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_SUB_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::SubOp>(
                         location_1,
@@ -44,14 +44,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_MUL_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::MulOp>(
                         location_1,
@@ -59,14 +59,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_DIV_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::DivOp>(
                         location_1,
@@ -74,14 +74,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_REM_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::RemOp>(
                         location_1,
@@ -89,14 +89,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_AND_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AndOp>(
                         location_1,
@@ -104,14 +104,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_OR_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::OrOp>(
                         location_1,
@@ -119,14 +119,14 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         case DexOpcodes::opcodes::OP_XOR_INT_LIT16:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
             {
-                auto src1_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
                 auto generated_value = builder.create<::mlir::shuriken::MjolnIR::XorOp>(
                         location_1,
@@ -134,7 +134,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
                         src1_value,
                         val);
 
-                writeLocalVariable(current_basic_block, dest, generated_value);
+                writeVariable(current_basic_block, dest, generated_value);
             }
             break;
         default:

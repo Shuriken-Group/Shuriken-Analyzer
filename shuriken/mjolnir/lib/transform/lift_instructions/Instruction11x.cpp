@@ -18,7 +18,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction11x *instr)
         case DexOpcodes::opcodes::OP_RETURN:
         case DexOpcodes::opcodes::OP_RETURN_WIDE:
         case DexOpcodes::opcodes::OP_RETURN_OBJECT: {
-            auto reg_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), dest);
+            auto reg_value = readVariable(current_basic_block, current_method->get_basic_blocks(), dest);
 
             builder.create<::mlir::shuriken::MjolnIR::ReturnOp>(
                     location,
@@ -31,7 +31,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction11x *instr)
                 if (call.getNumResults() == 0)
                     break;
                 auto call_result = call.getResult(0);
-                writeLocalVariable(current_basic_block, dest, call_result);
+                writeVariable(current_basic_block, dest, call_result);
             } else
                 throw exceptions::LifterException("Lifter::gen_instruction: error lifting OP_MOVE_RESULT*, last instruction is not an invoke...");
         } break;

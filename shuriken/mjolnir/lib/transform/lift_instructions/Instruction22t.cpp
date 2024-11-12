@@ -23,8 +23,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpEq>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
             [[fallthrough]];
         }
@@ -33,8 +33,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpNEq>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
             [[fallthrough]];
         }
@@ -43,8 +43,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLt>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
             [[fallthrough]];
         }
@@ -53,8 +53,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGe>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
             [[fallthrough]];
         }
@@ -63,8 +63,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGt>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
             [[fallthrough]];
         }
@@ -73,8 +73,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLe>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v2));
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v2));
             }
 
             auto location_jcc = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 1);

@@ -23,7 +23,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction31c *instr)
                     str_value,
                     str_ref);
 
-            writeLocalVariable(current_basic_block, dest, gen_value);
+            writeVariable(current_basic_block, dest, gen_value);
         } break;
 
         default:

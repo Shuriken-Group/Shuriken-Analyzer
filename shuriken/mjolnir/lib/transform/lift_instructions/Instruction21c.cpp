@@ -26,7 +26,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
                     location,
                     cls_type);
 
-            writeLocalVariable(current_basic_block, dest, gen_value);
+            writeVariable(current_basic_block, dest, gen_value);
         } break;
         case DexOpcodes::opcodes::OP_CONST_STRING: {
 
@@ -40,7 +40,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
                     str_value,
                     str_ref);
 
-            writeLocalVariable(current_basic_block, dest, gen_value);
+            writeVariable(current_basic_block, dest, gen_value);
         } break;
         case DexOpcodes::opcodes::OP_SGET:
         case DexOpcodes::opcodes::OP_SGET_WIDE:
@@ -64,7 +64,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
                     field_class,
                     field_ref);
 
-            writeLocalVariable(current_basic_block, dest, generated_value);
+            writeVariable(current_basic_block, dest, generated_value);
         } break;
 
         default:

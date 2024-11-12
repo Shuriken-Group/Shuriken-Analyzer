@@ -24,7 +24,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpEqz>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
             [[fallthrough]];
@@ -33,7 +33,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpNeqz>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
             [[fallthrough]];
@@ -42,7 +42,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLtz>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
             [[fallthrough]];
@@ -51,7 +51,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGez>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
             [[fallthrough]];
@@ -60,7 +60,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGtz>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
             [[fallthrough]];
@@ -69,7 +69,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
                 cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLez>(
                         location,
                         I1,
-                        readLocalVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
                         v2);
             }
 

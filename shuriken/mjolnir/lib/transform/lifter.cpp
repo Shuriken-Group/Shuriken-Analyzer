@@ -152,25 +152,25 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
         /// get the value from the parameter
         auto value = methodOp.getArgument(Argument);
         /// write to a local variable
-        writeLocalVariable(first_block, Reg, value);
+        writeVariable(first_block, Reg, value);
     }
 
     // with the type created, now create the Method
     return methodOp;
 }
 
-mlir::Value Lifter::readLocalVariableRecursive(analysis::dex::DVMBasicBlock *BB,
-                                               analysis::dex::BasicBlocks *BBs,
-                                               std::uint32_t Reg) {
+mlir::Value Lifter::readVariableRecursive(analysis::dex::DVMBasicBlock *BB,
+                                          analysis::dex::BasicBlocks *BBs,
+                                          std::uint32_t Reg) {
     mlir::Value new_value;
 
     /// because block doesn't have it add it to required.
     CurrentDef[BB].required.insert(Reg);
     std::cerr << "Processing readLVR: " << BB->get_name() << std::endl;
     for (auto pred: BBs->predecessors(BB)) {
-        if (!CurrentDef[pred].Analyzed)
+        if (!CurrentDef[pred].Filled)
             gen_block(pred);
-        auto Val = readLocalVariable(pred, BBs, Reg);
+        auto Val = readVariable(pred, BBs, Reg);
 
         /// if the value is required, add the argument to the block
         /// write the local variable and erase from required
@@ -179,7 +179,7 @@ mlir::Value Lifter::readLocalVariableRecursive(analysis::dex::DVMBasicBlock *BB,
 
             new_value = map_blocks[BB]->addArgument(Val.getType(), Loc);
 
-            writeLocalVariable(BB, Reg, new_value);
+            writeVariable(BB, Reg, new_value);
 
             CurrentDef[BB].required.erase(Reg);
         }
@@ -257,7 +257,7 @@ void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
         }
     }
 
-    CurrentDef[bb].Analyzed = 1;
+    CurrentDef[bb].Filled = 1;
 }
 
 void Lifter::gen_terminators(DVMBasicBlock *bb) {

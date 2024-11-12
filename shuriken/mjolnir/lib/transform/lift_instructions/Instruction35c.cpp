@@ -32,8 +32,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
             for (size_t I = 0, P = 0, Limit = invoke_parameters.size();
                  I < Limit;
                  ++I) {
-                parameters.push_back(readLocalVariable(current_basic_block,
-                                                       current_method->get_basic_blocks(), invoke_parameters[I]));
+                parameters.push_back(readVariable(current_basic_block,
+                                                  current_method->get_basic_blocks(), invoke_parameters[I]));
 
                 /// If the method is not static, the first
                 /// register is a pointer to the object

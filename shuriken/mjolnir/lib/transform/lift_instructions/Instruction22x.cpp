@@ -17,13 +17,13 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22x *instr)
         case DexOpcodes::opcodes::OP_MOVE_FROM16:
         case DexOpcodes::opcodes::OP_MOVE_WIDE_FROM16:
         case DexOpcodes::opcodes::OP_MOVE_OBJECT_FROM16: {
-            auto src_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), src);
+            auto src_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src);
 
             auto gen_value = builder.create<::mlir::shuriken ::MjolnIR::MoveOp>(location,
                                                                                 src_value.getType(),
                                                                                 src_value);
 
-            writeLocalVariable(current_basic_block, dest, gen_value);
+            writeVariable(current_basic_block, dest, gen_value);
         } break;
 
         default:

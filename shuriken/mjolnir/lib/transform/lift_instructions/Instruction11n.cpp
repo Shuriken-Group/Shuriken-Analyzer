@@ -21,7 +21,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction11n *instr)
                     ::mlir::shuriken::MjolnIR::DVMByteType::get(&context),
                     value);
 
-            writeLocalVariable(current_basic_block, dest, gen_value);
+            writeVariable(current_basic_block, dest, gen_value);
         } break;
 
         default:

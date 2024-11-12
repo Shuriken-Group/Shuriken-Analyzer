@@ -40,7 +40,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22c *instr)
                     field_class,
                     field_ref);
 
-            writeLocalVariable(current_basic_block, reg, generated_value);
+            writeVariable(current_basic_block, reg, generated_value);
         } break;
         case DexOpcodes::opcodes::OP_IPUT:
         case DexOpcodes::opcodes::OP_IPUT_WIDE:
@@ -55,7 +55,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22c *instr)
             std::string_view field_name = field->field_name();
             std::string_view field_class = field->field_class()->get_raw_type();
 
-            auto reg_value = readLocalVariable(current_basic_block, current_method->get_basic_blocks(), reg);
+            auto reg_value = readVariable(current_basic_block, current_method->get_basic_blocks(), reg);
 
             builder.create<::mlir::shuriken::MjolnIR::StoreFieldOp>(
                     location,

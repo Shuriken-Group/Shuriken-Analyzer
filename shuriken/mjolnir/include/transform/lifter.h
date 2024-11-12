@@ -62,9 +62,9 @@ namespace shuriken {
                 ///
                 /// Block is sealed, means no more predecessors will be
                 /// added nor analyzed.
-                unsigned Analyzed : 1;
+                unsigned Filled : 1;
 
-                BasicBlockDef() : Analyzed(0) {}
+                BasicBlockDef() : Filled(0) {}
             };
 
         private:
@@ -86,7 +86,7 @@ namespace shuriken {
             /// @param BB block where we find the assignment
             /// @param Reg register written
             /// @param Val
-            void writeLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
+            void writeVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
                 // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
                 assert(Val && "Value does not exist");
@@ -107,9 +107,9 @@ namespace shuriken {
             /// @param BBs basic blocks to retrieve the predecessors and successors
             /// @param Reg register to retrieve its Value
             /// @return value generated from an instruction.
-            mlir::Value readLocalVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                          shuriken::analysis::dex::BasicBlocks *BBs,
-                                          std::uint32_t Reg) {
+            mlir::Value readVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
+                                     shuriken::analysis::dex::BasicBlocks *BBs,
+                                     std::uint32_t Reg) {
                 // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
                 // INFO: Mismatch between algorithm paper and algorithm implementaiton:
@@ -124,7 +124,7 @@ namespace shuriken {
                     return Val->second;
                 /// if it doesn't have the value, it becomes required for
                 /// us too
-                return readLocalVariableRecursive(BB, BBs, Reg);
+                return readVariableRecursive(BB, BBs, Reg);
             }
 
             // TODO: The name should reflect the method in the paper, rename
@@ -145,9 +145,9 @@ namespace shuriken {
             //    val <- addPhiOperands(variable, val)
             //  writeVariable(variable, block, val)
             //  return val
-            mlir::Value readLocalVariableRecursive(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                                   shuriken::analysis::dex::BasicBlocks *BBs,
-                                                   std::uint32_t Reg);
+            mlir::Value readVariableRecursive(shuriken::analysis::dex::DVMBasicBlock *BB,
+                                              shuriken::analysis::dex::BasicBlocks *BBs,
+                                              std::uint32_t Reg);
 
             /// @brief Reference to an MLIR Context
             mlir::MLIRContext &context;
