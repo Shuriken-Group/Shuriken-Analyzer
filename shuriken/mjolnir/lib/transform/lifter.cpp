@@ -97,7 +97,6 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
     llvm::SmallVector<mlir::Type, 4> argTypes;
 
     /// as much space as parameters
-    // TODO: redundant for now, since get_parameters() returns a range now.
     // argTypes.reserve(proto->get_parameters().size());
 
     if (!is_static)

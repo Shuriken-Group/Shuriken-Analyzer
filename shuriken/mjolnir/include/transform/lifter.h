@@ -57,11 +57,7 @@ namespace shuriken {
 
                 mlir::DenseMap<edge_t, mlir::SmallVector<mlir::Value, 4>> jmpParameters;
 
-                /// TODO: Does Analyzed mean filled or sealed? We need to update the docs
-                /// As well as terminology to follow closely to the paper.
-                ///
-                /// Block is sealed, means no more predecessors will be
-                /// added nor analyzed.
+                /// Block is filled, no more instruction created and added to block
                 unsigned Filled : 1;
 
                 BasicBlockDef() : Filled(0) {}
@@ -87,7 +83,6 @@ namespace shuriken {
             /// @param Reg register written
             /// @param Val
             void writeVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
-                // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
                 assert(Val && "Value does not exist");
                 CurrentDef[BB].Defs[Reg] = Val;
@@ -110,7 +105,6 @@ namespace shuriken {
             mlir::Value readVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
                                      shuriken::analysis::dex::BasicBlocks *BBs,
                                      std::uint32_t Reg) {
-                // TODO: The name should reflect the method in the paper, rename
                 assert(BB && "Basic Block does not exist");
                 // INFO: Mismatch between algorithm paper and algorithm implementaiton:
                 // The paper queries for block, the implementation queries for variable.
@@ -127,8 +121,6 @@ namespace shuriken {
                 return readVariableRecursive(BB, BBs, Reg);
             }
 
-            // TODO: The name should reflect the method in the paper, rename
-            //
             // Verbatim from braun13cc.pdf
             //
             // readVariableRecursive(variable, block):
