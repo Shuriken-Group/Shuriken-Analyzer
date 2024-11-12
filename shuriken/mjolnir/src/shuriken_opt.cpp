@@ -2,6 +2,7 @@
 // Dex & APK stuff
 #include "transform/lifter.h"
 #include <algorithm>
+#include <cassert>
 #include <cstdio>
 #include <memory>
 
@@ -58,6 +59,13 @@ int main(int argc, char **argv) {
         shuriken_opt_log(fmt::format("Printing method names\n"));
         for (auto &[method_name, method_analysis]: mm) {
             shuriken_opt_log(fmt::format("Method name: {}\n", method_name));
+            std::string canon_method_name = method_name;
+            std::replace(canon_method_name.begin(), canon_method_name.end(), '/', '.');
+            assert(canon_method_name.find('/') == std::string::npos);
+            method_analysis.get()
+                    .dump_dot_file(canon_method_name);
+        }
+        for (auto &[method_name, method_analysis]: mm) {
             lift_ir(method_analysis, LOGGING);
         }
     }
