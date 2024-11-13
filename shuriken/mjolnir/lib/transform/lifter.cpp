@@ -1,6 +1,7 @@
 
 #include "transform/lifter.h"
 #include "mjolnir/MjolnIRDialect.h"
+#include "mjolnir/MjolnIRTypes.h"
 #include "shuriken/analysis/Dex/dex_analysis.h"
 #include "shuriken/common/Dex/dvm_types.h"
 #include "shuriken/common/logger.h"
@@ -17,6 +18,7 @@
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
 #include <mlir/IR/Builders.h>
 #include <mlir/IR/BuiltinOps.h>
+#include <mlir/IR/BuiltinTypes.h>
 #include <mlir/IR/Dialect.h>
 #include <mlir/IR/MLIRContext.h>
 
@@ -87,9 +89,12 @@ mlir::Type Lifter::get_type(DVMType *type) {
         return get_type(reinterpret_cast<DVMFundamental *>(type));
     else if (type->get_type() == CLASS)
         return get_type(reinterpret_cast<DVMClass *>(type));
-    else if (type->get_type() == ARRAY)
-        throw exceptions::LifterException("MjolnIRLIfter::get_type: type ARRAY not implemented yet...");
-    else
+    else if (type->get_type() == ARRAY) {
+        DVMArray *dvm_array_p = reinterpret_cast<DVMArray *>(type);
+        return ::mlir::shuriken::MjolnIR::DVMArrayType::get(&context, dvm_array_p->print_type());
+        // throw exceptions::LifterException("MjolnIRLIfter::get_type: type ARRAY not implemented yet...");
+    } else
+
         throw exceptions::LifterException("MjolnIRLifter::get_type: that type is unknown or I don't know what it is...");
 }
 

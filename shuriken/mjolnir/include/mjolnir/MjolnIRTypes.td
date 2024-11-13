@@ -72,5 +72,14 @@ def DVMObject : MjolnIRType<"DVMObject", "object"> {
 
 def DVM_BasicType : AnyTypeOf<[DVMBool, DVMChar, DVMShort, DVMInt, DVMLong, DVMFloat, DVMDouble]>;
 
+def DVMArray : MjolnIRType<"DVMArray", "dvmarray"> {
+  let summary = "Array type from dalvik";
+  let parameters = (ins
+        StringRefParameter<"the name of the type the array is holding">:$array_type
+  );
+  let assemblyFormat = [{
+    `:`$array_type 
+  }];
+}
 
 #endif // DALVIK_MJOLNIRTYPES_TD
