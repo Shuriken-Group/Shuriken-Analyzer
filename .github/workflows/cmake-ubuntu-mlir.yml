@@ -43,7 +43,7 @@ jobs:
     - name: Create build in CMake
       run: cmake -S . -B build -DGITHUB_ACTION=ON -DDEX_TESTS=ON -DMJOLNIR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_BUILD_TYPE=Debug  
     - name: Build with cmake
-      run: cmake --build build/ -j
+      run: cmake --build build/ -j 2
     - name: Install with cmake
       run: sudo cmake --install build/
     - name : Run tests
