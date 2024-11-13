@@ -24,9 +24,9 @@ MethodAnalysis::MethodAnalysis(ExternalMethod *external_method)
     : is_external(true), method_encoded(external_method), basic_blocks(std::make_unique<BasicBlocks>()) {
 }
 
-void MethodAnalysis::dump_dot_file(std::string &file_path) {
+void MethodAnalysis::dump_dot_file(const std::string &file_path) {
     std::ofstream dot_file{file_path};
-
+    assert(dot_file.is_open() && "Dot file needs to be opened");
     dump_method_dot(dot_file);
 }
 

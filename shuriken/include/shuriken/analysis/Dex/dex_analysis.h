@@ -450,7 +450,7 @@ namespace shuriken::analysis::dex {
         /// the current path
         /// @param file_path reference to a path where
         /// to dump the content
-        void dump_dot_file(std::string &file_path);
+        void dump_dot_file(const std::string &file_path);
 
         /// @brief Check if the method is external
         /// @return method external
