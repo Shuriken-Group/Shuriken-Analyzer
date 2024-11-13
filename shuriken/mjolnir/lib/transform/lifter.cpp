@@ -13,6 +13,7 @@
 #include "shuriken/parser/Dex/dex_types.h"
 
 /// MLIR includes
+#include <cassert>
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
@@ -170,7 +171,6 @@ mlir::Value Lifter::readVariableRecursive(analysis::dex::DVMBasicBlock *BB,
 
     /// because block doesn't have it add it to required.
     CurrentDef[BB].required.insert(Reg);
-    std::cerr << "Processing readLVR: " << BB->get_name() << std::endl;
     for (auto pred: BBs->predecessors(BB)) {
         if (!CurrentDef[pred].Filled)
             gen_block(pred);
@@ -188,7 +188,7 @@ mlir::Value Lifter::readVariableRecursive(analysis::dex::DVMBasicBlock *BB,
             CurrentDef[BB].required.erase(Reg);
         }
 
-        CurrentDef[pred].jmpParameters[std::make_pair(pred, BB)].push_back(Val);
+        CurrentDef[pred].jmpParameters[{pred, BB}].push_back(Val);
     }
 
     return new_value;
@@ -240,6 +240,7 @@ void Lifter::gen_method(MethodAnalysis *method) {
 
 void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
     /// update current basic block
+    // this->log(fmt::format("Gen_Block of {}", bb->toString()));
     current_basic_block = bb;
 
     for (auto instr: bb->get_instructions()) {
@@ -278,15 +279,14 @@ void Lifter::gen_terminators(DVMBasicBlock *bb) {
         if (last_instr->is_terminator())
             gen_instruction(last_instr);
         else {
+
             auto next_block = current_method->get_basic_blocks()->get_basic_block_by_idx(
                     last_instr->get_address() + last_instr->get_instruction_length());
-
             auto loc = mlir::FileLineColLoc::get(&context, module_name, last_instr->get_address(), 1);
-
             builder.create<::mlir::shuriken::MjolnIR::FallthroughOp>(
                     loc,
                     map_blocks[next_block],
-                    CurrentDef[current_basic_block].jmpParameters[std::make_pair(current_basic_block, next_block)]);
+                    CurrentDef[bb].jmpParameters[{bb, next_block}]);
         }
     } catch (const exceptions::LifterException &e) {
         /// if user wants to generate exception
