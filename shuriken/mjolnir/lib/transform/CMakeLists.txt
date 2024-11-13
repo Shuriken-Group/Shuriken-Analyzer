@@ -35,5 +35,6 @@ target_link_libraries(MjolnIRTransformLib LLVMSupport
     fmt::fmt
 )
 
+add_dependencies(MjolnIRTransformLib ShurikenTblGen)
 target_include_directories(MjolnIRTransformLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(MjolnIRTransformLib PRIVATE ${PROJECT_BINARY_DIR}/include/)
