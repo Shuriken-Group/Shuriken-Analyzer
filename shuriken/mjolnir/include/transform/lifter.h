@@ -55,6 +55,9 @@ namespace shuriken {
 
                 std::set<std::uint32_t> required;
 
+                /// Map to keep for an edge<BB1,BB2> the parameters used in BB2
+                /// that comes from BB1 (used to add parameters to jump instructions
+                /// and fallthrough instruction)
                 mlir::DenseMap<edge_t, mlir::SmallVector<mlir::Value, 4>> jmpParameters;
 
                 /// Block is filled, no more instruction created and added to block
@@ -68,7 +71,7 @@ namespace shuriken {
             /// know if a basic block is completely analyzed
             mlir::DenseMap<shuriken::analysis::dex::DVMBasicBlock *, BasicBlockDef> CurrentDef;
 
-            /// @brief Map for the Kunai basic blocks and the
+            /// @brief Map for the Shuriken basic blocks and the
             /// mlir blocks
             std::unordered_map<shuriken::analysis::dex::DVMBasicBlock *, mlir::Block *> map_blocks;
 
