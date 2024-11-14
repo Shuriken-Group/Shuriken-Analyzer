@@ -42,6 +42,21 @@ using shuriken::parser::dex::FUNDAMENTAL;
 using shuriken::parser::dex::fundamental_e;
 using shuriken::parser::dex::MethodID;
 using shuriken::parser::dex::ProtoID;
+
+namespace exceptions {
+    class LifterException : public std::exception {
+    public:
+        LifterException(const std::string &msg) : _msg(msg) {}
+
+        virtual const char *what() const noexcept override {
+            return _msg.c_str();
+        }
+
+    private:
+        std::string _msg;
+    };
+}// namespace exceptions
+
 namespace shuriken {
     namespace MjolnIR {
         class Lifter {

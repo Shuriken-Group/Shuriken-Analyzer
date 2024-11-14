@@ -1,5 +1,4 @@
 
-#include "shuriken/exceptions/invalidinstruction_exception.h"
 #include "transform/lifter.h"
 #include <mlir/IR/OpDefinition.h>
 

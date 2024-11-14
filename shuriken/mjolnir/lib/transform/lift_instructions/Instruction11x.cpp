@@ -1,7 +1,6 @@
 
 
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
-#include "shuriken/exceptions/invalidinstruction_exception.h"
 #include "transform/lifter.h"
 #include <memory>
 #include <mlir/IR/OpDefinition.h>

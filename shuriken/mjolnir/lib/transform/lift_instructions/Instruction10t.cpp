@@ -1,6 +1,5 @@
 
 #include "shuriken/common/Dex/dvm_types.h"
-#include "shuriken/exceptions/invalidinstruction_exception.h"
 #include "transform/lifter.h"
 #include <cstdint>
 #include <mlir/IR/OpDefinition.h>
