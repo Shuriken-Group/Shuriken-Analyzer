@@ -13,7 +13,6 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
-#include "shuriken/common/Dex/dvm_types.h"
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/dex_fields.h"
 #include "shuriken/parser/Dex/dex_methods.h"
