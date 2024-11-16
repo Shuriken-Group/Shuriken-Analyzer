@@ -17,7 +17,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction10x *instr)
             break;
         case DexOpcodes::opcodes::OP_NOP:
             builder.create<::mlir::shuriken::MjolnIR::Nop>(
-                    location);
+                    location, "Nonthrowing Nop from 10x");
             break;
         default:
             throw exceptions::LifterException("Lifter::gen_instruction: Instruction10x not supported");

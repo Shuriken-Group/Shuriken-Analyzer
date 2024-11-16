@@ -21,7 +21,6 @@ include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/Interfaces/ControlFlowInterfaces.td"
 
-
 // TODO: Should we restrict AnyType to at least MjolnirType
 
 // TODO: Should we put pure on everything
@@ -60,6 +59,10 @@ class MjolnIR_BinaryOpBase<string mnemonic, list<Trait> traits = []> :
 
 def MjolnIR_Nop : MjolnIR_Op<"nop", [Pure]>
 {
+    let arguments = (ins
+        StrAttr:$from // called method
+    );
+
     let assemblyFormat = "attr-dict";
 }
 

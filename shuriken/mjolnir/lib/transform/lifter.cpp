@@ -260,7 +260,7 @@ void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
                 throw e;
             /// if not just create a Nop instruction
             auto Loc = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
-            builder.create<::mlir::shuriken::MjolnIR::Nop>(Loc);
+            builder.create<::mlir::shuriken::MjolnIR::Nop>(Loc, e.what());
         }
     }
 
@@ -296,7 +296,7 @@ void Lifter::gen_terminators(DVMBasicBlock *bb) {
             throw e;
         /// if not just create a Nop instruction
         auto Loc = mlir::FileLineColLoc::get(&context, module_name, last_instr->get_address(), 0);
-        builder.create<::mlir::shuriken::MjolnIR::Nop>(Loc);
+        builder.create<::mlir::shuriken::MjolnIR::Nop>(Loc, e.what());
     }
 }
 
