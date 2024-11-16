@@ -58,25 +58,6 @@ class MjolnIR_BinaryOpBase<string mnemonic, list<Trait> traits = []> :
     );
 }
 
-class MjolnIR_ComparisonOpBase<string mnemonic, list<Trait> traits = []> :
-    MjolnIR_Op<mnemonic, !listconcat(traits, [Pure])>
-{
-    let description = [{
-        Different type of comparisons in Dalvik, the types of the arguments
-        can be any of the Dalvik Machine, but always as result the operation
-        returns a bool value for ControlFlowOps Dialect (I1 value)
-    }];
-
-    let arguments = (ins
-        DVM_BasicType:$lhs,
-        DVM_BasicType:$rhs
-    );
-
-    let results = (outs
-        I1:$res
-    );
-}
-
 def MjolnIR_Nop : MjolnIR_Op<"nop", [Pure]>
 {
     let assemblyFormat = "attr-dict";
@@ -211,71 +192,6 @@ def MjolnIR_UShr  : MjolnIR_BinaryOpBase<"ushr">
 {
     let summary = "Unsigned Shift Right a DVM register";
 }
-
-//===----------------------------------------------------------------------===//
-// Comparison Operations
-//===----------------------------------------------------------------------===//
-
-def MjolnIR_CmpEq : MjolnIR_ComparisonOpBase<"cmp-eq", [Commutative]>
-{
-    let summary = "Compare if values are equal";
-}
-
-def MjolnIR_CmpNEq : MjolnIR_ComparisonOpBase<"cmp-neq", [Commutative]>
-{
-    let summary = "Compare if values are not equal";
-}
-
-def MjolnIR_CmpLt : MjolnIR_ComparisonOpBase<"cmp-lt">
-{
-    let summary = "Compare a value is lower than other";
-}
-
-def MjolnIR_CmpGe : MjolnIR_ComparisonOpBase<"cmp-ge">
-{
-    let summary = "Compare a value is greater or equal than other";
-}
-
-def MjolnIR_CmpGt : MjolnIR_ComparisonOpBase<"cmp-gt">
-{
-    let summary = "Compare a value is greater than other";
-}
-
-def MjolnIR_CmpLe : MjolnIR_ComparisonOpBase<"cmp-le">
-{
-    let summary = "Compare a value is lower or equal than other";
-}
-
-def MjolnIR_CmpEqz : MjolnIR_ComparisonOpBase<"cmp-eqz">
-{
-    let summary = "Compare a value is equal to zero";
-}
-
-def MjolnIR_CmpNeqz : MjolnIR_ComparisonOpBase<"cmp-neqz">
-{
-    let summary = "Compare a value is not equal to zero";
-}
-
-def MjolnIR_CmpLtz : MjolnIR_ComparisonOpBase<"cmp-ltz">
-{
-    let summary = "Compare a value is lower than zero";
-}
-
-def MjolnIR_CmpGez : MjolnIR_ComparisonOpBase<"cmp-gez">
-{
-    let summary = "Compare a value is greater or equal to zero";
-}
-
-def MjolnIR_CmpGtz : MjolnIR_ComparisonOpBase<"cmp-gtz">
-{
-    let summary = "Compare a value is greater than zero";
-}
-
-def MjolnIR_CmpLez : MjolnIR_ComparisonOpBase<"cmp-lez">
-{
-    let summary = "Compare a value is lower or equal to zero";
-}
-
 
 
 //===----------------------------------------------------------------------===//
@@ -443,45 +359,6 @@ def InvokeOp : MjolnIR_Op<"invoke", [
                 $_state.addTypes(result);
         }]>,
     ];
-}
-
-
-//===----------------------------------------------------------------------===//
-// ReturnOp
-//===----------------------------------------------------------------------===//
-def ReturnOp : MjolnIR_Op<"return", [
-    Pure,
-    HasParent<"MethodOp">,
-    Terminator
-]>
-{
-    let summary = "return operation from Dalvik";
-
-    let description = [{
-        "return" operation represents the return from a function.
-        An optional operation is obtained, but no result is produced (no
-        other instruction obtains it, since an invoke instruction already
-        retrieves an optional value).
-    }];
-
-    // an optional value is given as an input to return. This return value
-    // must match the return type of the enclosing function.
-    let arguments = (ins
-    Variadic<DVM_BasicType>:$input
-    );
-
-    // return operation only emits the input in the format if it is present.
-    let assemblyFormat = "($input^ `:` type($input))? attr-dict ";
-
-    // Allow building a ReturnOp with no return operand.
-    let builders = [
-        OpBuilder<(ins), [{ build($_builder, $_state, std::nullopt); }]>
-    ];
-
-    // Provide extra utility definitions on the c++ operation class definition.
-    let extraClassDeclaration = [{
-        bool hasOperand() { return getNumOperands() != 0; }
-    }];
 }
 
 //===----------------------------------------------------------------------===//
