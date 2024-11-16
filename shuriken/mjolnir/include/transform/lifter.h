@@ -23,6 +23,7 @@
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
+#include <mlir/Dialect/Func/IR/FuncOps.h>
 
 using namespace mlir::shuriken::MjolnIR;
 using shuriken::analysis::dex::BasicBlocks;

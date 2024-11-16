@@ -17,6 +17,7 @@
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
+#include <mlir/Dialect/Func/IR/FuncOps.h>
 #include <mlir/IR/Builders.h>
 #include <mlir/IR/BuiltinOps.h>
 #include <mlir/IR/BuiltinTypes.h>
@@ -45,6 +46,7 @@ void Lifter::init() {
     context.getOrLoadDialect<::mlir::shuriken::MjolnIR::MjolnIRDialect>();
     context.getOrLoadDialect<::mlir::cf::ControlFlowDialect>();
     context.getOrLoadDialect<::mlir::arith::ArithDialect>();
+    context.getOrLoadDialect<::mlir::func::FuncDialect>();
 
     voidType = ::mlir::shuriken::MjolnIR::DVMVoidType::get(&context);
     byteType = ::mlir::shuriken::MjolnIR::DVMByteType::get(&context);

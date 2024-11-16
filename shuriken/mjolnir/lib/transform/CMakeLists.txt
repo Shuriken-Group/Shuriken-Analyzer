@@ -32,6 +32,7 @@ target_link_libraries(MjolnIRTransformLib LLVMSupport
     MLIRFunctionInterfaces
     MLIRParser
     MLIRTransforms
+    MLIRFuncDialect
     fmt::fmt
 )
 

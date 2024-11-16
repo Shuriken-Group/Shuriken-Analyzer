@@ -20,56 +20,68 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21t *instr)
     switch (op_code) {
         case DexOpcodes::opcodes::OP_IF_EQZ:
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpEqz>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::eq,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
             [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_NEZ:
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpNeqz>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::ne,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
             [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_LTZ:
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLtz>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::slt,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
             [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_GEZ:
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGez>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::sge,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
             [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_GTZ:
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpGtz>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::sgt,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
             [[fallthrough]];
         case DexOpcodes::opcodes::OP_IF_LEZ: {
             if (!cmp_value) {
-                cmp_value = builder.create<::mlir::shuriken::MjolnIR::CmpLez>(
-                        location,
-                        I1,
-                        readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
-                        v2);
+                cmp_value = builder.create<::mlir::arith::CmpIOp>(
+                    location,
+                    I1,
+                    ::mlir::arith::CmpIPredicate::sle,
+                    readVariable(current_basic_block, current_method->get_basic_blocks(), v1),
+                    v2
+                );
             }
 
             auto location_jcc = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 1);
