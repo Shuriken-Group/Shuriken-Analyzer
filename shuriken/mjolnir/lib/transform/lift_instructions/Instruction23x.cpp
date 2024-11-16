@@ -353,6 +353,33 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
+            // 44: aget
+            // 45: aget-wide
+            // 46: aget-object
+            // 47: aget-boolean
+            // 48: aget-byte
+            // 49: aget-char
+            // 4a: aget-short
+            // 4b: aput
+            // 4c: aput-wide
+            // 4d: aput-object
+            // 4e: aput-boolean
+            // 4f: aput-byte
+            // 50: aput-char
+            // 51: aput-short
+        case DexOpcodes::opcodes::OP_AGET:
+        case DexOpcodes::opcodes::OP_AGET_WIDE:
+        case DexOpcodes::opcodes::OP_AGET_OBJECT:
+        case DexOpcodes::opcodes::OP_AGET_BOOLEAN:
+        case DexOpcodes::opcodes::OP_AGET_BYTE:
+        case DexOpcodes::opcodes::OP_AGET_CHAR:
+        case DexOpcodes::opcodes::OP_AGET_SHORT:
+        case DexOpcodes::opcodes::OP_APUT:
+        case DexOpcodes::opcodes::OP_APUT_WIDE:
+        case DexOpcodes::opcodes::OP_APUT_OBJECT:
+        case DexOpcodes::opcodes::OP_APUT_BYTE:
+        case DexOpcodes::opcodes::OP_APUT_CHAR:
+        case DexOpcodes::opcodes::OP_APUT_SHORT:
 
         default:
             throw exceptions::LifterException("MjolnIRLifter::gen_instruction: Opcode from Instruction23x not implemented");
