@@ -186,14 +186,14 @@ namespace shuriken {
 
             // types from DVM for not generating it many times
             ::mlir::shuriken::MjolnIR::DVMVoidType voidType;
-            ::mlir::shuriken::MjolnIR::DVMByteType byteType;
-            ::mlir::shuriken::MjolnIR::DVMBoolType boolType;
-            ::mlir::shuriken::MjolnIR::DVMCharType charType;
-            ::mlir::shuriken::MjolnIR::DVMShortType shortType;
-            ::mlir::shuriken::MjolnIR::DVMIntType intType;
-            ::mlir::shuriken::MjolnIR::DVMLongType longType;
-            ::mlir::shuriken::MjolnIR::DVMFloatType floatType;
-            ::mlir::shuriken::MjolnIR::DVMDoubleType doubleType;
+            ::mlir::IntegerType byteType;
+            ::mlir::IntegerType boolType;
+            ::mlir::IntegerType charType;
+            ::mlir::IntegerType shortType;
+            ::mlir::IntegerType intType;
+            ::mlir::IntegerType longType;
+            ::mlir::Float32Type floatType;
+            ::mlir::Float64Type doubleType;
             ::mlir::shuriken::MjolnIR::DVMObjectType strObjectType;
 
 

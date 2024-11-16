@@ -49,14 +49,14 @@ void Lifter::init() {
     context.getOrLoadDialect<::mlir::func::FuncDialect>();
 
     voidType = ::mlir::shuriken::MjolnIR::DVMVoidType::get(&context);
-    byteType = ::mlir::shuriken::MjolnIR::DVMByteType::get(&context);
-    boolType = ::mlir::shuriken::MjolnIR::DVMBoolType::get(&context);
-    charType = ::mlir::shuriken::MjolnIR::DVMCharType::get(&context);
-    shortType = ::mlir::shuriken::MjolnIR::DVMShortType::get(&context);
-    intType = ::mlir::shuriken::MjolnIR::DVMIntType::get(&context);
-    longType = ::mlir::shuriken::MjolnIR::DVMLongType::get(&context);
-    floatType = ::mlir::shuriken::MjolnIR::DVMFloatType::get(&context);
-    doubleType = ::mlir::shuriken::MjolnIR::DVMDoubleType::get(&context);
+    byteType = ::mlir::IntegerType::get(&context, 8, mlir::IntegerType::Signed);// signed at default
+    boolType = ::mlir::IntegerType::get(&context, 1, mlir::IntegerType::Signless);
+    charType = ::mlir::IntegerType::get(&context, 8, mlir::IntegerType::Signed);
+    shortType = ::mlir::IntegerType::get(&context, 16, mlir::IntegerType::Signed);
+    intType = ::mlir::IntegerType::get(&context, 32, mlir::IntegerType::Signed);
+    longType = ::mlir::IntegerType::get(&context, 64, mlir::IntegerType::Signed);
+    floatType = ::mlir::Float32Type::get(&context);
+    doubleType = ::mlir::Float64Type::get(&context);
     strObjectType = ::mlir::shuriken::MjolnIR::DVMObjectType::get(&context, "Ljava/lang/String;");
 }
 

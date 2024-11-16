@@ -1,4 +1,5 @@
 #include "transform/lifter.h"
+#include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/IR/OpDefinition.h>
 
 using namespace shuriken::MjolnIR;
@@ -23,7 +24,19 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_ADD_LONG:
             if (!dest_type)
                 dest_type = longType;
-            [[fallthrough]];
+            {
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+
+                auto generated_value = builder.create<mlir::arith::AddIOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value);
+
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         case DexOpcodes::opcodes::OP_ADD_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
@@ -35,7 +48,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AddOp>(
+                auto generated_value = builder.create<mlir::arith::AddFOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -52,7 +65,19 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_SUB_LONG:
             if (!dest_type)
                 dest_type = longType;
-            [[fallthrough]];
+            {
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+
+                auto generated_value = builder.create<mlir::arith::SubIOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value);
+
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         case DexOpcodes::opcodes::OP_SUB_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
@@ -64,7 +89,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::SubOp>(
+                auto generated_value = builder.create<mlir::arith::SubFOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -81,7 +106,19 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_MUL_LONG:
             if (!dest_type)
                 dest_type = longType;
-            [[fallthrough]];
+            {
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+
+                auto generated_value = builder.create<mlir::arith::MulIOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value);
+
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         case DexOpcodes::opcodes::OP_MUL_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
@@ -93,7 +130,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::MulOp>(
+                auto generated_value = builder.create<mlir::arith::MulFOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -110,7 +147,19 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_DIV_LONG:
             if (!dest_type)
                 dest_type = longType;
-            [[fallthrough]];
+            {
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+
+                auto generated_value = builder.create<mlir::arith::DivSIOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value);
+
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         case DexOpcodes::opcodes::OP_DIV_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
@@ -122,7 +171,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::DivOp>(
+                auto generated_value = builder.create<mlir::arith::DivFOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -139,7 +188,19 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
         case DexOpcodes::opcodes::OP_REM_LONG:
             if (!dest_type)
                 dest_type = longType;
-            [[fallthrough]];
+            {
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+
+                auto generated_value = builder.create<::mlir::arith::RemSIOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value);
+
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         case DexOpcodes::opcodes::OP_REM_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
@@ -151,7 +212,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::RemOp>(
+                auto generated_value = builder.create<mlir::arith::RemFOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -173,7 +234,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::AndOp>(
+                auto generated_value = builder.create<mlir::arith::AndIOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -195,7 +256,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::OrOp>(
+                auto generated_value = builder.create<mlir::arith::OrIOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -217,7 +278,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::XorOp>(
+                auto generated_value = builder.create<mlir::arith::XOrIOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -239,7 +300,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::Shl>(
+                auto generated_value = builder.create<mlir::arith::ShLIOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -261,7 +322,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::Shr>(
+                auto generated_value = builder.create<mlir::arith::ShRSIOp>(
                         location,
                         dest_type,
                         src1_value,
@@ -283,7 +344,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
                 auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
 
-                auto generated_value = builder.create<::mlir::shuriken::MjolnIR::UShr>(
+                auto generated_value = builder.create<mlir::arith::ShRUIOp>(
                         location,
                         dest_type,
                         src1_value,

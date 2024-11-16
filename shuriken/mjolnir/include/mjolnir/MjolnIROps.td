@@ -138,60 +138,8 @@ def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure, ConstantLike]>
 //===----------------------------------------------------------------------===//
 // Binary operations
 //===----------------------------------------------------------------------===//
-def MjolnIR_AddOp : MjolnIR_BinaryOpBase<"add", [Commutative]>
-{
-    let summary = "Add two DVM registers";
-}
+// Badumbatish: THIS IS EMPTY AS IT IS REPLACED BY MLIR's arith dialect
 
-def MjolnIR_SubOp : MjolnIR_BinaryOpBase<"sub">
-{
-    let summary = "Substract two DVM registers";
-}
-
-def MjolnIR_MulOp : MjolnIR_BinaryOpBase<"mul", [Commutative]>
-{
-    let summary = "Multiply two DVM registers";
-}
-
-def MjolnIR_DivOp : MjolnIR_BinaryOpBase<"div">
-{
-    let summary = "Divide two DVM registers";
-}
-
-def MjolnIR_RemOp : MjolnIR_BinaryOpBase<"rem">
-{
-    let summary = "Divide two DVM registers and get the remainder";
-}
-
-def MjolnIR_AndOp : MjolnIR_BinaryOpBase<"and">
-{
-    let summary = "Apply AND operation in two DVM registers";
-}
-
-def MjolnIR_OrOp  : MjolnIR_BinaryOpBase<"or">
-{
-    let summary = "Apply OR operation in two DVM registers";
-}
-
-def MjolnIR_XorOp : MjolnIR_BinaryOpBase<"xor">
-{
-    let summary = "Apply XOR operation in two DVM registers";
-}
-
-def MjolnIR_Shl   : MjolnIR_BinaryOpBase<"shl">
-{
-    let summary = "Shift Left a DVM register";
-}
-
-def MjolnIR_Shr   : MjolnIR_BinaryOpBase<"shr">
-{
-    let summary = "Shift Right a DVM register";
-}
-
-def MjolnIR_UShr  : MjolnIR_BinaryOpBase<"ushr">
-{
-    let summary = "Unsigned Shift Right a DVM register";
-}
 
 
 //===----------------------------------------------------------------------===//
