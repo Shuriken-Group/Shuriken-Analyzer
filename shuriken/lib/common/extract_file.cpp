@@ -5,6 +5,7 @@
 // @file extract_file.cpp
 
 #include "shuriken/common/extract_file.h"
+#include "zip.h"
 
 bool extract_file(zip_t *archive, const char *filename, const std::string &output_path) {
     // Open the file inside the archive

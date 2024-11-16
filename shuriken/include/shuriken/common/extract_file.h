@@ -9,11 +9,12 @@
 #ifndef SHURIKENLIB_EXTRACT_FILE_H
 #define SHURIKENLIB_EXTRACT_FILE_H
 
-#include "zip.h"
 #include <string>
 #include <vector>
 #include <fstream>
 #include <iostream>
+
+typedef struct zip zip_t;
 
 /// Function to extract a file from a zip archive
 bool extract_file(zip_t *archive, const char *filename, const std::string &output_path);
