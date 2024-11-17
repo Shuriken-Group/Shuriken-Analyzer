@@ -25,6 +25,19 @@ include "mlir/Interfaces/ControlFlowInterfaces.td"
 
 // TODO: Should we put pure on everything
 
+def DEFAULT_WIDTH :    I32EnumAttrCase<"DEFAULT", 0>;
+def WWIDTH:    I32EnumAttrCase<"WIDE", 1>;
+def OBJECT_WIDTH :    I32EnumAttrCase<"OBJECT", 2>;
+def BOOLEAN_WIDTH :    I32EnumAttrCase<"BOOLEAN", 3>;
+def BYTE_WIDTH :    I32EnumAttrCase<"BYTE", 4>;
+def CHAR_WIDTH :    I32EnumAttrCase<"CHAR",5>;
+def SHORT_WIDTH :    I32EnumAttrCase<"SHORT", 6>;
+def WidthEnum : I32EnumAttr<"WidthEnum", "To simulate stuff like aget-object and aget-short", 
+        [DEFAULT_WIDTH, WWIDTH, OBJECT_WIDTH, BOOLEAN_WIDTH, BYTE_WIDTH, CHAR_WIDTH, SHORT_WIDTH]> {
+  let cppNamespace = "::mlir::MjolnIR";
+  let stringToSymbolFnName = "ConvertToEnum";
+  let symbolToStringFnName = "ConvertToString";
+}
 /// Base class for unary operations, we specify just one
 /// argument value as entry, and one value as result
 class MjolnIR_UnaryOpBase<string mnemonic, list<Trait> traits = []> :
@@ -144,7 +157,40 @@ def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure, ConstantLike]>
 // Badumbatish: THIS IS EMPTY AS IT IS REPLACED BY MLIR's arith dialect
 
 
+//===----------------------------------------------------------------------===//
+// LoadArrayOp
+//===----------------------------------------------------------------------===//
+def LoadArrayOp : MjolnIR_Op<"loadarray",
+    [ConstantLike, Pure]>
+{
+    let summary = "Load a field value";
 
+    let description = [{
+        In order to produces an SSA value from a symbol reference
+        we have this operation that takes a symbol field name and
+        returns a value with the type of the field.
+
+        ```mlir
+            %2 = MjolnIR.loadfield @MyArray (3) :  () -> DVMType
+        ```
+
+        It is not possible to create a kind of generic variable so
+        this will be a way to obtain a value from a non-SSA type
+        since the nature of a Array is not being SSA.
+    }];
+
+    let arguments = (ins
+        FlatSymbolRefAttr:$fieldName, // name of Array
+        FlatSymbolRefAttr:$fieldClass, // class of Array
+        UI32Attr: $fieldRef // reference to Array in Dalvik code
+    );
+
+    let results = (outs
+        DVM_BasicType               // any of the DVM Basic Types
+    );
+
+    let assemblyFormat = "attr-dict $fieldClass`->`$fieldName `(` $fieldRef `)` `:` type(results)";
+}
 //===----------------------------------------------------------------------===//
 // LoadFieldOp
 //===----------------------------------------------------------------------===//
