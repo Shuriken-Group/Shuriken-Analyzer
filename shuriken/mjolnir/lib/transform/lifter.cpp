@@ -403,3 +403,15 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction *instr) {
             throw exceptions::LifterException("MjolnIRLifter::gen_instruction: InstructionType not implemented");
     }
 }
+BasicBlockType Lifter::get_block_type(::mlir::Block *bb) {
+    return this->block_type_map[bb];
+}
+BasicBlockType Lifter::get_block_type(DVMBasicBlock *bb) {
+    return this->block_type_map[this->map_blocks[bb]];
+}
+void Lifter::set_block_type(::mlir::Block *bb, BasicBlockType bt) {
+    this->block_type_map[bb] = bt;
+}
+void Lifter::set_block_type(DVMBasicBlock *bb, BasicBlockType bt) {
+    this->block_type_map[this->map_blocks[bb]] = bt;
+}

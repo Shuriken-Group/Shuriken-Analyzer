@@ -13,6 +13,7 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
+#include "shuriken/analysis/Dex/dex_analysis.h"
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/dex_fields.h"
 #include "shuriken/parser/Dex/dex_methods.h"
@@ -24,6 +25,8 @@
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
 #include <mlir/Dialect/Func/IR/FuncOps.h>
+#include <mlir/IR/Block.h>
+#include <mlir/Support/LLVM.h>
 
 using namespace mlir::shuriken::MjolnIR;
 using shuriken::analysis::dex::BasicBlocks;
@@ -59,6 +62,11 @@ namespace exceptions {
 
 namespace shuriken {
     namespace MjolnIR {
+        enum class BasicBlockType {
+            NormalBlock,
+            TryBlock,
+            CatchBlock
+        };
         class Lifter {
         public:
             using edge_t =
@@ -85,6 +93,9 @@ namespace shuriken {
             /// @brief A map to keep the definitions of variables, and
             /// know if a basic block is completely analyzed
             mlir::DenseMap<shuriken::analysis::dex::DVMBasicBlock *, BasicBlockDef> CurrentDef;
+
+            /// @brief A map to know if a block is a normal, try or catch block
+            mlir::DenseMap<::mlir::Block *, BasicBlockType> block_type_map;
 
             /// @brief Map for the Shuriken basic blocks and the
             /// mlir blocks
@@ -203,6 +214,10 @@ namespace shuriken {
             /// @brief Return an mlir::Type from a Fundamental type of Dalvik
             /// @param fundamental fundamental type of Dalvik
             /// @return different type depending on input
+            BasicBlockType get_block_type(::mlir::Block *);
+            BasicBlockType get_block_type(DVMBasicBlock *);
+            void set_block_type(::mlir::Block *, BasicBlockType);
+            void set_block_type(DVMBasicBlock *, BasicBlockType);
             mlir::Type get_type(parser::dex::DVMFundamental *fundamental);
 
             /// @brief Return an mlir::Type from a class type of Dalvik
