@@ -166,6 +166,10 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
     return methodOp;
 }
 
+
+/// INFO: Algorithm from Braun et al.
+/// If we cant read the variable's ssa value from our own block (readVariable)
+///   then we recursively read our own block's predecessors.
 mlir::Value Lifter::readVariableRecursive(analysis::dex::DVMBasicBlock *BB,
                                           analysis::dex::BasicBlocks *BBs,
                                           std::uint32_t Reg) {
@@ -195,7 +199,8 @@ mlir::Value Lifter::readVariableRecursive(analysis::dex::DVMBasicBlock *BB,
 
     return new_value;
 }
-
+/// INFO: First level in the lifting process, we create a MethodOp (with get_method()) as well as
+///   map out all of DVMBasicBlock to their respective Block.
 void Lifter::gen_method(MethodAnalysis *method) {
     /// create the method
     auto function = get_method(method);
@@ -230,16 +235,16 @@ void Lifter::gen_method(MethodAnalysis *method) {
         gen_block(bb);
     }
 
-    for (auto it = bb_nodes.begin(); it != bb_nodes.end(); it++) {
-        // TODO: Need Edu for code review
-        auto bb = *it;
-        // if (it == bb_nodes.begin() || it == std::prev(bb_nodes.end()))
-        //     continue;
-
+    for (auto bb: bb_nodes)
         gen_terminators(bb);
-    }
 }
 
+/// INFO: Generate an mlir basic block full with the transform instruction
+/// Setting current_basic_block to bb allows the builder in gen_instruction to insert the
+///   transformed instruction to the correct basic block.
+/// Setting CurrentDef[bb].Filled to 1 since we've filled the block (except for its terminator)
+///
+/// INFO: Filling the block (CurrentDef[bb].Filled) is a necessary condition for readVariableRecursive on a block
 void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
     /// update current basic block
     // this->log(fmt::format("Gen_Block of {}", bb->toString()));
@@ -267,6 +272,10 @@ void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
     CurrentDef[bb].Filled = 1;
 }
 
+/// INFO: Function to add terminator to a block,
+/// If the last instruction is naturally a terminator, we generate it like normal
+/// Otherwise, artifically create a FallThrough Op to differentiate itself from a Cond.Br
+/// *** MLIR requires each block to end with a terminator
 void Lifter::gen_terminators(DVMBasicBlock *bb) {
     current_basic_block = bb;
 
@@ -300,6 +309,8 @@ void Lifter::gen_terminators(DVMBasicBlock *bb) {
     }
 }
 
+/// INFO: Entry point to calling the lifter
+///   It sets the module name to the method name for lowering purposes later, then calls gen_method
 mlir::OwningOpRef<mlir::ModuleOp> Lifter::mlirGen(MethodAnalysis *methodAnalysis) {
     /// create a Module
     Module = mlir::ModuleOp::create(builder.getUnknownLoc());
@@ -317,7 +328,7 @@ mlir::OwningOpRef<mlir::ModuleOp> Lifter::mlirGen(MethodAnalysis *methodAnalysis
     return Module;
 }
 
-
+/// INFO: Entry point to each instruction transform from DEI to Mjolnir
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction *instr) {
     using namespace shuriken::disassembler::dex;
     using shuriken::disassembler::dex::Instruction;
