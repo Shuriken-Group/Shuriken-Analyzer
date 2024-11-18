@@ -17,7 +17,7 @@
 #include <mlir/Interfaces/FunctionInterfaces.h>
 #include <mlir/Interfaces/SideEffectInterfaces.h>
 
-
+#include "mjolnir/MjolnIREnums.h"
 #define GET_OP_CLASSES
 #include "mjolnir/MjolnIROps.h.inc"
 
