@@ -168,7 +168,7 @@ def GetArrayOp: MjolnIR_Op<"getarray",
 
     let arguments = (ins
         AnyType :$dvm_array, // class of Array
-        UI32Attr: $array_index, // reference to Array in Dalvik code
+        AnyType: $array_index, // reference to Array in Dalvik code
         WidthEnum : $width
     );
 

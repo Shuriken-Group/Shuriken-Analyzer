@@ -1,6 +1,8 @@
+#include "mjolnir/MjolnIREnums.h"
 #include "transform/lifter.h"
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/IR/OpDefinition.h>
+#include <optional>
 
 using namespace shuriken::MjolnIR;
 
@@ -14,6 +16,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
     auto src2 = instr->get_second_source();
 
     mlir::Type dest_type = nullptr;
+    std::optional<WidthEnum> width = std::nullopt;
 
     switch (op_code) {
         /// Different Add Operations
@@ -368,19 +371,67 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction23x *instr)
             // 50: aput-char
             // 51: aput-short
         case DexOpcodes::opcodes::OP_AGET:
+            if (!width) width = WidthEnum::DEFAULT;
+            if (!dest_type) dest_type = intType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_WIDE:
+            if (!width) width = WidthEnum::WIDE;
+            if (!dest_type) dest_type = longType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_OBJECT:
+            if (!width) width = WidthEnum::OBJECT;
+            if (!dest_type) dest_type = ::mlir::shuriken::MjolnIR::DVMObjectType::get(&context, "aget-object");
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_BOOLEAN:
+            if (!width) width = WidthEnum::BOOLEAN;
+            if (!dest_type) dest_type = boolType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_BYTE:
+            if (!width) width = WidthEnum::BYTE;
+            if (!dest_type) dest_type = byteType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_CHAR:
+            if (!width) width = WidthEnum::CHAR;
+            if (!dest_type) dest_type = charType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_AGET_SHORT:
+            if (!width) width = WidthEnum::SHORT;
+            if (!dest_type) dest_type = shortType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT:
+            if (!width) width = WidthEnum::DEFAULT;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT_WIDE:
+            if (!width) width = WidthEnum::WIDE;
+            if (!dest_type) dest_type = longType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT_OBJECT:
+            if (!width) width = WidthEnum::OBJECT;
+            if (!dest_type) dest_type = ::mlir::shuriken::MjolnIR::DVMObjectType::get(&context, "aget-object");
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT_BYTE:
+            if (!width) width = WidthEnum::BYTE;
+            if (!dest_type) dest_type = byteType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT_CHAR:
+            if (!width) width = WidthEnum::CHAR;
+            if (!dest_type) dest_type = charType;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_APUT_SHORT:
+            if (!width) width = WidthEnum::SHORT;
+            if (!dest_type) dest_type = shortType;
+            {
 
+                auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
+                auto src2_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src2);
+                auto generated_value = builder.create<mlir::shuriken::MjolnIR::GetArrayOp>(
+                        location,
+                        dest_type,
+                        src1_value,
+                        src2_value, *width);
+                writeVariable(current_basic_block, dest, generated_value);
+            }
+            break;
         default:
             throw exceptions::LifterException("MjolnIRLifter::gen_instruction: Opcode from Instruction23x not implemented");
             break;
