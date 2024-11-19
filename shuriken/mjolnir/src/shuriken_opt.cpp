@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdio>
-#include <memory>
 
 #include "fmt/color.h"
 #include "fmt/core.h"
@@ -12,7 +11,6 @@
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
 #include <string>
-#include <variant>
 #include <vector>
 void shuriken_opt_log(const std::string &msg);
 bool LOGGING = false;
@@ -44,30 +42,14 @@ int main(int argc, char **argv) {
     if (error)
         return -1;
 
+
+    /// INFO: Process a file.
     if (options.at("-f") != "" || options.at("--file") != "") {
         std::string file_name = options.at("-f") != "" ? options.at("-f") : options.at("--file");
         shuriken_opt_log(fmt::format("The file name is {}\n", file_name));
-        auto parsed_dex = shuriken::parser::parse_dex(file_name);
-        assert(parsed_dex);
-        auto disassembler = std::make_unique<shuriken::disassembler::dex::DexDisassembler>(parsed_dex.get());
-        assert(disassembler);
-        disassembler->disassembly_dex();
+        shuriken::MjolnIR::Lifter lifter(file_name, false, true);
 
-        // INFO: xrefs option disabled
-        auto analysis = std::make_unique<shuriken::analysis::dex::Analysis>(parsed_dex.get(), disassembler.get(), false);
-        auto mm = analysis->get_methods();
-        shuriken_opt_log(fmt::format("Printing method names\n"));
-        for (auto &[method_name, method_analysis]: mm) {
-            shuriken_opt_log(fmt::format("Method name: {}\n", method_name));
-            std::string canon_method_name = method_name;
-            std::replace(canon_method_name.begin(), canon_method_name.end(), '/', '.');
-            assert(canon_method_name.find('/') == std::string::npos);
-            method_analysis.get()
-                    .dump_dot_file(canon_method_name);
-        }
-        for (auto &[method_name, method_analysis]: mm) {
-            lift_ir(method_analysis, LOGGING);
-        }
+        for (auto &module: lifter.mlir_gen_result) { module->dump(); }
     }
     return 0;
 }

@@ -24,6 +24,7 @@ add_library(MjolnIRTransformLib lifter.cpp
   lower.cpp)
 
 target_link_libraries(MjolnIRTransformLib LLVMSupport
+    MjolnIRLib
     MLIRArithDialect
     MLIRControlFlowDialect
     MLIRControlFlowInterfaces

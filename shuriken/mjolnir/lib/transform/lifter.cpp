@@ -1,6 +1,7 @@
 
 #include "transform/lifter.h"
 #include "mjolnir/MjolnIRDialect.h"
+#include "mjolnir/MjolnIROps.h"
 #include "mjolnir/MjolnIRTypes.h"
 #include "shuriken/analysis/Dex/dex_analysis.h"
 #include "shuriken/common/Dex/dvm_types.h"
@@ -25,6 +26,7 @@
 #include <mlir/IR/MLIRContext.h>
 
 #include <iterator>
+#include <mlir/IR/OwningOpRef.h>
 #include <utility>
 
 
@@ -42,7 +44,23 @@ using shuriken::parser::dex::DVMType;
 using shuriken::parser::dex::FUNDAMENTAL;
 using shuriken::parser::dex::fundamental_e;
 using shuriken::parser::dex::ProtoID;
+Lifter::Lifter(const std::string &file_name, bool gen_exception, bool LOGGING)
+    : context(mlir::MLIRContext()), builder(&context), gen_exception(gen_exception), LOGGING(LOGGING) {
+    parser = shuriken::parser::parse_dex(file_name);
+    assert(parser);
+    disassembler = std::make_unique<shuriken::disassembler::dex::DexDisassembler>(parser.get());
+    assert(disassembler);
+    disassembler->disassembly_dex();
+
+    // INFO: xrefs option disabled
+    analysis = std::make_unique<shuriken::analysis::dex::Analysis>(parser.get(), disassembler.get(), false);
+    auto mm = analysis->get_methods();
+    init();
+    mlir_gen_result = mlirGen();
+}
 void Lifter::init() {
+    registry.insert<::mlir::shuriken::MjolnIR::MjolnIRDialect>();
+    context.loadAllAvailableDialects();
     context.getOrLoadDialect<::mlir::shuriken::MjolnIR::MjolnIRDialect>();
     context.getOrLoadDialect<::mlir::cf::ControlFlowDialect>();
     context.getOrLoadDialect<::mlir::arith::ArithDialect>();
@@ -311,21 +329,26 @@ void Lifter::gen_terminators(DVMBasicBlock *bb) {
 
 /// INFO: Entry point to calling the lifter
 ///   It sets the module name to the method name for lowering purposes later, then calls gen_method
-mlir::OwningOpRef<mlir::ModuleOp> Lifter::mlirGen(MethodAnalysis *methodAnalysis) {
+std::vector<mlir::OwningOpRef<mlir::ModuleOp>> Lifter::mlirGen() {
+    auto mm = analysis->get_methods();
     /// create a Module
-    Module = mlir::ModuleOp::create(builder.getUnknownLoc());
+    ///
+    std::vector<mlir::OwningOpRef<mlir::ModuleOp>> result;
+    for (auto &[method_name, method_analysis]: mm) {
+        Module = mlir::ModuleOp::create(builder.getUnknownLoc());
 
-    /// Set the insertion point into the region of the Module
-    builder.setInsertionPointToEnd(Module.getBody());
+        /// Set the insertion point into the region of the Module
+        builder.setInsertionPointToEnd(Module.getBody());
 
-    if (module_name.empty())
-        module_name = methodAnalysis->get_class_name();
+        module_name = method_analysis.get().get_class_name();
 
-    Module.setName(module_name);
+        Module.setName(module_name);
 
-    gen_method(methodAnalysis);
+        gen_method(&method_analysis.get());
+        result.push_back(Module);
+    }
 
-    return Module;
+    return result;
 }
 
 /// INFO: Entry point to each instruction transform from DEI to Mjolnir

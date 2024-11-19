@@ -30,22 +30,12 @@ add_subdirectory(lib)
 
 add_executable(shuriken-opt src/shuriken_opt.cpp lib/shuriken_opt_lib.cpp)
 target_link_libraries(shuriken-opt
-  PUBLIC
-  fmt::fmt
-  shuriken
- LLVMLinker	 ${llvm_libs} LLVMSupport
-    MLIRArithDialect
-    MLIRControlFlowDialect
-    MLIRControlFlowInterfaces
-    MLIRSideEffectInterfaces
-    MLIRAnalysis
-    MLIRFunctionInterfaces
-    MLIRParser
-    MLIRTransforms
+    PUBLIC
+    fmt::fmt
+    shuriken
     MjolnIRLib
     MjolnIRTransformLib
-  )
-  add_dependencies(shuriken-opt ShurikenTblGen)
+)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_BINARY_DIR}/include/)
 target_compile_options(shuriken-opt PRIVATE -fexceptions)

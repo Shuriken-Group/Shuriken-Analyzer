@@ -19,6 +19,8 @@
 #include "shuriken/parser/Dex/dex_methods.h"
 #include "shuriken/parser/Dex/dex_protos.h"
 #include "shuriken/parser/Dex/dex_types.h"
+#include <mlir/IR/OwningOpRef.h>
+#include <shuriken/parser/shuriken_parsers.h>
 
 
 #include <mlir/Dialect/Arith/IR/Arith.h>
@@ -171,7 +173,7 @@ namespace shuriken {
                                               std::uint32_t Reg);
 
             /// @brief Reference to an MLIR Context
-            mlir::MLIRContext &context;
+            mlir::MLIRContext context;
 
             /// @brief Module to return on lifting process
             mlir::ModuleOp Module;
@@ -327,21 +329,27 @@ namespace shuriken {
                     fmt::print(stderr, "{}", msg);
             }
 
+            mlir::DialectRegistry registry;
+
+
+            std::unique_ptr<shuriken::parser::dex::Parser>
+                    parser;
+            std::unique_ptr<shuriken::disassembler::dex::DexDisassembler> disassembler;
+            std::unique_ptr<shuriken::analysis::dex::Analysis> analysis;
+
+
+            /// @brief Generate a vector of ModuleOp with the lifted instructions from methods from this->analysis
+            /// @return a vector of ModuleOp with the lifted instructions
+            std ::vector<mlir::OwningOpRef<mlir::ModuleOp>>
+            mlirGen();
+
         public:
             /// @brief Constructor of Lifter
             /// @param context context from MjolnIR
             /// @param gen_exception generate a exception or nop instruction
-            Lifter(mlir::MLIRContext &context, bool gen_exception, bool LOGGING)
-                : context(context), builder(&context), gen_exception(gen_exception), LOGGING(LOGGING) {
-                init();
-            }
+            Lifter(const std::string &file_name, bool gen_exception, bool LOGGING);
 
-            /// @brief Generate a ModuleOp with the lifted instructions from a
-            /// MethodAnalysis
-            /// @param methodAnalysis method analysis to lift to MjolnIR
-            /// @return reference to ModuleOp with the lifted instructions
-            mlir::OwningOpRef<mlir::ModuleOp>
-            mlirGen(shuriken::analysis::dex::MethodAnalysis *methodAnalysis);
+            std::vector<mlir::OwningOpRef<mlir::ModuleOp>> mlir_gen_result;
         };
     }// namespace MjolnIR
 }// namespace shuriken
