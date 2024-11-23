@@ -15,6 +15,7 @@
 
 /// MLIR includes
 #include <cassert>
+#include <llvm/ADT/StringExtras.h>
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
@@ -27,6 +28,7 @@
 
 #include <iterator>
 #include <mlir/IR/OwningOpRef.h>
+#include <string>
 #include <utility>
 
 
@@ -71,7 +73,7 @@ void Lifter::init() {
     boolType = ::mlir::IntegerType::get(&context, 1, mlir::IntegerType::Signless);
     charType = ::mlir::IntegerType::get(&context, 8, mlir::IntegerType::Signed);
     shortType = ::mlir::IntegerType::get(&context, 16, mlir::IntegerType::Signed);
-    intType = ::mlir::IntegerType::get(&context, 32, mlir::IntegerType::Signed);
+    intType = builder.getI32Type();// INFO: AddIOp can only take I32, not SI or UI32
     longType = ::mlir::IntegerType::get(&context, 64, mlir::IntegerType::Signed);
     floatType = ::mlir::Float32Type::get(&context);
     doubleType = ::mlir::Float64Type::get(&context);
@@ -334,6 +336,7 @@ std::vector<mlir::OwningOpRef<mlir::ModuleOp>> Lifter::mlirGen() {
     /// create a Module
     ///
     std::vector<mlir::OwningOpRef<mlir::ModuleOp>> result;
+    int i = 0;
     for (auto &[method_name, method_analysis]: mm) {
         Module = mlir::ModuleOp::create(builder.getUnknownLoc());
 
@@ -345,6 +348,7 @@ std::vector<mlir::OwningOpRef<mlir::ModuleOp>> Lifter::mlirGen() {
         Module.setName(module_name);
 
         gen_method(&method_analysis.get());
+        method_analysis.get().dump_dot_file(std::string(method_analysis.get().get_class_name()) + llvm::itostr(i++));
         result.push_back(Module);
     }
 

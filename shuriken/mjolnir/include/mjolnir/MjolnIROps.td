@@ -9,8 +9,8 @@
 #ifndef DALVIK_MJOLNIROPS_TD
 #define DALVIK_MJOLNIROPS_TD
 
-include "MjolnIRTypes.td"
-include "MjolnIRDialect.td"
+include "mjolnir/MjolnIRTypes.td"
+include "mjolnir/MjolnIRDialect.td"
 
 include "mlir/IR/OpBase.td"
 include "mlir/Bytecode/BytecodeOpInterface.td"
@@ -20,6 +20,7 @@ include "mlir/Interfaces/CallInterfaces.td"
 include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/Interfaces/ControlFlowInterfaces.td"
+include "mlir/IR/OpAsmInterface.td"
 
 // TODO: Should we restrict AnyType to at least MjolnirType
 
@@ -44,11 +45,11 @@ class MjolnIR_UnaryOpBase<string mnemonic, list<Trait> traits = []> :
     MjolnIR_Op<mnemonic, !listconcat(traits, [Pure])>
 {
     let arguments = (ins
-        DVM_BasicTypes:$src
+        AnyType:$src
     );
 
     let results = (outs
-        DVM_BasicTypes:$dst
+        AnyType:$dst
     );
 }
 
@@ -91,7 +92,7 @@ def MjolnIR_Not : MjolnIR_UnaryOpBase<"not", [AllTypesMatch<["src", "dst"]>]>;
 //===----------------------------------------------------------------------===//
 // Load values operations
 //===----------------------------------------------------------------------===//
-def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure, ConstantLike]>
+def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure]>
 {
     let summary = "Load a constant value";
 
@@ -123,7 +124,7 @@ def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure, ConstantLike]>
 //===----------------------------------------------------------------------===//
 // Load string operations
 //===----------------------------------------------------------------------===//
-def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure, ConstantLike]>
+def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure]>
 {
     let summary = "Load a String into a String object";
 
@@ -179,8 +180,9 @@ def GetArrayOp: MjolnIR_Op<"getarray",
 //===----------------------------------------------------------------------===//
 // LoadFieldOp
 //===----------------------------------------------------------------------===//
+
 def LoadFieldOp : MjolnIR_Op<"loadfield",
-    [ConstantLike, Pure]>
+    [Pure]>
 {
     let summary = "Load a field value";
 
@@ -205,7 +207,7 @@ def LoadFieldOp : MjolnIR_Op<"loadfield",
     );
 
     let results = (outs
-        DVM_BasicTypes               // any of the DVM Basic Types
+        AnyType               // any of the DVM Basic Types
     );
 
     let assemblyFormat = "attr-dict $fieldClass`->`$fieldName `(` $fieldRef `)` `:` type(results)";
@@ -230,7 +232,7 @@ def StoreFieldOp : MjolnIR_Op<"storefield", []>
     }];
 
     let arguments = (ins
-        DVM_BasicTypes:$value,   // value to store in the Field
+        AnyType:$value,   // value to store in the Field
         FlatSymbolRefAttr:$fieldName, // name of Field
         FlatSymbolRefAttr:$fieldClass, // class of Field
         UI32Attr: $fieldRef // reference to Field in Dalvik code
@@ -346,7 +348,8 @@ def InvokeOp : MjolnIR_Op<"invoke", [
 //===----------------------------------------------------------------------===//
 // ReturnOp
 //===----------------------------------------------------------------------===//
-def ReturnOp : MjolnIR_Op<"return", [Pure, Terminator]> {
+def MjolnIR_ReturnOp : MjolnIR_Op<"return", [Pure, HasParent<"MethodOp">,
+                                 Terminator]> {
   let summary = "return operation";
   let description = [{
     The "return" operation represents a return operation in Dalvik bytecode. 
