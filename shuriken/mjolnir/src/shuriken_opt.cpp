@@ -2,11 +2,14 @@
 // Dex & APK stuff
 #include "passes/mjolnirtoopgraph.h"
 #include "transform/lifter.h"
+#include "transform/opt.h"
 #include <algorithm>
 #include <cstdio>
 
 #include "fmt/color.h"
 #include "fmt/core.h"
+#include <llvm/Support/raw_ostream.h>
+#include <mlir/Support/LLVM.h>
 #include <shuriken/common/Dex/dvm_types.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
@@ -51,8 +54,8 @@ int main(int argc, char **argv) {
     if (options.at("-f") != "" || options.at("--file") != "") {
         std::string file_name = options.at("-f") != "" ? options.at("-f") : options.at("--file");
         shuriken_opt_log(fmt::format("The file name is {}\n", file_name));
+        std::cerr << "*****BEGIN LIFTING*****\n";
         shuriken::MjolnIR::Lifter lifter(file_name, false, true);
-
         for (auto &module: lifter.mlir_gen_result) { module->dump(); }
 
         if (show_graph) {
@@ -63,8 +66,23 @@ int main(int argc, char **argv) {
                     return -1;
             }
         }
+        std::cerr << "*****BEGIN Optimizer*****\n";
+        shuriken::MjolnIR::Opt opt;
+        for (auto &module: lifter.mlir_gen_result) {
+            auto result = opt.run(module.get());
+            if (mlir::failed(result)) {
+                llvm::errs() << "Failed to optimize" << module.get().getName() << "\n";
+            } else {
+                module->dump();
+            }
+            break;
+        }
+        return 0;
     }
-    return 0;
+
+    if (need_help) return 0;
+    else
+        return -1;
 }
 
 void show_help(std::string &prog_name) {
