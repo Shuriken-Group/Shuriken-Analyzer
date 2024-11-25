@@ -1,6 +1,7 @@
 #include "shuriken_opt.h"
 // Dex & APK stuff
 #include "transform/lifter.h"
+#include "transform/lower.h"
 #include <algorithm>
 #include <cassert>
 #include <cstdio>

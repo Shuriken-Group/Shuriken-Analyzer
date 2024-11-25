@@ -23,7 +23,7 @@
 
 namespace shuriken {
     namespace MjolnIR {
-        class Lower {};
+        class LowerAdd : public mlir::OpRewritePattern<mlir::arith::AddIOp> {};
     }// namespace MjolnIR
 }// namespace shuriken
 #endif// LIFTER_MJOLNIR_LIFTER
