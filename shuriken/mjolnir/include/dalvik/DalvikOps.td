@@ -2,6 +2,7 @@
 #define DALVIK_DALVIKOPS_TD
 include "DalvikDialect.td"
 
+include "mjolnir/MjolnIRDialect.td"
 include "mlir/IR/OpBase.td"
 include "mlir/Bytecode/BytecodeOpInterface.td"
 include "mlir/IR/AttrTypeBase.td"
@@ -86,5 +87,4 @@ def Dalvik_Instr_3rms : Dalvik_Op<"Instr_3rms", [Pure]> {}
 def Dalvik_Instr_3rmi : Dalvik_Op<"Instr_3rmi", [Pure]> {}
 def Dalvik_Instr_45cc : Dalvik_Op<"Instr_45cc", [Pure]> {}
 def Dalvik_Instr_4rcc : Dalvik_Op<"Instr_4rcc", [Pure]> {}
-def Dalvik_Instr_00x : Dalvik_Op<"Instr_00x", [Pure]> {}
 #endif

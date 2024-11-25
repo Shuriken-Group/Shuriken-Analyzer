@@ -10,6 +10,7 @@ add_mlir_dialect_library(DalvikMLIRLib
 
     DEPENDS
     DalvikTblgen
+    DalvikPatternTblgen   
 
     LINK_LIBS PUBLIC
     LLVMSupport

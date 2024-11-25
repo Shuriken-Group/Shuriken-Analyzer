@@ -9,7 +9,7 @@
 #define DALVIK_MJOLNIRTYPES_TD
 
 include "mlir/IR/AttrTypeBase.td"
-include "MjolnIRDialect.td"
+include "mjolnir/MjolnIRDialect.td"
 
 class MjolnIRType<string typeName, string typeMnemonic, list<Trait> traits = []>
   : TypeDef<MjolnIR_Dialect, typeName, traits>

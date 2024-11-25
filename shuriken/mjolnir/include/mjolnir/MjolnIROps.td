@@ -9,8 +9,8 @@
 #ifndef DALVIK_MJOLNIROPS_TD
 #define DALVIK_MJOLNIROPS_TD
 
-include "MjolnIRTypes.td"
-include "MjolnIRDialect.td"
+include "mjolnir/MjolnIRTypes.td"
+include "mjolnir/MjolnIRDialect.td"
 
 include "mlir/IR/OpBase.td"
 include "mlir/Bytecode/BytecodeOpInterface.td"
