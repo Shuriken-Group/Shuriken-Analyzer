@@ -7,8 +7,10 @@
 
 #include "mjolnir/MjolnIRTypes.h"
 
+#include "dalvik/DalvikPatterns.h.inc"
+#include "mlir/IR/PatternMatch.h"
+#include "mlir/Transforms/GreedyPatternRewriteDriver.h"
 #include "shuriken/analysis/Dex/analysis.h"
-
 /// MLIR includes
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
@@ -21,9 +23,7 @@
 
 namespace shuriken {
     namespace MjolnIR {
-        class Lower {
-        };
-
+        class Lower {};
     }// namespace MjolnIR
 }// namespace shuriken
 #endif// LIFTER_MJOLNIR_LIFTER

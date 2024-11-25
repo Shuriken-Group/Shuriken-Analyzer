@@ -21,6 +21,6 @@ add_public_tablegen_target(DalvikTblgen)
 
 set(LLVM_TARGET_DEFINITIONS DalvikPatterns.td)
 
-mlir_tablegen(DalvikPatterns.cpp.inc -gen-rewriters -I=${PROJECT_SOURCE_DIR}/include)
+mlir_tablegen(DalvikPatterns.h.inc -gen-rewriters -I=${PROJECT_SOURCE_DIR}/include)
 
 add_public_tablegen_target(DalvikPatternTblgen )
