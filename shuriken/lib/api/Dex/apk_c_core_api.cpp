@@ -45,6 +45,14 @@ namespace {
         std::unordered_map<std::string, hdvmstringanalysis_t *> string_analysis;
     } apk_opaque_struct_t;
 
+    // Methods from parser
+    hdvmmethod_t *get_method_by_name_from_apk(hApkContext context, const char *method_name) {
+        auto *opaque_struct = reinterpret_cast<apk_opaque_struct_t *>(context);
+        std::string_view m_name{method_name};
+        if (!opaque_struct || opaque_struct->tag != APK_TAG || !opaque_struct->methods.contains(m_name)) return nullptr;
+        return opaque_struct->methods.at(m_name);
+    }
+
     // Methods for the disassembly
 
     /// @brief Add the data to an instruction from the core API, from an instruction from shuriken library
@@ -86,7 +94,7 @@ namespace {
             dvmdisassembled_method_t *method_core_api) {
         size_t i = 0;
         method_core_api->method_id =
-                get_method_by_name(opaque_struct,
+                get_method_by_name_from_apk(opaque_struct,
                                    disassembled_method->get_method_id()->dalvik_name_format().data());
         method_core_api->n_of_registers = disassembled_method->get_number_of_registers();
         method_core_api->n_of_instructions = disassembled_method->get_number_of_instructions();
