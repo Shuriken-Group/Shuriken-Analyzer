@@ -8,6 +8,8 @@
 
 #include "fmt/color.h"
 #include "fmt/core.h"
+#include <llvm/Support/raw_ostream.h>
+#include <mlir/Support/LLVM.h>
 #include <shuriken/common/Dex/dvm_types.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
@@ -48,18 +50,27 @@ int main(int argc, char **argv) {
     if (options.at("-f") != "" || options.at("--file") != "") {
         std::string file_name = options.at("-f") != "" ? options.at("-f") : options.at("--file");
         shuriken_opt_log(fmt::format("The file name is {}\n", file_name));
+        std::cerr << "*****BEGIN LIFTING*****\n";
         shuriken::MjolnIR::Lifter lifter(file_name, false, true);
-
         for (auto &module: lifter.mlir_gen_result) { module->dump(); }
+
+        std::cerr << "*****BEGIN LOWERING*****\n";
+        shuriken::MjolnIR::Lower lower;
+        for (auto &module: lifter.mlir_gen_result) {
+            auto result = lower.run(module.get());
+            if (mlir::failed(result)) {
+                llvm::errs() << "Failed to lower " << module.get().getName() << "\n";
+            }
+        }
+        return 0;
     }
-    return 0;
 }
 
 void show_help(std::string &prog_name) {
     fmt::print(fg(fmt::color::green), "USAGE: {} [-h | --help] [-d | --diagnostics] [-f|--file file_name] \n", prog_name);
     fmt::print(fg(fmt::color::green), "    -h | --help: Shows the help menu, like what you're seeing right now\n");
     fmt::print(fg(fmt::color::green), "    -d | --diagnostics: Enables diagnostics for shuriken-opt\n");
-    fmt::print(fg(fmt::color::green), "    -f | --file: Analyzes a file with file name\n");
+    fmt::print(fg(fmt::color::green), "    -f | --file: Analyzes a file with file name (Lift and Lower)\n");
 }
 /// Simple log for shuriken opt, msgs need to provide newline.
 void shuriken_opt_log(const std::string &msg) {
