@@ -9,7 +9,7 @@ var classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis =
     [ "add_xrefread", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#acaab6115b6a1643e1df63a576eed1c7d", null ],
     [ "add_xrefto", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ad64c64d0d9c02be80855e0283e3ebd9b", null ],
     [ "add_xrefwrite", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#a6c764ef46ad756b47907f5cae79effd0", null ],
-    [ "dump_dot_file", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#af2edf532e9dfbe9f2c9b8248852e44c6", null ],
+    [ "dump_dot_file", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ad5bf55753cb45f178d8b03135695820e", null ],
     [ "external", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#a94d4d432ab7d546c17700dcb9aa7e732", null ],
     [ "get_access_flags", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ad79ad05ae800687cf7ec92d3eddfa8f3", null ],
     [ "get_basic_blocks", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#a5a678b087f3d9636ece4da7ab8770595", null ],

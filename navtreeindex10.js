@@ -1,5 +1,11 @@
 var NAVTREEINDEX10 =
 {
+"shuriken__core__data_8h.html#a217f703e5a5c4aaf9e37c4365a0206ce":[2,0,0,0,0,1,0,1,32],
+"shuriken__core__data_8h.html#a2798a862b13c21181a8804a3c3f811e2":[2,0,0,0,0,1,0,1,22],
+"shuriken__core__data_8h.html#a2e7b337a62e39243e884328a0588bc4b":[2,0,0,0,0,1,0,1,25],
+"shuriken__core__data_8h.html#a2eff70ed8a0bbeb7e1c6404fb1ba75a4":[2,0,0,0,0,1,0,1,28],
+"shuriken__core__data_8h.html#a368195fdcdfa12be96aaaabb2c981f42":[2,0,0,0,0,1,0,1,35],
+"shuriken__core__data_8h.html#a377b2d29da853f3b6f96b4a1c164dce0":[2,0,0,0,0,1,0,1,39],
 "shuriken__core__data_8h.html#a6546ddc792f4fc9749220e5890f84cdc":[2,0,0,0,0,1,0,1,34],
 "shuriken__core__data_8h.html#a68f230416ae6406d36231f5b039fae8a":[2,0,0,0,0,1,0,1,45],
 "shuriken__core__data_8h.html#a68f230416ae6406d36231f5b039fae8aa11f58475fa1ddbb0690d5c4b04456e93":[2,0,0,0,0,1,0,1,45,0],
@@ -110,8 +116,8 @@ var NAVTREEINDEX10 =
 "shuriken__parsers_8h.html#a8e5422e127de611ff948e12dbef7d94b":[2,0,0,0,0,5,2,0],
 "shuriken__parsers_8h.html#aa16d3f7d0991ba47c613685afa67cfe5":[2,0,0,0,0,5,2,2],
 "shuriken__parsers_8h_source.html":[2,0,0,0,0,5,2],
-"shurikenstream_8h.html":[2,0,0,0,0,2,4],
-"shurikenstream_8h_source.html":[2,0,0,0,0,2,4],
+"shurikenstream_8h.html":[2,0,0,0,0,2,5],
+"shurikenstream_8h_source.html":[2,0,0,0,0,2,5],
 "structbasic__blocks__t__.html":[1,0,2],
 "structbasic__blocks__t__.html#a0e0b7ed2d66d350b58278e40c1087b1b":[1,0,2,0],
 "structbasic__blocks__t__.html#aced4dfc33eb181f4008a729d749f0209":[1,0,2,1],
@@ -243,11 +249,5 @@ var NAVTREEINDEX10 =
 "structhdvmstringanalysis__t__.html":[1,0,20],
 "structhdvmstringanalysis__t__.html#a83c5c6eb0ce0ef17ae95a027f90919bf":[1,0,20,0],
 "structhdvmstringanalysis__t__.html#a87684f0db7363f78cd4b5d4f559f258d":[1,0,20,2],
-"structhdvmstringanalysis__t__.html#ad5a1e54046c6b284b18a4580bf7b2b47":[1,0,20,1],
-"structshuriken_1_1deref__iterator__range.html":[0,0,1,5],
-"structshuriken_1_1deref__iterator__range.html":[1,0,1,5],
-"structshuriken_1_1deref__iterator__range.html#a1f881ae51a407f6739d4291e72c61446":[0,0,1,5,3],
-"structshuriken_1_1deref__iterator__range.html#a1f881ae51a407f6739d4291e72c61446":[1,0,1,5,3],
-"structshuriken_1_1deref__iterator__range.html#a4cfc8d5d7af306167cace87ad4a170cc":[0,0,1,5,1],
-"structshuriken_1_1deref__iterator__range.html#a4cfc8d5d7af306167cace87ad4a170cc":[1,0,1,5,1]
+"structhdvmstringanalysis__t__.html#ad5a1e54046c6b284b18a4580bf7b2b47":[1,0,20,1]
 };

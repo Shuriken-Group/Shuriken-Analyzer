@@ -229,6 +229,12 @@ Functions</h2></td></tr>
 <tr class="memitem:ae5291f9f42cfc7cfe7b019e48377ad7c" id="r_ae5291f9f42cfc7cfe7b019e48377ad7c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shuriken__core__data_8h.html#a377b2d29da853f3b6f96b4a1c164dce0">hdvmmethodanalysis_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae5291f9f42cfc7cfe7b019e48377ad7c">get_analyzed_method_from_apk</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, const char *method_full_name)</td></tr>
 <tr class="memdesc:ae5291f9f42cfc7cfe7b019e48377ad7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain one hdvmmethodanalysis_t given its name.  <br /></td></tr>
 <tr class="separator:ae5291f9f42cfc7cfe7b019e48377ad7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9febe77b04e26998a89bace4f541514d" id="r_a9febe77b04e26998a89bace4f541514d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9febe77b04e26998a89bace4f541514d">get_number_of_methodanalysis_objects</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context)</td></tr>
+<tr class="memdesc:a9febe77b04e26998a89bace4f541514d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain the number of methodanalysis objects in the APK.  <br /></td></tr>
+<tr class="separator:a9febe77b04e26998a89bace4f541514d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7047f881da1557165d269f192316bd" id="r_a4e7047f881da1557165d269f192316bd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shuriken__core__data_8h.html#a377b2d29da853f3b6f96b4a1c164dce0">hdvmmethodanalysis_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4e7047f881da1557165d269f192316bd">get_analyzed_method_by_idx</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, size_t idx)</td></tr>
+<tr class="memdesc:a4e7047f881da1557165d269f192316bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain a methodanalysis object from the APK by idx.  <br /></td></tr>
+<tr class="separator:a4e7047f881da1557165d269f192316bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a812b2e6481ca4377506a347cb0e7dedf" id="r_a812b2e6481ca4377506a347cb0e7dedf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shuriken__core__data_8h.html#a6f81b03ebd144f47373a5f8f1bab0ccd">hdvmstringanalysis_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a812b2e6481ca4377506a347cb0e7dedf">get_analyzed_string_from_apk</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, const char *string)</td></tr>
 <tr class="memdesc:a812b2e6481ca4377506a347cb0e7dedf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obtain a hdvmstringanalysis_t given a string.  <br /></td></tr>
 <tr class="separator:a812b2e6481ca4377506a347cb0e7dedf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -594,6 +600,37 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a4e7047f881da1557165d269f192316bd" name="a4e7047f881da1557165d269f192316bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e7047f881da1557165d269f192316bd">&#9670;&#160;</a></span>get_analyzed_method_by_idx()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shuriken__core__data_8h.html#a377b2d29da853f3b6f96b4a1c164dce0">hdvmmethodanalysis_t</a> * get_analyzed_method_by_idx </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>idx</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Obtain a methodanalysis object from the APK by idx. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>APK context from the CORE API </td></tr>
+    <tr><td class="paramname">idx</td><td>index of the MethodAnalysis to retrieve </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>pointer to hdvmmethodanalysis_t </dd></dl>
+
+</div>
+</div>
 <a id="ae5291f9f42cfc7cfe7b019e48377ad7c" name="ae5291f9f42cfc7cfe7b019e48377ad7c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae5291f9f42cfc7cfe7b019e48377ad7c">&#9670;&#160;</a></span>get_analyzed_method_from_apk()</h2>
 
@@ -950,6 +987,32 @@ Functions</h2></td></tr>
 
 <p>APKs contain a number of DEX files with the classes, with this you retrieve the number of those dex files. </p>
 <dl class="section return"><dt>Returns</dt><dd>number of dex files in the APK </dd></dl>
+
+</div>
+</div>
+<a id="a9febe77b04e26998a89bace4f541514d" name="a9febe77b04e26998a89bace4f541514d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9febe77b04e26998a89bace4f541514d">&#9670;&#160;</a></span>get_number_of_methodanalysis_objects()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t get_number_of_methodanalysis_objects </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Obtain the number of methodanalysis objects in the APK. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>APK context from the CORE API </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>number of MethodAnalysis in the APK </dd></dl>
 
 </div>
 </div>

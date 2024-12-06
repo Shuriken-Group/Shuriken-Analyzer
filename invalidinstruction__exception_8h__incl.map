@@ -1,5 +1,7 @@
 <map id="shuriken/include/shuriken/exceptions/invalidinstruction_exception.h" name="shuriken/include/shuriken/exceptions/invalidinstruction_exception.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,194,61"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="64,109,135,135"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,61,102,93,97,93,97,61"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="25,109,86,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,62,71,96,66,94,83,60"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="109,109,180,135"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="116,60,134,94,129,96,111,62"/>
 </map>
