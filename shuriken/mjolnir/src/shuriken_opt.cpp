@@ -60,7 +60,10 @@ int main(int argc, char **argv) {
             auto result = lower.run(module.get());
             if (mlir::failed(result)) {
                 llvm::errs() << "Failed to lower " << module.get().getName() << "\n";
+            } else {
+                module->dump();
             }
+            break;
         }
         return 0;
     }

@@ -19,7 +19,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction11x *instr)
         case DexOpcodes::opcodes::OP_RETURN_OBJECT: {
             auto reg_value = readVariable(current_basic_block, current_method->get_basic_blocks(), dest);
 
-            builder.create<::mlir::func::ReturnOp>(
+            builder.create<::mlir::shuriken::MjolnIR::ReturnOp>(
                     location,
                     reg_value);
         } break;

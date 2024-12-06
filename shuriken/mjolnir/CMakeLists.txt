@@ -36,6 +36,7 @@ target_link_libraries(shuriken-opt
     MjolnIRLib
     MjolnIRTransformLib
     DalvikMLIRLib
+    LLVMSupport
 )
 add_dependencies(shuriken-opt ShurikenTblGen DalvikTblgen)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)

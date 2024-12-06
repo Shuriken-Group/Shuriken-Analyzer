@@ -13,10 +13,10 @@
 #include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/IR/PatternMatch.h"
 /// MLIR includes
+#include "llvm/Support/Casting.h"
+#include "llvm/Support/LogicalResult.h"
+#include "llvm/Support/raw_ostream.h"
 #include <iostream>
-#include <llvm/Support/Casting.h>
-#include <llvm/Support/LogicalResult.h>
-#include <llvm/Support/raw_ostream.h>
 #include <mlir/Dialect/Arith/IR/Arith.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlow.h>
 #include <mlir/Dialect/ControlFlow/IR/ControlFlowOps.h>
@@ -31,6 +31,7 @@
 #include <mlir/Pass/PassManager.h>
 #include <mlir/Support/LLVM.h>
 #include <mlir/Transforms/GreedyPatternRewriteDriver.h>
+#include <mlir/Transforms/Passes.h>
 namespace shuriken {
     namespace MjolnIR {
         class LowerAdd : public mlir::OpRewritePattern<mlir::arith::AddIOp> {
@@ -44,22 +45,36 @@ namespace shuriken {
                     return llvm::success();
             }
         };
-        class LowerFallThrough : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::FallthroughOp> {
+        class LowerNop : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::Nop> {
             using LogicalResult = llvm::LogicalResult;
 
         public:
-            LowerFallThrough(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
+            LowerNop(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
 
-            LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::FallthroughOp op, mlir::PatternRewriter &rewriter) const override {
+            LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::Nop op, mlir::PatternRewriter &rewriter) const override {
+                llvm::errs() << "Matching and rewriting FallthroughOp\n";
+                llvm::errs() << "Successfully erased FallthroughOp\n";
                 rewriter.eraseOp(op);
                 return llvm::success();
             }
         };
+        // class LowerFallThrough : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::FallthroughOp> {
+        //     using LogicalResult = llvm::LogicalResult;
+        //
+        // public:
+        //     LowerFallThrough(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
+        //
+        //     LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::FallthroughOp op, mlir::PatternRewriter &rewriter) const override {
+        //         llvm::errs() << "Matching and rewriting FallthroughOp\n";
+        //         llvm::errs() << "Successfully erased FallthroughOp\n";
+        //         return llvm::success();
+        //     }
+        // };
 
         /// The Lower class applies all lowering patterns that is added to it when it enters/encounters a FuncOp
         class DalvikLower : public mlir::PassWrapper<DalvikLower, mlir::OperationPass<mlir::ModuleOp>> {
             void registerMjolnIRToDalvikLowering(mlir::MLIRContext &context, mlir::RewritePatternSet &s) {
-                s.add<LowerFallThrough>(&context);
+                s.add<LowerNop>(&context);
             }
 
         public:
@@ -72,21 +87,22 @@ namespace shuriken {
                 mlir::RewritePatternSet patterns(&context);
                 registerMjolnIRToDalvikLowering(context, patterns);
 
-                bool should_lower = false;
-                // First, let's log what operations we find
-                module.walk([&](mlir::Operation *op) {
-                    llvm::errs() << "Found operation: " << op->getName() << "\n";
-                    if (llvm::isa<mlir::shuriken::MjolnIR::FallthroughOp>(op)) {
-                        llvm::errs() << "Found a FallthroughOp to lower\n";
-                        should_lower = true;
-                    } else {
-                        llvm::errs() << "Not one of the supported lowering methods, skipping it \n";
-                        should_lower = false;
-                    }
-                });
-
-                if (!should_lower) return;
+                // bool should_lower = false;
+                // // First, let's log what operations we find
+                // module.walk([&](mlir::Operation *op) {
+                //     llvm::errs() << "Found operation: " << op->getName() << "\n";
+                //     if (llvm::isa<mlir::shuriken::MjolnIR::FallthroughOp>(op)) {
+                //         llvm::errs() << "Found a FallthroughOp to lower\n";
+                //         should_lower = true;
+                //     } else {
+                //         llvm::errs() << "Not one of the supported lowering methods, skipping it \n";
+                //         should_lower = false;
+                //     }
+                // });
+                //
+                // if (!should_lower) return;
                 // Apply the patterns to the entire module once
+                llvm::errs() << "Applying patterns\n";
                 if (mlir::failed(mlir::applyPatternsAndFoldGreedily(module, std::move(patterns)))) {
                     llvm::errs() << "Failed to apply patterns\n";
                     return;
@@ -109,6 +125,7 @@ namespace shuriken {
                 context.getOrLoadDialect<::mlir::arith::ArithDialect>();
                 context.getOrLoadDialect<::mlir::func::FuncDialect>();
                 pm.addPass(std::make_unique<DalvikLower>());
+                pm.addPass(mlir::createSCCPPass());
             }
 
             mlir::LogicalResult run(mlir::ModuleOp &&module) {

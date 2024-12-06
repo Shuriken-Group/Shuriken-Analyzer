@@ -20,6 +20,7 @@ include "mlir/Interfaces/CallInterfaces.td"
 include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 include "mlir/Interfaces/ControlFlowInterfaces.td"
+include "mlir/IR/OpAsmInterface.td"
 
 // TODO: Should we restrict AnyType to at least MjolnirType
 
@@ -44,11 +45,11 @@ class MjolnIR_UnaryOpBase<string mnemonic, list<Trait> traits = []> :
     MjolnIR_Op<mnemonic, !listconcat(traits, [Pure])>
 {
     let arguments = (ins
-        DVM_BasicType:$src
+        AnyType:$src
     );
 
     let results = (outs
-        DVM_BasicType:$dst
+        AnyType:$dst
     );
 }
 
@@ -91,7 +92,7 @@ def MjolnIR_Not : MjolnIR_UnaryOpBase<"not", [AllTypesMatch<["src", "dst"]>]>;
 //===----------------------------------------------------------------------===//
 // Load values operations
 //===----------------------------------------------------------------------===//
-def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure, ConstantLike]>
+def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure]>
 {
     let summary = "Load a constant value";
 
@@ -123,7 +124,7 @@ def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure, ConstantLike]>
 //===----------------------------------------------------------------------===//
 // Load string operations
 //===----------------------------------------------------------------------===//
-def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure, ConstantLike]>
+def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure]>
 {
     let summary = "Load a String into a String object";
 
@@ -179,8 +180,9 @@ def GetArrayOp: MjolnIR_Op<"getarray",
 //===----------------------------------------------------------------------===//
 // LoadFieldOp
 //===----------------------------------------------------------------------===//
+
 def LoadFieldOp : MjolnIR_Op<"loadfield",
-    [ConstantLike, Pure]>
+    [Pure]>
 {
     let summary = "Load a field value";
 
@@ -205,7 +207,7 @@ def LoadFieldOp : MjolnIR_Op<"loadfield",
     );
 
     let results = (outs
-        DVM_BasicType               // any of the DVM Basic Types
+        AnyType               // any of the DVM Basic Types
     );
 
     let assemblyFormat = "attr-dict $fieldClass`->`$fieldName `(` $fieldRef `)` `:` type(results)";
@@ -230,7 +232,7 @@ def StoreFieldOp : MjolnIR_Op<"storefield", []>
     }];
 
     let arguments = (ins
-        DVM_BasicType:$value,   // value to store in the Field
+        AnyType:$value,   // value to store in the Field
         FlatSymbolRefAttr:$fieldName, // name of Field
         FlatSymbolRefAttr:$fieldClass, // class of Field
         UI32Attr: $fieldRef // reference to Field in Dalvik code
@@ -387,6 +389,38 @@ def FallthroughOp : MjolnIR_Op<"fallthrough", [
   let assemblyFormat = [{
     $dest (`(` $destOperands^ `:` type($destOperands) `)`)? attr-dict
   }];
+}
+//===----------------------------------------------------------------------===//
+// Return operation
+// Copied from func dialect since we decided to use MethodOp <-> FuncOp
+//===----------------------------------------------------------------------===//
+def MjolnIR_ReturnOp : MjolnIR_Op<"return", [Pure, HasParent<"MethodOp">,
+                                 Terminator]> {
+  let summary = "Function return operation";
+  let description = [{
+    The `func.return` operation represents a return operation within a function.
+    The operation takes variable number of operands and produces no results.
+    The operand number and types must match the signature of the function
+    that contains the operation.
+
+    Example:
+
+    ```mlir
+    func.func @foo() : (i32, f8) {
+      ...
+      return %0, %1 : i32, f8
+    }
+    ```
+  }];
+
+  let arguments = (ins Variadic<AnyType>:$operands);
+
+  // Allow building a ReturnOp with no return operand.
+  let builders = [
+    OpBuilder<(ins), [{ build($_builder, $_state, std::nullopt); }]>
+  ];
+
+  let assemblyFormat = "attr-dict ($operands^ `:` type($operands))?";
 }
 
 //===----------------------------------------------------------------------===//
