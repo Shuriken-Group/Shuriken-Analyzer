@@ -1,3 +1,4 @@
+from shuriken.dex import *
 import ctypes
 import ctypes.util
 import os
@@ -45,6 +46,7 @@ _path_list.extend(common_paths)
 for _path in _path_list:
     if _path is None:
         continue
+    print(f"Trying to load library from: {_path}")
     _shuriken = _load_lib(_path)
     if _shuriken is not None:
         print(f"Library loaded from: {_path}")
@@ -53,7 +55,6 @@ else:
     raise ImportError("ERROR: fail to load the dynamic library")
 
 # import dex structures
-from shuriken.dex import *
 
 
 class Dex(object):
@@ -106,7 +107,8 @@ class Dex(object):
         :param id: id of the string to retrieve
         :return: string from the provided id
         """
-        _shuriken.get_string_by_id.argtypes = [ctypes.c_void_p, ctypes.c_size_t]
+        _shuriken.get_string_by_id.argtypes = [
+            ctypes.c_void_p, ctypes.c_size_t]
         _shuriken.get_string_by_id.restype = ctypes.c_char_p
         return _shuriken.get_string_by_id(self.dex_context_object, id)
 
@@ -137,7 +139,8 @@ class Dex(object):
             return None
 
         self.class_by_id[id] = ptr.contents
-        self.class_by_names[str(self.class_by_id[id].class_name)] = self.class_by_id[id]
+        self.class_by_names[str(
+            self.class_by_id[id].class_name)] = self.class_by_id[id]
         return self.class_by_id[id]
 
     def get_class_by_name(self, name: str) -> hdvmclass_t | None:
@@ -147,7 +150,8 @@ class Dex(object):
         """
         if name in self.class_by_names.keys():
             return self.class_by_names[name]
-        _shuriken.get_class_by_name.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_class_by_name.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         _shuriken.get_class_by_name.restype = ctypes.POINTER(hdvmclass_t)
         ptr = ctypes.cast(
             _shuriken.get_class_by_name(
@@ -169,11 +173,13 @@ class Dex(object):
         """
         if method_name in self.method_by_name.keys():
             return self.method_by_name[method_name]
-        _shuriken.get_method_by_name.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_method_by_name.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         _shuriken.get_method_by_name.restype = ctypes.POINTER(hdvmmethod_t)
         ptr = ctypes.cast(
             _shuriken.get_method_by_name(
-                self.dex_context_object, ctypes.c_char_p(method_name.encode("utf-8"))
+                self.dex_context_object, ctypes.c_char_p(
+                    method_name.encode("utf-8"))
             ),
             ctypes.POINTER(hdvmmethod_t),
         )
@@ -196,10 +202,13 @@ class Dex(object):
         """
         if method_name in self.disassembled_methods.keys():
             return self.disassembled_methods[method_name]
-        _shuriken.get_disassembled_method.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-        _shuriken.get_disassembled_method.restype = ctypes.POINTER(dvmdisassembled_method_t)
+        _shuriken.get_disassembled_method.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_disassembled_method.restype = ctypes.POINTER(
+            dvmdisassembled_method_t)
         ptr = ctypes.cast(
-            _shuriken.get_disassembled_method(self.dex_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
+            _shuriken.get_disassembled_method(
+                self.dex_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
             ctypes.POINTER(dvmdisassembled_method_t))
 
         if not ptr:
@@ -213,7 +222,8 @@ class Dex(object):
         user must also call `analyze_classes`.
         :param create_xrefs: Boolean flag to create xrefs or not
         """
-        _shuriken.create_dex_analysis.argtypes = [ctypes.c_void_p, ctypes.c_char]
+        _shuriken.create_dex_analysis.argtypes = [
+            ctypes.c_void_p, ctypes.c_char]
         _shuriken.create_dex_analysis(self.dex_context_object, create_xrefs)
 
     def analyze_classes(self):
@@ -231,10 +241,13 @@ class Dex(object):
         """
         if class_name in self.class_analysis_by_name:
             return self.class_analysis_by_name[class_name]
-        _shuriken.get_analyzed_class.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-        _shuriken.get_analyzed_class.restype = ctypes.POINTER(hdvmclassanalysis_t)
+        _shuriken.get_analyzed_class.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_analyzed_class.restype = ctypes.POINTER(
+            hdvmclassanalysis_t)
         ptr = ctypes.cast(
-            _shuriken.get_analyzed_class(self.dex_context_object, ctypes.c_char_p(class_name.encode("utf-8"))),
+            _shuriken.get_analyzed_class(
+                self.dex_context_object, ctypes.c_char_p(class_name.encode("utf-8"))),
             ctypes.POINTER(hdvmclassanalysis_t))
         if not ptr:
             return None
@@ -249,10 +262,13 @@ class Dex(object):
         class_name = class_.class_name.decode()
         if class_name in self.class_analysis_by_name:
             return self.class_analysis_by_name[class_name]
-        _shuriken.get_analyzed_class_by_hdvmclass.argtypes = [ctypes.c_void_p, ctypes.POINTER(hdvmclass_t)]
-        _shuriken.get_analyzed_class_by_hdvmclass.restype = ctypes.POINTER(hdvmclassanalysis_t)
+        _shuriken.get_analyzed_class_by_hdvmclass.argtypes = [
+            ctypes.c_void_p, ctypes.POINTER(hdvmclass_t)]
+        _shuriken.get_analyzed_class_by_hdvmclass.restype = ctypes.POINTER(
+            hdvmclassanalysis_t)
         ptr = ctypes.cast(
-            _shuriken.get_analyzed_class_by_hdvmclass(self.dex_context_object, class_),
+            _shuriken.get_analyzed_class_by_hdvmclass(
+                self.dex_context_object, class_),
             ctypes.POINTER(hdvmclassanalysis_t))
         if not ptr:
             return None
@@ -266,10 +282,13 @@ class Dex(object):
         """
         if method_name in self.method_analysis_by_name:
             return self.method_analysis_by_name[method_name]
-        _shuriken.get_analyzed_method.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
-        _shuriken.get_analyzed_method.restype = ctypes.POINTER(hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_analyzed_method.restype = ctypes.POINTER(
+            hdvmmethodanalysis_t)
         ptr = ctypes.cast(
-            _shuriken.get_analyzed_method(self.dex_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
+            _shuriken.get_analyzed_method(
+                self.dex_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
             ctypes.POINTER(hdvmmethodanalysis_t))
         if not ptr:
             return None
@@ -284,8 +303,10 @@ class Dex(object):
         method_name = method.dalvik_name.decode()
         if method_name in self.method_analysis_by_name:
             return self.method_analysis_by_name[method_name]
-        _shuriken.get_analyzed_method_by_hdvmmethod.argtypes = [ctypes.c_void_p, ctypes.POINTER(hdvmmethod_t)]
-        _shuriken.get_analyzed_method_by_hdvmmethod.restype = ctypes.POINTER(hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method_by_hdvmmethod.argtypes = [
+            ctypes.c_void_p, ctypes.POINTER(hdvmmethod_t)]
+        _shuriken.get_analyzed_method_by_hdvmmethod.restype = ctypes.POINTER(
+            hdvmmethodanalysis_t)
         ptr = ctypes.cast(_shuriken.get_analyzed_method_by_hdvmmethod(self.dex_context_object, method),
                           ctypes.POINTER(hdvmmethodanalysis_t))
         if not ptr:
@@ -351,8 +372,10 @@ class Apk(object):
         if idx in self.dex_files:
             return self.dex_files[idx]
         _shuriken.get_dex_file_by_index.restype = ctypes.c_char_p
-        _shuriken.get_dex_file_by_index.argtypes = [ctypes.c_void_p, ctypes.c_int]
-        dex_file = _shuriken.get_dex_file_by_index(self.apk_context_object, idx)
+        _shuriken.get_dex_file_by_index.argtypes = [
+            ctypes.c_void_p, ctypes.c_int]
+        dex_file = _shuriken.get_dex_file_by_index(
+            self.apk_context_object, idx)
         if not dex_file:
             return None
         self.dex_files[idx] = dex_file.decode()
@@ -363,7 +386,8 @@ class Apk(object):
         :return: Number of classes inside the DEX file
         """
         _shuriken.get_number_of_classes_for_dex_file.restype = ctypes.c_int
-        _shuriken.get_number_of_classes_for_dex_file.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_number_of_classes_for_dex_file.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         return _shuriken.get_number_of_classes_for_dex_file(
             self.apk_context_object,
             ctypes.c_char_p(dex_file.encode("utf-8"))
@@ -377,7 +401,8 @@ class Apk(object):
         """
         if dex_file in self.class_by_id and idx in self.class_by_id[dex_file]:
             return self.class_by_id[dex_file][idx]
-        _shuriken.get_hdvmclass_from_dex_by_index.restype = ctypes.POINTER(hdvmclass_t)
+        _shuriken.get_hdvmclass_from_dex_by_index.restype = ctypes.POINTER(
+            hdvmclass_t)
         _shuriken.get_hdvmclass_from_dex_by_index.argtypes = [
             ctypes.c_void_p,
             ctypes.c_char_p,
@@ -406,7 +431,8 @@ class Apk(object):
         :return: Number of strings inside the DEX file
         """
         _shuriken.get_number_of_strings_from_dex.restype = ctypes.c_int
-        _shuriken.get_number_of_strings_from_dex.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_number_of_strings_from_dex.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         return _shuriken.get_number_of_strings_from_dex(
             self.apk_context_object,
             ctypes.c_char_p(dex_file.encode("utf-8"))
@@ -425,11 +451,11 @@ class Apk(object):
             ctypes.c_uint32
         ]
         # call the function
-        string =  _shuriken.get_string_by_id_from_dex(
-                self.apk_context_object,
-                ctypes.c_char_p(dex_file.encode("utf-8")),
-                idx
-            )
+        string = _shuriken.get_string_by_id_from_dex(
+            self.apk_context_object,
+            ctypes.c_char_p(dex_file.encode("utf-8")),
+            idx
+        )
         if not string:
             return None
         return string.decode()
@@ -441,10 +467,13 @@ class Apk(object):
         """
         if method_name in self.disassembled_methods:
             return self.disassembled_methods[method_name]
-        _shuriken.get_disassembled_method_from_apk.restype = ctypes.POINTER(dvmdisassembled_method_t)
-        _shuriken.get_disassembled_method_from_apk.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_disassembled_method_from_apk.restype = ctypes.POINTER(
+            dvmdisassembled_method_t)
+        _shuriken.get_disassembled_method_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         ptr = ctypes.cast(
-            _shuriken.get_disassembled_method_from_apk(self.apk_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
+            _shuriken.get_disassembled_method_from_apk(
+                self.apk_context_object, ctypes.c_char_p(method_name.encode("utf-8"))),
             ctypes.POINTER(dvmdisassembled_method_t))
 
         if not ptr:
@@ -459,10 +488,13 @@ class Apk(object):
         """
         if class_name in self.class_analysis_by_name:
             return self.class_analysis_by_name[class_name]
-        _shuriken.get_analyzed_class_from_apk.restype = ctypes.POINTER(hdvmclassanalysis_t)
-        _shuriken.get_analyzed_class_from_apk.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_analyzed_class_from_apk.restype = ctypes.POINTER(
+            hdvmclassanalysis_t)
+        _shuriken.get_analyzed_class_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         ptr = ctypes.cast(
-            _shuriken.get_analyzed_class_from_apk(self.apk_context_object, ctypes.c_char_p(class_name.encode("utf-8"))),
+            _shuriken.get_analyzed_class_from_apk(
+                self.apk_context_object, ctypes.c_char_p(class_name.encode("utf-8"))),
             ctypes.POINTER(hdvmclassanalysis_t))
         if not ptr:
             return None
@@ -477,8 +509,10 @@ class Apk(object):
         class_name = class_.class_name.decode()
         if class_name in self.class_analysis_by_name:
             return self.class_analysis_by_name[class_name]
-        _shuriken.get_analyzed_class_by_hdvmclass_from_apk.restype = ctypes.POINTER(hdvmclassanalysis_t)
-        _shuriken.get_analyzed_class_by_hdvmclass_from_apk.argtypes = [ctypes.c_void_p, ctypes.POINTER(hdvmclass_t)]
+        _shuriken.get_analyzed_class_by_hdvmclass_from_apk.restype = ctypes.POINTER(
+            hdvmclassanalysis_t)
+        _shuriken.get_analyzed_class_by_hdvmclass_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.POINTER(hdvmclass_t)]
         ptr = ctypes.cast(
             _shuriken.get_analyzed_class_by_hdvmclass_from_apk(
                 self.apk_context_object,
@@ -496,8 +530,10 @@ class Apk(object):
         """
         if method_full_name in self.method_analysis_by_name:
             return self.method_analysis_by_name[method_full_name]
-        _shuriken.get_analyzed_method_from_apk.restype = ctypes.POINTER(hdvmmethodanalysis_t)
-        _shuriken.get_analyzed_method_from_apk.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_analyzed_method_from_apk.restype = ctypes.POINTER(
+            hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         ptr = ctypes.cast(
             _shuriken.get_analyzed_method_from_apk(self.apk_context_object,
                                                    ctypes.c_char_p(method_full_name.encode("utf-8"))),
@@ -516,8 +552,10 @@ class Apk(object):
         method_name = method.dalvik_name
         if method_name in self.method_analysis_by_name:
             return self.method_analysis_by_name[method_name]
-        _shuriken.get_analyzed_method_by_hdvmmethod_from_apk.argtypes = [ctypes.c_void_p, ctypes.POINTER(hdvmmethod_t)]
-        _shuriken.get_analyzed_method_by_hdvmmethod_from_apk.restype = ctypes.POINTER(hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method_by_hdvmmethod_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.POINTER(hdvmmethod_t)]
+        _shuriken.get_analyzed_method_by_hdvmmethod_from_apk.restype = ctypes.POINTER(
+            hdvmmethodanalysis_t)
         ptr = ctypes.cast(_shuriken.get_analyzed_method_by_hdvmmethod_from_apk(self.apk_context_object, method),
                           ctypes.POINTER(hdvmmethodanalysis_t))
         if not ptr:
@@ -530,7 +568,8 @@ class Apk(object):
         :return: Number of methodanalysis objects
         """
         _shuriken.get_number_of_methodanalysis_objects.restype = ctypes.c_size_t
-        _shuriken.get_number_of_methodanalysis_objects.argtypes = [ctypes.c_void_p]
+        _shuriken.get_number_of_methodanalysis_objects.argtypes = [
+            ctypes.c_void_p]
         return _shuriken.get_number_of_methodanalysis_objects(self.apk_context_object)
 
     def get_analyzed_method_by_idx(self, idx: int) -> hdvmmethodanalysis_t | None:
@@ -538,8 +577,10 @@ class Apk(object):
         :param idx: Index of method to retrieve its analysis
         :return: :class:`hdvmmethodanalysis_t` structure
         """
-        _shuriken.get_analyzed_method_by_idx.restype = ctypes.POINTER(hdvmmethodanalysis_t)
-        _shuriken.get_analyzed_method_by_idx.argtypes = [ctypes.c_void_p, ctypes.c_size_t]
+        _shuriken.get_analyzed_method_by_idx.restype = ctypes.POINTER(
+            hdvmmethodanalysis_t)
+        _shuriken.get_analyzed_method_by_idx.argtypes = [
+            ctypes.c_void_p, ctypes.c_size_t]
         ptr = ctypes.cast(_shuriken.get_analyzed_method_by_idx(self.apk_context_object, idx),
                           ctypes.POINTER(hdvmmethodanalysis_t))
         if not ptr:
@@ -558,8 +599,10 @@ class Apk(object):
             return None
         if string in self.string_analysis_by_str:
             return self.string_analysis_by_str[string]
-        _shuriken.get_analyzed_string_from_apk.restype = ctypes.POINTER(hdvmstringanalysis_t)
-        _shuriken.get_analyzed_string_from_apk.argtypes = [ctypes.c_void_p, ctypes.c_char_p]
+        _shuriken.get_analyzed_string_from_apk.restype = ctypes.POINTER(
+            hdvmstringanalysis_t)
+        _shuriken.get_analyzed_string_from_apk.argtypes = [
+            ctypes.c_void_p, ctypes.c_char_p]
         ptr = ctypes.cast(
             _shuriken.get_analyzed_string_from_apk(self.apk_context_object,
                                                    ctypes.c_char_p(string.encode("utf-8"))),

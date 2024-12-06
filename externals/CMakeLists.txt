@@ -36,7 +36,7 @@ else()
     message(STATUS "Fetch will be used to download external dependencies")
 endif()
 #
-if (GITHUB_ACTION)
+if (GITHUB_ACTION OR (DEFINED ENV{GITHUB_ACTION} OR ENV{GITHUB_ACTION} EQUAL ON))
     message(WARNING "Running as a github action, download fetch the content")
     set(FETCHCONTENT_FULLY_DISCONNECTED OFF)
 endif ()

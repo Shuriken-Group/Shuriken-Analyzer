@@ -15,7 +15,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-SUBFOLDERS_NUMBER=2
+SUBFOLDERS_NUMBER = 3
 ROOT_FOLDER = Path(__file__).resolve().parents[SUBFOLDERS_NUMBER]
 BUILD_FOLDER = ROOT_FOLDER / 'build'
 
@@ -40,7 +40,8 @@ def build_libraries():
         try:
             with change_directory(BUILD_FOLDER):
                 logger.info("Configuring with CMake...")
-                subprocess.check_call(['cmake', '..', '-DCMAKE_BUILD_TYPE=Release'])
+                subprocess.check_call(
+                    ['cmake', '..', '-DCMAKE_BUILD_TYPE=Release'])
 
                 logger.info("Building with CMake...")
                 subprocess.check_call(['cmake', '--build', '.', '-j'])
@@ -72,6 +73,7 @@ class custom_bdist_egg(_bdist_egg):
     def run(self):
         self.run_command('build_ext')
         super().run()
+
 
 class CustomInstall(_install):
     def run(self):
