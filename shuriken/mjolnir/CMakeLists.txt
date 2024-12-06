@@ -16,7 +16,7 @@ include(TableGen)
 
 # Set up necessary llvm definitions and libraries
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
-include_directories(${LLVM_INCLUDE_DIRS})
+include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 llvm_map_components_to_libnames(llvm_libs native orcjit core support irreader option)
 
@@ -24,6 +24,7 @@ message("LLVM dir is ${LLVM_DIR}")
 message("MLIR dir is ${MLIR_DIR}")
 message(${CMAKE_CURRENT_SOURCE_DIR})
 message(${CMAKE_CURRENT_BINARY_DIR})
+message("LLVM INCLUDE DIR ": ${LLVM_INCLUDE_DIRS})
 add_subdirectory(include)
 add_subdirectory(lib)
 
@@ -36,11 +37,12 @@ target_link_libraries(shuriken-opt
     MjolnIRLib
     MjolnIRTransformLib
     DalvikMLIRLib
-    LLVMSupport
+    llvm_libs
 )
 add_dependencies(shuriken-opt ShurikenTblGen DalvikTblgen)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_BINARY_DIR}/include/)
+target_include_directories(shuriken-opt SYSTEM PUBLIC ${LLVM_INCLUDE_DIRS})
 target_compile_options(shuriken-opt PRIVATE -fexceptions)
 
 

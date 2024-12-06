@@ -14,7 +14,6 @@
 #include "mlir/IR/PatternMatch.h"
 /// MLIR includes
 #include "llvm/Support/Casting.h"
-#include "llvm/Support/LogicalResult.h"
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
 #include <mlir/Dialect/Arith/IR/Arith.h>
