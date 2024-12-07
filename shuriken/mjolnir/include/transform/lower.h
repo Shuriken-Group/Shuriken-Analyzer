@@ -29,23 +29,24 @@
 #include <mlir/Pass/Pass.h>
 #include <mlir/Pass/PassManager.h>
 #include <mlir/Support/LLVM.h>
+#include <mlir/Support/LogicalResult.h>
 #include <mlir/Transforms/GreedyPatternRewriteDriver.h>
 #include <mlir/Transforms/Passes.h>
+
 namespace shuriken {
     namespace MjolnIR {
+        using namespace mlir;
         class LowerAdd : public mlir::OpRewritePattern<mlir::arith::AddIOp> {
-            using LogicalResult = llvm::LogicalResult;
             LowerAdd(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/3) {}
 
             LogicalResult matchAndRewrite(mlir::arith::AddIOp op, mlir::PatternRewriter &rewriter) const override {
                 auto rhs = op.getRhs().getDefiningOp();
-                if (llvm::isa<mlir::arith::ConstantOp>(rhs)) return llvm::success();
+                if (llvm::isa<mlir::arith::ConstantOp>(rhs)) return success();
                 else
-                    return llvm::success();
+                    return success();
             }
         };
         class LowerNop : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::Nop> {
-            using LogicalResult = llvm::LogicalResult;
 
         public:
             LowerNop(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
@@ -54,11 +55,11 @@ namespace shuriken {
                 llvm::errs() << "Matching and rewriting FallthroughOp\n";
                 llvm::errs() << "Successfully erased FallthroughOp\n";
                 rewriter.eraseOp(op);
-                return llvm::success();
+                return success();
             }
         };
         // class LowerFallThrough : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::FallthroughOp> {
-        //     using LogicalResult = llvm::LogicalResult;
+        //
         //
         // public:
         //     LowerFallThrough(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
@@ -66,7 +67,7 @@ namespace shuriken {
         //     LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::FallthroughOp op, mlir::PatternRewriter &rewriter) const override {
         //         llvm::errs() << "Matching and rewriting FallthroughOp\n";
         //         llvm::errs() << "Successfully erased FallthroughOp\n";
-        //         return llvm::success();
+        //         return success();
         //     }
         // };
 
