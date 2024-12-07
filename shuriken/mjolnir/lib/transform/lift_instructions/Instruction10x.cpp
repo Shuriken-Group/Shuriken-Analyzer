@@ -12,7 +12,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction10x *instr)
     switch (op_code) {
 
         case DexOpcodes::opcodes::OP_RETURN_VOID:
-            builder.create<::mlir::func::ReturnOp>(
+            builder.create<::mlir::shuriken::MjolnIR::ReturnOp>(
                     location);
             break;
         case DexOpcodes::opcodes::OP_NOP:

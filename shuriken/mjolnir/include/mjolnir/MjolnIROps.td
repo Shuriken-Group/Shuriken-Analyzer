@@ -360,18 +360,13 @@ def ReturnOp : MjolnIR_Op<"return", [Pure, Terminator]> {
       mjolnir.return %value : i32
   }];
 
-  // Optional operand for the return value
-  let arguments = (ins Optional<DVM_BasicTypes>:$returnVal);
+  let arguments = (ins Variadic<AnyType>:$operands);
 
-  // No results as this is a terminator
-  let results = (outs);
+  let builders = [OpBuilder<(ins), [{
+    build($_builder, $_state, std::nullopt);
+  }]>];
 
-  // Custom assembly format:
-  // - If there's a return value, print it with its type
-  // - If no return value, just print the operation name
-  let assemblyFormat = [{
-    ($returnVal^ `:` type($returnVal))? attr-dict
-  }];
+  let assemblyFormat = "attr-dict ($operands^ `:` type($operands))?";
 }
 
 
