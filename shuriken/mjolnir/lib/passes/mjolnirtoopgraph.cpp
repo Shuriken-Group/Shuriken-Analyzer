@@ -16,6 +16,7 @@
 #include <mlir/Pass/Pass.h>
 #include <mlir/IR/Operation.h>
 #include <mlir/Transforms/Passes.h>
+#include <mlir/Pass/PassManager.h>
 #include <mlir/Support/TypeID.h>
 #include <mlir/Support/IndentedOstream.h>
 #include <mlir/Dialect/Func/IR/FuncOps.h>
@@ -26,9 +27,6 @@
 #include "mjolnir/MjolnIRDialect.h"
 #include "mjolnir/MjolnIRTypes.h"
 #include "mjolnir/MjolnIROps.h"
-
-
-using namespace shuriken::MjolnIR;
 
 /// Constants used for drawing the graph
 static const mlir::StringRef kLineStyleControlFlow = "dashed";
@@ -75,6 +73,8 @@ static std::string quoteString(const std::string &str) {
 
 using AttributeMap = std::map<std::string, std::string>;
 
+namespace {
+
 /** 
  * This struct represents a node in the DOT language. Each node has an
  * identifier and an optional identifier for the cluster (subgraph) that
@@ -94,9 +94,9 @@ public:
 };
 
 /**
- * Pass to print the 
+ * Pass to print the graph of a module
  */
-class PrintOpPass : public mlir::PassWrapper<PrintOpPass, mlir::OperationPass<void>> {
+class PrintOpPass : public mlir::PassWrapper<PrintOpPass, mlir::OperationPass<>> {
 public:
     // Define the Pass
     MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(PrintOpPass)
@@ -104,6 +104,8 @@ public:
     // Constructors for the Pass
     PrintOpPass(mlir::raw_ostream &os) : os(os) {}
     PrintOpPass(const PrintOpPass &o) : PrintOpPass(o.os.getOStream()) {}
+
+    ~PrintOpPass() = default;
 
     /**
      * Run the main operation from the pass, emit a graph given
@@ -357,12 +359,11 @@ public:
     int counter = 0;
 };
 
-namespace shuriken
-{
-    namespace MjolnIR {
-        std::unique_ptr<mlir::Pass> create_mjolnir_op_graph_pass(mlir::raw_ostream &os) {
-            return std::make_unique<PrintOpPass>(os);
-        }
-    } // namespace MjolnIR 
-} // namespace shuriken
+} // namespace
+
+namespace shuriken::MjolnIR {
+    std::unique_ptr<mlir::Pass> create_mjolnir_op_graph_pass(mlir::raw_ostream &os) {
+        return std::make_unique<PrintOpPass>(os);
+    }
+} // namespace shuriken::MjolnIR 
 

@@ -10,6 +10,7 @@
 
 #include <memory>
 
+#include <mlir/Pass/Pass.h>
 #include <mlir/Support/LLVM.h>
 #include <llvm/Support/raw_ostream.h>
 

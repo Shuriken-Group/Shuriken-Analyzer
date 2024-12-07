@@ -1,15 +1,18 @@
 add_library(MjolnIRPasses
 mjolnirtoopgraph.cpp
-
 )
 
-target_link_libraries(MjolnIRPasses
+target_compile_options(MjolnIRPasses PRIVATE -fno-rtti)
+
+target_link_libraries(MjolnIRPasses LLVMSupport
     MLIRAnalysis
     MLIRPass
     MLIRTransforms
     MLIRSupport
     MLIRFuncTransforms
     MLIRSCFDialect
+    MLIRIR               
+    MLIRDialect
 )
 
 add_dependencies(MjolnIRPasses ShurikenTblGen)
