@@ -8,6 +8,7 @@
 #ifndef DALVIK_MJOLNIRTYPES_TD
 #define DALVIK_MJOLNIRTYPES_TD
 
+include "mlir/IR/BuiltinTypes.td"
 include "mlir/IR/AttrTypeBase.td"
 include "MjolnIRDialect.td"
 
@@ -26,38 +27,6 @@ def DVMVoid : MjolnIRType<"DVMVoid", "dvmvoid"> {
   let summary = "Void type from Dalvik, returns nothing";
 }
 
-def DVMByte : MjolnIRType<"DVMByte", "dvmbyte"> {
-  let summary = "Bool type from Dalvik";
-}
-
-def DVMBool : MjolnIRType<"DVMBool", "dvmbool"> {
-  let summary = "Bool type from Dalvik";
-}
-
-def DVMChar : MjolnIRType<"DVMChar", "dvmchar"> {
-  let summary = "Char type from Dalvik";
-}
-
-def DVMShort : MjolnIRType<"DVMShort", "dvmshort"> {
-  let summary = "Short type from Dalvik";
-}
-
-def DVMInt : MjolnIRType<"DVMInt", "dvmint"> {
-  let summary = "Integer type from Dalvik";
-}
-
-def DVMLong : MjolnIRType<"DVMLong", "dvmlong"> {
-  let summary = "Long type from Dalvik";
-}
-
-def DVMFloat : MjolnIRType<"DVMFloat", "dvmfloat"> {
-  let summary = "Float type from Dalvik";
-}
-
-def DVMDouble : MjolnIRType<"DVMDouble", "dvmdouble"> {
-  let summary = "Double type from Dalvik";
-}
-
 def DVMObject : MjolnIRType<"DVMObject", "object"> {
   let summary = "An object from any Java class";
 
@@ -70,16 +39,24 @@ def DVMObject : MjolnIRType<"DVMObject", "object"> {
   }];
 }
 
-def DVM_BasicType : AnyTypeOf<[DVMBool, DVMChar, DVMShort, DVMInt, DVMLong, DVMFloat, DVMDouble]>;
-
 def DVMArray : MjolnIRType<"DVMArray", "dvmarray"> {
   let summary = "Array type from dalvik";
+  let description = [{
+    Represents a Dalvik array type. Maps to Java array types.
+    
+    Examples:
+      dvmarray<"I">      // int[]
+      dvmarray<"String"> // String[]
+  }];
+
   let parameters = (ins
         StringRefParameter<"the name of the type the array is holding">:$array_type
   );
   let assemblyFormat = [{
-    `:`$array_type 
+    `<` $array_type `>`
   }];
 }
+
+def DVM_BasicTypes : AnyTypeOf<[Builtin_Integer, Builtin_Float32, Builtin_Float64, DVMObject, DVMArray]>;
 
 #endif // DALVIK_MJOLNIRTYPES_TD

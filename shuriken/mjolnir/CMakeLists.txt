@@ -35,6 +35,7 @@ target_link_libraries(shuriken-opt
     shuriken
     MjolnIRLib
     MjolnIRTransformLib
+    MjolnIRPasses
 )
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_BINARY_DIR}/include/)
