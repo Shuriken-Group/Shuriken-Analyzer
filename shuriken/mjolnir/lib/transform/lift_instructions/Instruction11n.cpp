@@ -17,7 +17,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction11n *instr)
 
             auto gen_value = builder.create<::mlir::shuriken::MjolnIR::LoadValue>(
                     location,
-                    ::mlir::shuriken::MjolnIR::DVMByteType::get(&context),
+                    byteType,
                     value);
 
             writeVariable(current_basic_block, dest, gen_value);

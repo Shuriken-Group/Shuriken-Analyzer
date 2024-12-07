@@ -44,11 +44,11 @@ class MjolnIR_UnaryOpBase<string mnemonic, list<Trait> traits = []> :
     MjolnIR_Op<mnemonic, !listconcat(traits, [Pure])>
 {
     let arguments = (ins
-        DVM_BasicType:$src
+        DVM_BasicTypes:$src
     );
 
     let results = (outs
-        DVM_BasicType:$dst
+        DVM_BasicTypes:$dst
     );
 }
 
@@ -56,17 +56,17 @@ class MjolnIR_BinaryOpBase<string mnemonic, list<Trait> traits = []> :
     MjolnIR_Op<mnemonic, !listconcat(traits, [Pure])>
 {
     let description = [{
-        Binary operation receives two Values of DVM_BasicTypes,
+        Binary operation receives two Values of DVM_BasicTypess,
         each one of these operations return only one Value.
     }];
 
     let arguments = (ins
-        DVM_BasicType:$lhs,
-        DVM_BasicType:$rhs
+        DVM_BasicTypes:$lhs,
+        DVM_BasicTypes:$rhs
     );
 
     let results = (outs
-        DVM_BasicType:$res
+        DVM_BasicTypes:$res
     );
 }
 
@@ -114,7 +114,7 @@ def MjolnIR_LoadValue : MjolnIR_Op<"load-value", [Pure, ConstantLike]>
     );
 
     let results = (outs
-        DVM_BasicType:$res
+        DVM_BasicTypes:$res
     );
 
     let assemblyFormat = "`(` $value `)` attr-dict `:` type($res)";
@@ -145,7 +145,7 @@ def MjolnIR_LoadString : MjolnIR_Op<"load-string", [Pure, ConstantLike]>
     );
 
     let results = (outs
-        DVM_BasicType:$res
+        DVM_BasicTypes:$res
     );
 
     let assemblyFormat = "`(` $string `)` attr-dict `:` type($res)";
@@ -173,7 +173,7 @@ def GetArrayOp: MjolnIR_Op<"getarray",
     );
 
     let results = (outs
-        DVM_BasicType               // any of the DVM Basic Types
+        DVM_BasicTypes               // any of the DVM Basic Types
     );
 }
 //===----------------------------------------------------------------------===//
@@ -205,7 +205,7 @@ def LoadFieldOp : MjolnIR_Op<"loadfield",
     );
 
     let results = (outs
-        DVM_BasicType               // any of the DVM Basic Types
+        DVM_BasicTypes               // any of the DVM Basic Types
     );
 
     let assemblyFormat = "attr-dict $fieldClass`->`$fieldName `(` $fieldRef `)` `:` type(results)";
@@ -230,7 +230,7 @@ def StoreFieldOp : MjolnIR_Op<"storefield", []>
     }];
 
     let arguments = (ins
-        DVM_BasicType:$value,   // value to store in the Field
+        DVM_BasicTypes:$value,   // value to store in the Field
         FlatSymbolRefAttr:$fieldName, // name of Field
         FlatSymbolRefAttr:$fieldClass, // class of Field
         UI32Attr: $fieldRef // reference to Field in Dalvik code
@@ -309,14 +309,14 @@ def InvokeOp : MjolnIR_Op<"invoke", [
         FlatSymbolRefAttr:$callee, // called method
         UI32Attr:$methodRef,
         UI32Attr:$isStatic,
-        Variadic<DVM_BasicType>: $inputs // the inputs that must be the same
+        Variadic<DVM_BasicTypes>: $inputs // the inputs that must be the same
                                          // of those from the callee
     );
 
     // The return type must also be the same than the returned type
     // from the callee
     let results = (outs
-        Optional<DVM_BasicType>
+        Optional<DVM_BasicTypes>
     );
 
     let assemblyFormat = [{
@@ -342,6 +342,38 @@ def InvokeOp : MjolnIR_Op<"invoke", [
         }]>,
     ];
 }
+
+//===----------------------------------------------------------------------===//
+// ReturnOp
+//===----------------------------------------------------------------------===//
+def ReturnOp : MjolnIR_Op<"return", [Pure, Terminator]> {
+  let summary = "return operation";
+  let description = [{
+    The "return" operation represents a return operation in Dalvik bytecode. 
+    It can be used both for void returns and value returns.
+
+    Example:
+      // Void return
+      mjolnir.return
+
+      // Return with value
+      mjolnir.return %value : i32
+  }];
+
+  // Optional operand for the return value
+  let arguments = (ins Optional<DVM_BasicTypes>:$returnVal);
+
+  // No results as this is a terminator
+  let results = (outs);
+
+  // Custom assembly format:
+  // - If there's a return value, print it with its type
+  // - If no return value, just print the operation name
+  let assemblyFormat = [{
+    ($returnVal^ `:` type($returnVal))? attr-dict
+  }];
+}
+
 
 //===----------------------------------------------------------------------===//
 // FallthroughOp
