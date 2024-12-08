@@ -56,6 +56,27 @@ def build_libraries():
     else:
         logger.warning("CMake build is only supported on Linux for now.")
 
+    if platform.system() == 'darwin':
+        try:
+            with change_directory(BUILD_FOLDER):
+                logger.info("Configuring with CMake...")
+                subprocess.check_call(
+                    ['cmake', '..', '-DCMAKE_BUILD_TYPE=Release'])
+
+                logger.info("Building with CMake...")
+                subprocess.check_call(['cmake', '--build', '.', '-j'])
+
+                logger.info("Installing with CMake...")
+                subprocess.check_call(['sudo', 'cmake', '--install', '.'])
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Cmake build failed: {e}")
+        except Exception as e:
+            logger.error(f"An error ocurred: {e}")
+
+    else:
+        logger.warning("CMake build is only supported on Linux/MacOS for now.")
+
+
 
 class custom_sdist(_sdist):
     def run(self):
