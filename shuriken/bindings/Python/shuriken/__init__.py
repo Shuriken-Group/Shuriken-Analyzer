@@ -8,7 +8,8 @@ from os.path import join, exists
 # Shuriken C interface
 
 if sys.platform == "darwin":
-    raise Exception("Not supported platform (yet...)")
+    _lib = "libshuriken.dylib"
+    common_paths = ["/opt/homebrew/lib/", "/usr/lib", "/usr/local/lib"]
 elif sys.platform in ("win32", "cygwin"):
     _lib = "libshuriken.dll"
     common_paths = [
