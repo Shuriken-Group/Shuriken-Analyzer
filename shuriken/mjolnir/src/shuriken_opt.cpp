@@ -1,10 +1,8 @@
 #include "shuriken_opt.h"
 // Dex & APK stuff
-#include "transform/lifter.h"
 #include "passes/mjolnirtoopgraph.h"
-#include "mjolnir/MjolnIROps.h"
+#include "transform/lifter.h"
 #include <algorithm>
-#include <cassert>
 #include <cstdio>
 
 #include "fmt/color.h"
@@ -13,14 +11,10 @@
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
 
-#include <mlir/Pass/PassManager.h>
-#include <mlir/Transforms/ViewOpGraph.h>
-
 #include <string>
 #include <vector>
 
 void shuriken_opt_log(const std::string &msg);
-mlir::LogicalResult generate_functions_cfg(mlir::raw_ostream &os, mlir::OwningOpRef<mlir::ModuleOp> &module);
 
 bool LOGGING = false;
 
@@ -30,8 +24,7 @@ int main(int argc, char **argv) {
 
     std::map<std::string, std::string> options{
             {"-f", ""},
-            {"--file", ""}
-    };
+            {"--file", ""}};
 
 
     // INFO: Check if we need to print out help
@@ -64,13 +57,12 @@ int main(int argc, char **argv) {
 
         if (show_graph) {
 
-            for (auto &module : lifter.mlir_gen_result) {
-                auto logical_result = generate_functions_cfg(llvm::outs(), module);
+            for (auto &module: lifter.mlir_gen_result) {
+                auto logical_result = shuriken::MjolnIR::generate_functions_cfg(llvm::outs(), module);
                 if (logical_result.failed())
                     return -1;
             }
         }
-
     }
     return 0;
 }
@@ -86,13 +78,4 @@ void show_help(std::string &prog_name) {
 void shuriken_opt_log(const std::string &msg) {
     if (LOGGING)
         fmt::print(stderr, "{}", msg);
-}
-
-
-mlir::LogicalResult generate_functions_cfg(mlir::raw_ostream &os, mlir::OwningOpRef<mlir::ModuleOp> &module) {
-    mlir::PassManager pm(module.get()->getName());
-
-    pm.addNestedPass<MethodOp>(shuriken::MjolnIR::create_mjolnir_op_graph_pass(os));
-
-    return pm.run(*module);
 }
