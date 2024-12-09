@@ -9,27 +9,36 @@ on:
       - main
 env:
   GITHUB_ACTION: ON 
+
 jobs:
   build:
-    runs-on: ubuntu-24.04
-      # clang custom placeholder
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v3
+    
     - uses: actions/setup-python@v5
       with:
-        python-version: '3.10' 
-    - name: Setup compiler on Linux
+        python-version: '3.10'
+   
+      # INFO: This is here to streamline package manager across OS
+    - name: Install system dependencies
+      uses: ConorMacBride/install-package@v1
+      with:
+        apt: gcc-13 g++-13 cmake git
+        brew: gcc@13 cmake git
+    
+    - name: Setup compiler environment
       run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-13 g++-13
         echo "CC=gcc-13" >> $GITHUB_ENV
         echo "CXX=g++-13" >> $GITHUB_ENV
+    
     - name: Display compiler version
       run: $CC --version
-    - name: Install cmake
-      run: sudo apt-get install cmake
-    - name: Install git
-      run: sudo apt install git
+    
     - name: Set up venv
       run: |
         python3 -m venv .venv && source .venv/bin/activate
