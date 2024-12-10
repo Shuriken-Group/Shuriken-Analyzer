@@ -1,13 +1,13 @@
 #include "shuriken_opt.h"
 // Dex & APK stuff
 #include "passes/mjolnirtoopgraph.h"
+#include "passes/opt.h"
 #include "transform/lifter.h"
 #include <algorithm>
 #include <cstdio>
 
 #include "fmt/color.h"
 #include "fmt/core.h"
-#include "passes/opt.h"
 #include <llvm/Support/raw_ostream.h>
 #include <mlir/Support/LLVM.h>
 #include <shuriken/common/Dex/dvm_types.h>
