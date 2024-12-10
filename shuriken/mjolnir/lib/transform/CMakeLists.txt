@@ -23,6 +23,7 @@ add_library(MjolnIRTransformLib lifter.cpp
   lift_instructions/Instruction51l.cpp
   mjolnir_to_smali.cpp)
 
+target_compile_options(MjolnIRTransformLib PRIVATE -fno-rtti) # https://makslevental.github.io/working-with-mlir/#fixing-missing-__ztvn4mlir4passe-ie-typeinfo-for-mlirpass
 target_link_libraries(MjolnIRTransformLib LLVMSupport
     MjolnIRLib
     MLIRArithDialect
@@ -34,6 +35,9 @@ target_link_libraries(MjolnIRTransformLib LLVMSupport
     MLIRParser
     MLIRTransforms
     MLIRFuncDialect
+    MLIRPass
+    MLIRAnalysis
+    MLIRSupport
     fmt::fmt
 )
 
