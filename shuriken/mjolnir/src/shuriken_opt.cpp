@@ -8,6 +8,7 @@
 
 #include "fmt/color.h"
 #include "fmt/core.h"
+#include "transform/mjolnir_to_smali.h"
 #include <llvm/Support/raw_ostream.h>
 #include <mlir/Support/LLVM.h>
 #include <shuriken/common/Dex/dvm_types.h>
@@ -88,7 +89,14 @@ int main(int argc, char **argv) {
                 }
             }
 
-            if (lower) {}
+            if (lower) {
+                std::cerr << "Begin lowering\n";
+                auto smali_lines = shuriken::MjolnIR::to_smali(lifter.mlir_gen_result);
+                shuriken_opt_log(fmt::format("There is a total of {} smali lines", smali_lines.size()));
+                for (auto &line: smali_lines) {
+                    std::cout << line << std::endl;
+                }
+            }
         } else {
             std::cerr << "USer picked the -f | --file option but did not specify at least lift | lower | opt\n";
         }
