@@ -78,7 +78,7 @@ namespace shuriken::MjolnIR {
                         matched_an_op = true;
                     }
                     if (matched_an_op) {
-                        smali_lines.emplace_back(TAB + smali_line);
+                        smali_lines.emplace_back(std::string(TAB) + smali_line);
                         continue;
                     }
                     // INFO: Control flow
@@ -96,7 +96,7 @@ namespace shuriken::MjolnIR {
 
                     if (matched_an_op) {
                         for (auto &temp_smali_line: temp_smali_lines)
-                            smali_lines.emplace_back(TAB + temp_smali_line);
+                            smali_lines.emplace_back(std::string(TAB) + temp_smali_line);
                         continue;
                     }
 

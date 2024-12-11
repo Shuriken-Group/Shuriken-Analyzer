@@ -32,7 +32,7 @@ namespace shuriken::MjolnIR {
 
     using ::shuriken::MjolnIR::SmaliLine;
     using ::shuriken::MjolnIR::SmaliLines;
-    inline constexpr std::string TAB = "    ";
+    inline constexpr std::string_view TAB = "    ";
     template<class Aspect>
     class SmaliCounter {
         size_t counter = 0;
