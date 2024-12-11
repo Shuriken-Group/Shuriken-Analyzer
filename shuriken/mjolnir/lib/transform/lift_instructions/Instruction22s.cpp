@@ -1,6 +1,7 @@
 
 #include "transform/lifter.h"
 #include <mlir/Dialect/Arith/IR/Arith.h>
+#include <mlir/IR/BuiltinTypes.h>
 #include <mlir/IR/OpDefinition.h>
 
 using namespace shuriken::MjolnIR;
@@ -19,7 +20,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22s *instr)
     switch (op_code) {
         case DexOpcodes::opcodes::OP_ADD_INT_LIT16:
             if (!val)
-                val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 16);
+                val = builder.create<mlir::arith::ConstantIntOp>(location, src2, builder.getIntegerType(16, false));
             {
                 auto src1_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src1);
 
