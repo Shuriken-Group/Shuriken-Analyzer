@@ -30,7 +30,11 @@ namespace shuriken::MjolnIR {
 
         return fmt::format("move v{}, v{}", vrc.get_counter(dest), vrc.get_counter(operand));
     }
-    SmaliLine MjolnIRToSmali::from_mjolnir_invoke(InvokeOp) { return ""; }
+    SmaliLine MjolnIRToSmali::from_mjolnir_invoke(InvokeOp op) {
+        // auto class_name = op.getCalleeClass();
+        // auto callee = op.getCallee();
+        return "";
+    }
     SmaliLine MjolnIRToSmali::from_mjolnir_new(NewOp) { return ""; }
     SmaliLine MjolnIRToSmali::from_mjolnir_getarray(GetArrayOp) { return ""; }
 
