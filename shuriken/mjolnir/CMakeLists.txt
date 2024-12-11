@@ -35,7 +35,8 @@ target_link_libraries(shuriken-opt
     fmt::fmt
     shuriken
     MjolnIRLib
-    MjolnIRTransformLib
+    MjolnIRLifterLib
+    MjolnIRLowerLib
     MjolnIRPasses
 )
 add_dependencies(shuriken-opt ShurikenTblGen)

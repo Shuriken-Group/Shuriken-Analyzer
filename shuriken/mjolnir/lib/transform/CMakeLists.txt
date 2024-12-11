@@ -1,4 +1,4 @@
-add_library(MjolnIRTransformLib lifter.cpp
+add_library(MjolnIRLifterLib lifter.cpp
   lift_instructions/Instruction10t.cpp
   lift_instructions/Instruction10x.cpp
   lift_instructions/Instruction11n.cpp
@@ -23,8 +23,8 @@ add_library(MjolnIRTransformLib lifter.cpp
   lift_instructions/Instruction51l.cpp
   mjolnir_to_smali.cpp)
 
-target_compile_options(MjolnIRTransformLib PRIVATE -fno-rtti) # https://makslevental.github.io/working-with-mlir/#fixing-missing-__ztvn4mlir4passe-ie-typeinfo-for-mlirpass
-target_link_libraries(MjolnIRTransformLib LLVMSupport
+target_compile_options(MjolnIRLifterLib PRIVATE -fno-rtti) # https://makslevental.github.io/working-with-mlir/#fixing-missing-__ztvn4mlir4passe-ie-typeinfo-for-mlirpass
+target_link_libraries(MjolnIRLifterLib LLVMSupport
     MjolnIRLib
     MLIRArithDialect
     MLIRControlFlowDialect
@@ -41,6 +41,36 @@ target_link_libraries(MjolnIRTransformLib LLVMSupport
     fmt::fmt
 )
 
-add_dependencies(MjolnIRTransformLib ShurikenTblGen)
-target_include_directories(MjolnIRTransformLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
-target_include_directories(MjolnIRTransformLib PRIVATE ${PROJECT_BINARY_DIR}/include/)
+add_dependencies(MjolnIRLifterLib ShurikenTblGen)
+target_include_directories(MjolnIRLifterLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(MjolnIRLifterLib PRIVATE ${PROJECT_BINARY_DIR}/include/)
+
+
+
+add_library(MjolnIRLowerLib
+  mjolnir_to_smali.cpp
+  lower_instructions/arith_to_smali.cpp
+  lower_instructions/mjolnir_to_smali.cpp
+  lower_instructions/cf_to_smali.cpp
+)
+target_compile_options(MjolnIRLowerLib PRIVATE -fno-rtti) # https://makslevental.github.io/working-with-mlir/#fixing-missing-__ztvn4mlir4passe-ie-typeinfo-for-mlirpass
+target_link_libraries(MjolnIRLowerLib LLVMSupport
+    MjolnIRLib
+    MLIRArithDialect
+    MLIRControlFlowDialect
+    MLIRControlFlowInterfaces
+    MLIRSideEffectInterfaces
+    MLIRAnalysis
+    MLIRFunctionInterfaces
+    MLIRParser
+    MLIRTransforms
+    MLIRFuncDialect
+    MLIRPass
+    MLIRAnalysis
+    MLIRSupport
+    fmt::fmt
+)
+
+add_dependencies(MjolnIRLowerLib ShurikenTblGen)
+target_include_directories(MjolnIRLowerLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(MjolnIRLowerLib PRIVATE ${PROJECT_BINARY_DIR}/include/)

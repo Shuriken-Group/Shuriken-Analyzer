@@ -308,6 +308,7 @@ def InvokeOp : MjolnIR_Op<"invoke", [
     }];
 
     let arguments = (ins
+        FlatSymbolRefAttr:$calleeClass, // called method's class
         FlatSymbolRefAttr:$callee, // called method
         UI32Attr:$methodRef,
         UI32Attr:$isStatic,
@@ -321,9 +322,9 @@ def InvokeOp : MjolnIR_Op<"invoke", [
         Optional<DVM_BasicTypes>
     );
 
-    let assemblyFormat = [{
-        $callee `(` $inputs `)` attr-dict `:` functional-type($inputs, results)
-    }];
+    //let assemblyFormat = [{
+    //    $callee `(` $inputs `)` attr-dict `:` functional-type($inputs, results)
+    //}];
 
     let builders = [
         OpBuilder<(ins "StringRef":$callee, "ArrayRef<Value>":$arguments, "MethodOp& ":$method)>,

@@ -19,7 +19,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
 
             auto called_method = std::get<MethodID *>(instr->get_value());
             auto method_ref = instr->get_type_idx();
-            auto method_name = called_method->get_method_name();
+            auto method_name = called_method->demangle();
+            auto class_name = called_method->get_class()->print_type();
 
             auto parameters_protos = called_method->get_prototype()->get_parameters();
             auto invoke_parameters = instr->get_registers();
@@ -55,6 +56,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
                 builder.create<::mlir::shuriken::MjolnIR::InvokeOp>(
                         location,
                         NoneType,
+                        class_name,
                         method_name,
                         method_ref,
                         is_static,
@@ -63,6 +65,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
                 builder.create<::mlir::shuriken::MjolnIR::InvokeOp>(
                         location,
                         retType,
+                        class_name,
                         method_name,
                         method_ref,
                         is_static,
