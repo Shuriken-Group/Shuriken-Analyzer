@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
             if (lower) {
                 std::cerr << "Begin lowering\n";
                 auto smali_lines = shuriken::MjolnIR::to_smali(lifter.mlir_gen_result);
-                shuriken_opt_log(fmt::format("There is a total of {} smali lines", smali_lines.size()));
+                shuriken_opt_log(fmt::format("There is a total of {} smali lines\n", smali_lines.size()));
                 for (auto &line: smali_lines) {
                     std::cout << line << std::endl;
                 }
