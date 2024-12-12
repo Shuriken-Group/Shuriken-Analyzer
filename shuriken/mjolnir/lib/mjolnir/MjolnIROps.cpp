@@ -144,14 +144,6 @@ ArrayRef<Type> MethodOp::getResultTypes() { return getFunctionType().getResults(
 // InvokeOp
 //===----------------------------------------------------------------------===//
 
-void InvokeOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                     StringRef callee, ArrayRef<mlir::Value> arguments, MethodOp &method) {
-    state.addTypes(method.getResultTypes());
-    state.addOperands(arguments);
-    state.addAttribute("callee",
-                       mlir::SymbolRefAttr::get(builder.getContext(), callee));
-}
-
 /// Return the callee of the generic call operation, this is required by the
 /// call interface.
 CallInterfaceCallable InvokeOp::getCallableForCallee() {

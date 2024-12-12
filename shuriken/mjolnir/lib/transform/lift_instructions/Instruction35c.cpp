@@ -4,29 +4,47 @@
 #include <mlir/IR/OpDefinition.h>
 
 using namespace shuriken::MjolnIR;
+using namespace ::mlir::shuriken::MjolnIR;
+
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr) {
     auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
+    InvokeType type = InvokeType::NONE;
+
     switch (op_code) {
         case DexOpcodes::opcodes::OP_INVOKE_VIRTUAL:
+            if (type == InvokeType::NONE)
+                type = InvokeType::VIRTUAL;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_INVOKE_SUPER:
+            if (type == InvokeType::NONE)
+                type = InvokeType::SUPER;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_INVOKE_DIRECT:
+            if (type == InvokeType::NONE)
+                type = InvokeType::DIRECT;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_INVOKE_STATIC:
+            if (type == InvokeType::NONE)
+                type = InvokeType::STATIC;
+            [[fallthrough]];
         case DexOpcodes::opcodes::OP_INVOKE_INTERFACE: {
+            if (type == InvokeType::NONE)
+                type = InvokeType::INTERFACE;
+
+
             mlir::SmallVector<mlir::Value, 4> parameters;
 
             auto called_method = std::get<MethodID *>(instr->get_value());
-            auto method_ref = instr->get_type_idx();
             auto method_name = called_method->get_method_name();
+            auto class_name = called_method->get_class()->get_raw_type();
 
             auto parameters_protos = called_method->get_prototype()->get_parameters();
             auto invoke_parameters = instr->get_registers();
 
             ::mlir::Type retType = get_type(called_method->get_prototype()->get_return_type());
-
-            bool is_static = op_code == DexOpcodes::opcodes::OP_INVOKE_STATIC ? true : false;
 
             for (size_t I = 0, P = 0, Limit = invoke_parameters.size();
                  I < Limit;
@@ -56,16 +74,16 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
                         location,
                         NoneType,
                         method_name,
-                        method_ref,
-                        is_static,
+                        class_name,
+                        type,
                         parameters);
             } else
                 builder.create<::mlir::shuriken::MjolnIR::InvokeOp>(
                         location,
                         retType,
                         method_name,
-                        method_ref,
-                        is_static,
+                        class_name,
+                        type,
                         parameters);
         }
         /* code */

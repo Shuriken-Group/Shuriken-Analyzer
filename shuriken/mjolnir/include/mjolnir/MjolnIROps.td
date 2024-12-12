@@ -307,8 +307,8 @@ def InvokeOp : MjolnIR_Op<"invoke", [
 
     let arguments = (ins
         FlatSymbolRefAttr:$callee, // called method
-        UI32Attr:$methodRef,
-        UI32Attr:$isStatic,
+        FlatSymbolRefAttr:$classOwner, 
+        MjolnIR_InvokeTypeAttr:$invokeType, // specification of invoke type
         Variadic<DVM_BasicTypes>: $inputs // the inputs that must be the same
                                          // of those from the callee
     );
@@ -320,23 +320,25 @@ def InvokeOp : MjolnIR_Op<"invoke", [
     );
 
     let assemblyFormat = [{
-        $callee `(` $inputs `)` attr-dict `:` functional-type($inputs, results)
+        $invokeType `invoke` $classOwner `:` $callee `(` $inputs `)` attr-dict `:` functional-type($inputs, results)
     }];
 
     let builders = [
-        OpBuilder<(ins "StringRef":$callee, "ArrayRef<Value>":$arguments, "MethodOp& ":$method)>,
-        OpBuilder<(ins "MethodOp":$callee, "IntegerAttr":$methodRef, "IntegerAttr":$isStatic, CArg<"ValueRange", "{}">:$operands), [{
+        // Builder with direct specification of all attributes
+        OpBuilder<(ins "MethodOp":$callee, "StringRef":$owner, "::mlir::shuriken::MjolnIR::InvokeTypeAttr":$invokeType, CArg<"ValueRange", "{}">:$operands), [{
             $_state.addOperands(operands);
             $_state.addAttribute("callee", SymbolRefAttr::get(callee));
-            $_state.addAttribute("methodRef", methodRef);
-            $_state.addAttribute("isStatic", isStatic);
+            $_state.addAttribute("classOwner", FlatSymbolRefAttr::get($_builder.getContext(), owner));
+            $_state.addAttribute("invokeType", invokeType);
             $_state.addTypes(callee.getFunctionType().getResults());
         }]>,
-        OpBuilder<(ins "Type":$result, "StringAttr":$callee, "IntegerAttr":$methodRef, "IntegerAttr":$isStatic, CArg<"ValueRange", "{}">:$operands), [{
+
+        // Builder with result type specification
+        OpBuilder<(ins "Type":$result, "StringAttr":$callee, "StringRef":$owner, "::mlir::shuriken::MjolnIR::InvokeTypeAttr":$invokeType, CArg<"ValueRange", "{}">:$operands), [{
             $_state.addOperands(operands);
             $_state.addAttribute("callee", SymbolRefAttr::get(callee));
-            $_state.addAttribute("methodRef", methodRef);
-            $_state.addAttribute("isStatic", isStatic);
+            $_state.addAttribute("classOwner", FlatSymbolRefAttr::get($_builder.getContext(), owner));
+            $_state.addAttribute("invokeType", invokeType);
             if (!mlir::isa<::mlir::shuriken::MjolnIR::DVMVoidType>(result))
                 $_state.addTypes(result);
         }]>,

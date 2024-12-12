@@ -57,4 +57,22 @@ def MjolnIR_FieldType : I32EnumAttr<
     let cppNamespace = "::mlir::shuriken::MjolnIR";
 }
 
+
+//===----------------------------------------------------------------------===//
+// MjolnIR_InvokeTypeAttr
+// Attribute used for specifying the type of invoke we are working with.
+//===----------------------------------------------------------------------===//
+def MjolnIR_InvokeTypeAttr : I32EnumAttr<
+    "InvokeType", "Different types of invoke instructions in Dalvik",
+    [
+      I32EnumAttrCase<"VIRTUAL", 0, "virtual">,
+      I32EnumAttrCase<"SUPER", 1, "super">,
+      I32EnumAttrCase<"DIRECT", 2, "direct">,
+      I32EnumAttrCase<"STATIC", 3, "static">,
+      I32EnumAttrCase<"INTERFACE", 4, "interface">,
+      I32EnumAttrCase<"NONE", 99, "none">
+    ]> {
+  let cppNamespace = "::mlir::shuriken::MjolnIR";
+}
+
 #endif // SHURIKENPROJECT_MJOLNIR_TD
