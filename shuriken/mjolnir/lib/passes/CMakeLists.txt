@@ -1,5 +1,6 @@
 add_library(MjolnIRPasses
 mjolnirtoopgraph.cpp
+opt.cpp
 )
 
 target_compile_options(MjolnIRPasses PRIVATE -fno-rtti)
