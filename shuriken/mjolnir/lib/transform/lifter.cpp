@@ -148,7 +148,7 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
 
     // now let's create a MethodOp, for that we will need first to retrieve
     // the type of the parameters
-    bool is_static = (encoded_method->get_flags() | shuriken::dex::TYPES::access_flags::ACC_STATIC) == shuriken::dex::TYPES::access_flags::ACC_STATIC;
+    bool is_static = (encoded_method->get_flags() & shuriken::dex::TYPES::access_flags::ACC_STATIC) == shuriken::dex::TYPES::access_flags::ACC_STATIC;
     auto paramTypes = gen_prototype(proto, is_static, method->get_class());
 
     // now retrieve the return type

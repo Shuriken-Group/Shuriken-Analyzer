@@ -11,8 +11,6 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction10t *instr)
     // TODO: is all instruction per line only? as in 1 instruction per line
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
-    this->log(fmt::format("Gen instr {}", instr->print_instruction()));
-
     switch (op_code) {
         case DexOpcodes::opcodes::OP_GOTO: {
             auto offset = instr->get_offset();
