@@ -11,7 +11,7 @@ namespace shuriken::MjolnIR {
         auto rhs = op.getRhs();
         auto res = op.getResult();
 
-        return fmt::format("add-int v{}, v{}, v{}", vrc.get_counter(res), vrc.get_counter(lhs), vrc.get_counter(rhs));
+        return fmt::format("add-int {}, {}, {}", get_smali_value(res), get_smali_value(lhs), get_smali_value(rhs));
 
         return "";
     }
@@ -20,14 +20,14 @@ namespace shuriken::MjolnIR {
         auto rhs = op.getRhs();
         auto res = op.getResult();
 
-        return fmt::format("mul-int v{}, v{}, v{}", vrc.get_counter(res), vrc.get_counter(lhs), vrc.get_counter(rhs));
+        return fmt::format("mul-int {}, {}, {}", get_smali_value(res), get_smali_value(lhs), get_smali_value(rhs));
     }
     SmaliLine MjolnIRToSmali::from_arith_divsi(arith::DivSIOp op) {
         auto lhs = op.getLhs();
         auto rhs = op.getRhs();
         auto res = op.getResult();
 
-        return fmt::format("div-int v{}, v{}, v{}", vrc.get_counter(res), vrc.get_counter(lhs), vrc.get_counter(rhs));
+        return fmt::format("div-int {}, {}, {}", get_smali_value(res), get_smali_value(lhs), get_smali_value(rhs));
     }
     SmaliLine MjolnIRToSmali::from_arith_cmpi(arith::CmpIOp op) {
         auto lhs = op.getLhs();
@@ -36,7 +36,7 @@ namespace shuriken::MjolnIR {
 
         previous_predicate = op.getPredicate();
         std::string pred_str = "cmp-long";
-        return fmt::format("{} v{}, v{}, v{}", pred_str, vrc.get_counter(res), vrc.get_counter(lhs), vrc.get_counter(rhs));
+        return fmt::format("{} {}, {}, {}", pred_str, get_smali_value(res), get_smali_value(lhs), get_smali_value(rhs));
     }
 
 
