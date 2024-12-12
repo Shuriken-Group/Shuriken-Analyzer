@@ -52,11 +52,11 @@ namespace shuriken::MjolnIR {
             auto op_it = operands.begin();
             auto bb_op_it = bb_operands.begin();
             for (; op_it != operands.end() && bb_op_it != bb_operands.end(); op_it++, bb_op_it++) {
-                handling.emplace_back(fmt::format("move v{}, v{}", vrc.get_counter(*bb_op_it), vrc.get_counter(*op_it)));
+                handling.emplace_back(fmt::format("move {}, {}", get_smali_value(*bb_op_it), get_smali_value(*op_it)));
             }
             auto pred = op->getOperand(0);
             auto comparision_type = arith_cmpipredicate_to_str(*previous_predicate);
-            auto temp_result = fmt::format("if-{} v{}, :block_{}", comparision_type, vrc.get_counter(pred), true_block_id);
+            auto temp_result = fmt::format("if-{} {}, :block_{}", comparision_type, get_smali_value(pred), true_block_id);
             handling.emplace_back(temp_result);
         }
 
@@ -68,7 +68,7 @@ namespace shuriken::MjolnIR {
             auto op_it = operands.begin();
             auto bb_op_it = bb_operands.begin();
             for (; op_it != operands.end() && bb_op_it != bb_operands.end(); op_it++, bb_op_it++) {
-                handling.emplace_back(fmt::format("move v{}, v{}", vrc.get_counter(*bb_op_it), vrc.get_counter(*op_it)));
+                handling.emplace_back(fmt::format("move {}, {}", get_smali_value(*bb_op_it), get_smali_value(*op_it)));
             }
             auto temp_result = fmt::format("goto :block_{}", false_block_id);
             handling.emplace_back(temp_result);
@@ -84,7 +84,7 @@ namespace shuriken::MjolnIR {
         auto bb_op_it = bb_operands.begin();
         SmaliLines handling;
         for (; op_it != operands.end() && bb_op_it != bb_operands.end(); op_it++, bb_op_it++) {
-            handling.emplace_back(fmt::format("move v{}, v{}", vrc.get_counter(*bb_op_it), vrc.get_counter(*op_it)));
+            handling.emplace_back(fmt::format("move {}, {}", vrc.get_counter(*bb_op_it), vrc.get_counter(*op_it)));
         }
         auto temp_result = fmt::format("goto :block_{}", block_counter.get_counter(dest));
         handling.emplace_back(temp_result);

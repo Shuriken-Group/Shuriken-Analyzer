@@ -3,7 +3,7 @@
 #include <iostream>
 namespace shuriken::MjolnIR {
     /// INFO: MJOLNIR
-    std::tuple<SmaliLines, SmaliLines> MjolnIRToSmali::from_mjolnir_method_op(MethodOp) {
+    std::tuple<SmaliLines, SmaliLines> MjolnIRToSmali::from_mjolnir_method_op(MethodOp op) {
         SmaliLines prologue = {".method"};
         SmaliLines epilogue = {".end method"};
         return {prologue, epilogue};
@@ -13,7 +13,7 @@ namespace shuriken::MjolnIR {
         if (operands.size() == 0) {
             return "return";
         } else if (operands.size() == 1) {
-            return fmt::format("return v{}", vrc.get_counter(operands.front()));
+            return fmt::format("return {}", get_smali_value(operands[0]));
         }
         std::cerr << "Returning more than 1 operand, which is an impossible variant\n";
         std::abort();

@@ -7,6 +7,7 @@
 #include <llvm/Support/raw_ostream.h>
 
 #include <mlir/IR/BuiltinOps.h>
+#include <mlir/IR/Value.h>
 #include <mlir/Pass/Pass.h>
 #include <mlir/Pass/PassManager.h>
 #include <mlir/Support/LLVM.h>
@@ -106,6 +107,57 @@ namespace shuriken::MjolnIR {
                 smali_lines.insert(smali_lines.end(), epilogue.begin(), epilogue.end());
             }
         }
+    }
+    std::string MjolnIRToSmali::get_smali_value(mlir::Value val) {
+        if (auto block_arg = llvm::dyn_cast<BlockArgument>(val)) {
+            if (block_arg.getParentBlock()->isEntryBlock()) {
+                return fmt::format("p{}", func_arg_counter.get_counter(val));
+            }
+        }
+        return fmt::format("v{}", vrc.get_counter(val));
+    }
+    std::string get_smali_access_flag(dex::TYPES::access_flags acc_flag) {
+        switch (acc_flag) {
+            case dex::TYPES::NONE:
+                return "";
+            case dex::TYPES::ACC_PUBLIC:
+                return "public";
+            case dex::TYPES::ACC_PRIVATE:
+                return "private";
+            case dex::TYPES::ACC_PROTECTED:
+                return "protected";
+            case dex::TYPES::ACC_STATIC:
+                return "static";
+            case dex::TYPES::ACC_FINAL:
+                return "final";
+            case dex::TYPES::ACC_SYNCHRONIZED:
+                return "synchronized";
+            case dex::TYPES::ACC_VOLATILE:
+                return "volatile";
+            case dex::TYPES::ACC_TRANSIENT:
+                return "transient";
+            case dex::TYPES::ACC_NATIVE:
+                return "native";
+            case dex::TYPES::ACC_INTERFACE:
+                return "interface";
+            case dex::TYPES::ACC_ABSTRACT:
+                return "abstract";
+            case dex::TYPES::ACC_STRICT:
+                return "strict";
+            case dex::TYPES::ACC_SYNTHETIC:
+                return "synthetic";
+            case dex::TYPES::ACC_ANNOTATION:
+                return "annotation";
+            case dex::TYPES::ACC_ENUM:
+                return "enum";
+            case dex::TYPES::UNUSED:
+                return "unused";
+            case dex::TYPES::ACC_CONSTRUCTOR:
+                return "constructor";
+            case dex::TYPES::ACC_DECLARED_SYNCHRONIZED:
+                return "declared_synchronized";
+        }
+        return "non-matching smali access flags, contact Jasmine or Edu";
     }
     void MjolnIRToSmali::runOnOperation() {
         auto *outer_op = getOperation();

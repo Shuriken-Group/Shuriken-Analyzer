@@ -25,6 +25,7 @@
 #include "mjolnir/MjolnIRDialect.h"
 #include "mjolnir/MjolnIROps.h"
 #include "mjolnir/MjolnIRTypes.h"
+#include "shuriken/common/Dex/dvm_types.h"
 namespace shuriken::MjolnIR {
     using SmaliLine = std::string;
     using SmaliLines = std::vector<std::string>;
@@ -59,7 +60,7 @@ namespace shuriken::MjolnIR {
         /// Virtual register counter, which is different than parameter_counter
         SmaliCounter<Value> vrc;
         SmaliCounter<Block *> block_counter;
-        SmaliCounter<Value> parameter_counter;
+        SmaliCounter<Value> func_arg_counter;
         SmaliLines &smali_lines;
         void runOnOperation() override;
 
@@ -89,6 +90,10 @@ namespace shuriken::MjolnIR {
 
 
         void emitOnMethodOp(MethodOp);
+
+        /// INFO: Get either vX or pX, depending on if the mlir value is block argument of the entry block or otherwise
+        std::string get_smali_value(mlir::Value);
+        std::string get_smali_access_flag(dex::TYPES::access_flags);
 
     public:
         MjolnIRToSmali(SmaliLines &smali_lines) : smali_lines(smali_lines) {}
