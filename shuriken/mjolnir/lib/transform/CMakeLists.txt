@@ -21,7 +21,7 @@ add_library(MjolnIRLifterLib lifter.cpp
   lift_instructions/Instruction32x.cpp
   lift_instructions/Instruction35c.cpp
   lift_instructions/Instruction51l.cpp
-  mjolnir_to_smali.cpp)
+  )
 
 target_compile_options(MjolnIRLifterLib PRIVATE -fno-rtti) # https://makslevental.github.io/working-with-mlir/#fixing-missing-__ztvn4mlir4passe-ie-typeinfo-for-mlirpass
 target_link_libraries(MjolnIRLifterLib LLVMSupport
