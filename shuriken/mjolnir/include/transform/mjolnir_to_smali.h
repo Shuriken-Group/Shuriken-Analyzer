@@ -55,9 +55,12 @@ namespace shuriken::MjolnIR {
 
     class MjolnIRToSmali : public PassWrapper<MjolnIRToSmali, OperationPass<>> {
         std::optional<arith::CmpIPredicate> previous_predicate;
+
+        /// Virtual register counter, which is different than parameter_counter
+        SmaliCounter<Value> vrc;
+        SmaliCounter<Block *> block_counter;
+        SmaliCounter<Value> parameter_counter;
         SmaliLines &smali_lines;
-        SmaliCounter<Value> &vrc;
-        SmaliCounter<Block *> &block_counter;
         void runOnOperation() override;
 
         /// INFO: ARITH
@@ -85,9 +88,9 @@ namespace shuriken::MjolnIR {
         SmaliLines from_cf_br(cf::BranchOp);
 
 
+        void emitOnMethodOp(MethodOp);
+
     public:
-        MjolnIRToSmali(SmaliLines &smali_lines, SmaliCounter<Value> &virtual_reg_counter, SmaliCounter<Block *> &block_counter) : smali_lines(smali_lines), vrc(virtual_reg_counter),
-                                                                                                                                  block_counter(block_counter) {}
-        std::vector<std::string> get_smali_lines();
+        MjolnIRToSmali(SmaliLines &smali_lines) : smali_lines(smali_lines) {}
     };
 }// namespace shuriken::MjolnIR
