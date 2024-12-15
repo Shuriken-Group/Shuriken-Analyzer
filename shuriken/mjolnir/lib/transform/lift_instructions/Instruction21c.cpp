@@ -49,7 +49,6 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
         case DexOpcodes::opcodes::OP_SGET_CHAR:
         case DexOpcodes::opcodes::OP_SGET_SHORT: {
             auto field = std::get<FieldID *>(instr->get_source_as_kind());
-            auto field_ref = instr->get_source();
 
             std::string_view field_name = field->field_name();
             std::string_view field_class = field->field_class()->get_raw_type();
@@ -58,14 +57,34 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
 
             auto generated_value = builder.create<::mlir::shuriken::MjolnIR::LoadFieldOp>(
                     location,
-                    dest_type,
                     field_name,
                     field_class,
-                    field_ref);
+                    dest_type);
 
             writeVariable(current_basic_block, dest, generated_value);
         } break;
+        case DexOpcodes::opcodes::OP_SPUT:
+        case DexOpcodes::opcodes::OP_SPUT_WIDE:
+        case DexOpcodes::opcodes::OP_SPUT_OBJECT:
+        case DexOpcodes::opcodes::OP_SPUT_BOOLEAN:
+        case DexOpcodes::opcodes::OP_SPUT_BYTE:
+        case DexOpcodes::opcodes::OP_SPUT_CHAR:
+        case DexOpcodes::opcodes::OP_SPUT_SHORT: {
+            auto field = std::get<FieldID *>(instr->get_source_as_kind());
 
+            std::string_view field_name = field->field_name();
+            std::string_view field_class = field->field_class()->get_raw_type();
+
+            auto reg = instr->get_destination();
+            auto reg_value = readVariable(current_basic_block, current_method->get_basic_blocks(), reg);
+
+            builder.create<::mlir::shuriken::MjolnIR::StoreFieldOp>(
+                location,
+                reg_value,
+                field_name,
+                field_class
+            );   
+        } break;
         default:
             throw exceptions::LifterException("Lifter::gen_instruction: Instruction21c not supported");
             break;

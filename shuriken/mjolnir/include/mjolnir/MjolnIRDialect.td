@@ -75,4 +75,19 @@ def MjolnIR_InvokeTypeAttr : I32EnumAttr<
   let cppNamespace = "::mlir::shuriken::MjolnIR";
 }
 
+//===----------------------------------------------------------------------===//
+// MjolnIR_FieldTypeAttr
+// Attribute used for specifying the type of load/get of a field (instance or static)
+//===----------------------------------------------------------------------===//
+def MjolnIR_FieldTypeAttr : I32EnumAttr<
+    "FieldAccessType", "Different types of load/get of a field",
+    [
+        I32EnumAttrCase<"INSTANCE", 0, "instance">,
+        I32EnumAttrCase<"STATIC", 1, "static">,
+        I32EnumAttrCase<"NONE", 99, "none">
+    ]> {
+    let cppNamespace = "::mlir::shuriken::MjolnIR";
+}
+
+
 #endif // SHURIKENPROJECT_MJOLNIR_TD

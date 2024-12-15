@@ -179,64 +179,112 @@ def GetArrayOp: MjolnIR_Op<"getarray",
 //===----------------------------------------------------------------------===//
 // LoadFieldOp
 //===----------------------------------------------------------------------===//
-def LoadFieldOp : MjolnIR_Op<"loadfield",
-    [ConstantLike, Pure]>
-{
+def LoadFieldOp : MjolnIR_Op<"loadfield", [Pure]> {
     let summary = "Load a field value";
 
     let description = [{
-        In order to produces an SSA value from a symbol reference
-        we have this operation that takes a symbol field name and
-        returns a value with the type of the field.
+        Loads a value from a field. The field can be either static or instance-based.
+        For instance fields, an object reference must be provided.
 
+        Examples:
         ```mlir
-            %2 = MjolnIR.loadfield @MyField (3) :  () -> DVMType
-        ```
+        // Static field load
+        %1 = MjolnIR.loadfield static MyClass->myStaticField : i32
 
-        It is not possible to create a kind of generic variable so
-        this will be a way to obtain a value from a non-SSA type
-        since the nature of a Field is not being SSA.
+        // Instance field load
+        %2 = MjolnIR.loadfield instance (%obj : !MjolnIR.object<MyClass>) MyClass->myField : i32
+        ```
     }];
 
     let arguments = (ins
-        FlatSymbolRefAttr:$fieldName, // name of Field
-        FlatSymbolRefAttr:$fieldClass, // class of Field
-        UI32Attr: $fieldRef // reference to Field in Dalvik code
+        FlatSymbolRefAttr:$fieldName,    // name of Field
+        FlatSymbolRefAttr:$fieldClass,   // class of Field
+        MjolnIR_FieldTypeAttr:$accessType, // type of field access
+        Optional<DVM_BasicTypes>:$instance    // optional instance object for instance fields
     );
 
     let results = (outs
-        DVM_BasicTypes               // any of the DVM Basic Types
+        DVM_BasicTypes  // any of the DVM Basic Types
     );
 
-    let assemblyFormat = "attr-dict $fieldClass`->`$fieldName `(` $fieldRef `)` `:` type(results)";
+    let assemblyFormat = [{
+        $accessType ($instance^ `:` type($instance))? $fieldClass `->` $fieldName attr-dict `:` type(results)
+    }];
+
+    let builders = [
+        // Builder for static field loads
+        OpBuilder<(ins "StringRef":$fieldName, "StringRef":$fieldClass, "Type":$resultType), [{
+            $_state.addAttribute("fieldName", FlatSymbolRefAttr::get($_builder.getContext(), fieldName));
+            $_state.addAttribute("fieldClass", FlatSymbolRefAttr::get($_builder.getContext(), fieldClass));
+            $_state.addAttribute("accessType", ::mlir::shuriken::MjolnIR::FieldAccessTypeAttr::get($_builder.getContext(), 
+                ::mlir::shuriken::MjolnIR::FieldAccessType::STATIC));
+            $_state.addTypes(resultType);
+        }]>,
+
+        // Builder for instance field loads
+        OpBuilder<(ins "StringRef":$fieldName, "StringRef":$fieldClass, "Value":$instance, "Type":$resultType), [{
+            $_state.addAttribute("fieldName", FlatSymbolRefAttr::get($_builder.getContext(), fieldName));
+            $_state.addAttribute("fieldClass", FlatSymbolRefAttr::get($_builder.getContext(), fieldClass));
+            $_state.addAttribute("accessType", ::mlir::shuriken::MjolnIR::FieldAccessTypeAttr::get($_builder.getContext(), 
+                ::mlir::shuriken::MjolnIR::FieldAccessType::INSTANCE));
+            $_state.addOperands(instance);
+            $_state.addTypes(resultType);
+        }]>
+    ];
 }
 
 //===----------------------------------------------------------------------===//
 // StoreFieldOp
 //===----------------------------------------------------------------------===//
-def StoreFieldOp : MjolnIR_Op<"storefield", []>
-{
+def StoreFieldOp : MjolnIR_Op<"storefield", []> {
     let summary = "Store value in field";
 
     let description = [{
-        In order to store a value in a field we have to represent the field
-        as a Symbol, since there are not global variables. In that case we
-        will obtain the SSA value that will be stored in the field, and we will
-        obtain the name of the field and reference.
+        Stores a value into a field. The field can be either static or instance-based.
+        For instance fields, an object reference must be provided.
 
+        Examples:
         ```mlir
-            MjolnIR.storeField 
+        // Static field store
+        MjolnIR.storefield static %value : i32, MyClass->myStaticField
+
+        // Instance field store
+        MjolnIR.storefield instance %value : i32, (%obj : !MjolnIR.object<MyClass>) MyClass->myField
         ```
     }];
 
     let arguments = (ins
-        DVM_BasicTypes:$value,   // value to store in the Field
-        FlatSymbolRefAttr:$fieldName, // name of Field
-        FlatSymbolRefAttr:$fieldClass, // class of Field
-        UI32Attr: $fieldRef // reference to Field in Dalvik code
+        DVM_BasicTypes:$value,           // value to store in the Field
+        FlatSymbolRefAttr:$fieldName,    // name of Field
+        FlatSymbolRefAttr:$fieldClass,   // class of Field
+        MjolnIR_FieldTypeAttr:$accessType, // type of field access
+        Optional<DVM_BasicTypes>:$instance    // optional instance object for instance fields
     );
 
-    let assemblyFormat = "attr-dict $value`:`type($value)`,` $fieldClass`->`$fieldName `(`$fieldRef`)`";
+    let assemblyFormat = [{
+        $accessType $value `:` type($value) `,` ($instance^ `:` type($instance))? $fieldClass `->` $fieldName attr-dict
+    }];
+
+    let builders = [
+        // Builder for static field stores
+        OpBuilder<(ins "Value":$value, "StringRef":$fieldName, "StringRef":$fieldClass), [{
+            $_state.addOperands(value);
+            $_state.addAttribute("fieldName", FlatSymbolRefAttr::get($_builder.getContext(), fieldName));
+            $_state.addAttribute("fieldClass", FlatSymbolRefAttr::get($_builder.getContext(), fieldClass));
+            $_state.addAttribute("accessType", ::mlir::shuriken::MjolnIR::FieldAccessTypeAttr::get($_builder.getContext(), 
+                ::mlir::shuriken::MjolnIR::FieldAccessType::STATIC));
+        }]>,
+
+        // Builder for instance field stores
+        OpBuilder<(ins "Value":$value, "StringRef":$fieldName, "StringRef":$fieldClass, "Value":$instance), [{
+            $_state.addOperands(value);
+            $_state.addAttribute("fieldName", FlatSymbolRefAttr::get($_builder.getContext(), fieldName));
+            $_state.addAttribute("fieldClass", FlatSymbolRefAttr::get($_builder.getContext(), fieldClass));
+            $_state.addAttribute("accessType", ::mlir::shuriken::MjolnIR::FieldAccessTypeAttr::get($_builder.getContext(), 
+                ::mlir::shuriken::MjolnIR::FieldAccessType::INSTANCE));
+            $_state.addOperands(instance);
+        }]>
+    ];
 }
 
 
