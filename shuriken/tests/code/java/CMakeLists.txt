@@ -24,6 +24,7 @@ if(DEX AND DEX_TESTS AND COMPILE_DEX_FILES)
             _xrefs
             _test_lifter
             DexParserTest
+            TestFieldsLifter
     )
 
     set(D8_RESULTS)
