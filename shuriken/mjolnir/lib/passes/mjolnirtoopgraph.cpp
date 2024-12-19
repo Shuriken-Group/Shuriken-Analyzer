@@ -29,8 +29,8 @@
 #include "mjolnir/MjolnIRTypes.h"
 
 /// Constants used for drawing the graph
-static const mlir::StringRef kLineStyleControlFlow = "dashed";
-static const mlir::StringRef kLineStyleDataFlow = "solid";
+[[maybe_unused]] static const mlir::StringRef kLineStyleControlFlow = "dashed";
+[[maybe_unused]] static const mlir::StringRef kLineStyleDataFlow = "solid";
 static const mlir::StringRef kShapeNode = "ellipse";
 static const mlir::StringRef kShapeNone = "plain";
 static const std::size_t maxLabelLen = 250;
@@ -73,7 +73,6 @@ static std::string quoteString(const std::string &str) {
 using AttributeMap = std::map<std::string, std::string>;
 
 namespace {
-
     /** 
  * This struct represents a node in the DOT language. Each node has an
  * identifier and an optional identifier for the cluster (subgraph) that
