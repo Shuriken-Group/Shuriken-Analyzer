@@ -8,17 +8,8 @@
 
 namespace shuriken {
     namespace MjolnIR {
-
-        class Opt {
-            mlir::MLIRContext context;
-
-            mlir::PassManager pm;
-
-        public:
-            // TODO: explain PM::On
-            Opt();
-
+        namespace Opt {
             mlir::LogicalResult run(mlir::ModuleOp &&module);
-        };
+        }
     }// namespace MjolnIR
 }// namespace shuriken

@@ -28,8 +28,19 @@
 #include <mlir/Support/LogicalResult.h>
 #include <mlir/Transforms/GreedyPatternRewriteDriver.h>
 #include <mlir/Transforms/Passes.h>
-namespace {
+namespace shuriken::MjolnIR::Opt {
     using namespace mlir;
+    class Opt {
+        mlir::MLIRContext context;
+
+        mlir::PassManager pm;
+
+    public:
+        // TODO: explain PM::On
+        Opt();
+        mlir::LogicalResult run(mlir::ModuleOp &module);
+    };
+
     class OptAdd : public mlir::OpRewritePattern<mlir::arith::AddIOp> {
         OptAdd(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/3) {}
 
@@ -69,47 +80,32 @@ namespace {
             mlir::RewritePatternSet patterns(&context);
             registerMjolnIRToDalvikLowering(context, patterns);
 
-            // bool should_lower = false;
-            // // First, let's log what operations we find
-            // module.walk([&](mlir::Operation *op) {
-            //     llvm::errs() << "Found operation: " << op->getName() << "\n";
-            //     if (llvm::isa<mlir::shuriken::MjolnIR::FallthroughOp>(op)) {
-            //         llvm::errs() << "Found a FallthroughOp to lower\n";
-            //         should_lower = true;
-            //     } else {
-            //         llvm::errs() << "Not one of the supported lowering methods, skipping it \n";
-            //         should_lower = false;
-            //     }
-            // });
-            //
-            // if (!should_lower) return;
-            // Apply the patterns to the entire module once
-            llvm::errs() << "Applying patterns\n";
             if (mlir::failed(mlir::applyPatternsAndFoldGreedily(module, std::move(patterns)))) {
-                llvm::errs() << "Failed to apply patterns\n";
                 return;
             }
         }
     };
+    Opt::Opt() : context(mlir::MLIRContext()), pm(&context) {
+        // Load required dialects
+        context.loadAllAvailableDialects();
+        context.getOrLoadDialect<::mlir::shuriken::MjolnIR::MjolnIRDialect>();
+        context.getOrLoadDialect<::mlir::cf::ControlFlowDialect>();
+        context.getOrLoadDialect<::mlir::arith::ArithDialect>();
+        context.getOrLoadDialect<::mlir::func::FuncDialect>();
+        pm.addPass(std::make_unique<MjolnIROpt>());
+        pm.addPass(mlir::createSCCPPass());
+    }
+    mlir::LogicalResult Opt::run(mlir::ModuleOp &module) {
+        std::cerr << "Running a module\n";
+        auto result = pm.run(module);
+        return result;
+    }
 
-}// namespace
+}// namespace shuriken::MjolnIR::Opt
 namespace shuriken {
-    namespace MjolnIR {
-
-        Opt::Opt() : context(mlir::MLIRContext()), pm(&context) {
-            // Load required dialects
-            context.loadAllAvailableDialects();
-            context.getOrLoadDialect<::mlir::shuriken::MjolnIR::MjolnIRDialect>();
-            context.getOrLoadDialect<::mlir::cf::ControlFlowDialect>();
-            context.getOrLoadDialect<::mlir::arith::ArithDialect>();
-            context.getOrLoadDialect<::mlir::func::FuncDialect>();
-            pm.addPass(std::make_unique<MjolnIROpt>());
-            pm.addPass(mlir::createSCCPPass());
+    namespace MjolnIR::Opt {
+        mlir::LogicalResult run(mlir::ModuleOp &&module) {
+            return Opt().run(module);
         }
-        mlir::LogicalResult Opt::run(mlir::ModuleOp &&module) {
-            std::cerr << "Running a module\n";
-            auto result = pm.run(module);
-            return result;
-        }
-    }// namespace MjolnIR
+    }// namespace MjolnIR::Opt
 }// namespace shuriken
