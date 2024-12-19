@@ -21,7 +21,7 @@ add_library(MjolnIRTransformLib lifter.cpp
   lift_instructions/Instruction32x.cpp
   lift_instructions/Instruction35c.cpp
   lift_instructions/Instruction51l.cpp
-  lower.cpp)
+)
 
 target_link_libraries(MjolnIRTransformLib LLVMSupport
     MjolnIRLib
