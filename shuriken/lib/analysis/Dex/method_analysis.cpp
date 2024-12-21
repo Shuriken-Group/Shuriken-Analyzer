@@ -238,7 +238,7 @@ void MethodAnalysis::create_basic_blocks() {
     if (current == nullptr) {
         current = new DVMBasicBlock(disassembled->get_ref_to_instructions(start, end));
         basic_blocks->add_node(current);
-    } else if (start != end) {
+    } else if (start != end || basic_blocks->get_basic_block_by_idx(start) == nullptr) {
         prev = current;
         current = new DVMBasicBlock(disassembled->get_ref_to_instructions(start, end));
         auto next = internal_disassembler.determine_next(prev->get_terminator(), prev->get_last_address());
