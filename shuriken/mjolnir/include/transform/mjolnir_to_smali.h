@@ -48,6 +48,11 @@ namespace shuriken::MjolnIR {
 
             return this->counter_map[a];
         }
+
+        void clean_counter() {
+            counter = 0;
+            counter_map.clear();
+        }
     };
 
 
@@ -82,6 +87,7 @@ namespace shuriken::MjolnIR {
         SmaliLine from_mjolnir_loadvalue(LoadValue);
         SmaliLine from_mjolnir_new(NewOp);
         SmaliLine from_mjolnir_getarray(GetArrayOp);
+        SmaliLine from_mjolnir_loadstring(LoadString);
 
 
         /// INFO: Control flow dialect

@@ -74,6 +74,9 @@ namespace shuriken::MjolnIR {
                 } else if (auto op = llvm::dyn_cast<GetArrayOp>(gen_op)) {
                     smali_line = from_mjolnir_getarray(op);
                     matched_an_op = true;
+                } else if (auto op = llvm::dyn_cast<LoadString>(gen_op)) {
+                    smali_line = from_mjolnir_loadstring(op);
+                    matched_an_op = true;
                 }
                 if (matched_an_op) {
                     smali_lines.emplace_back(std::string(TAB) + smali_line);
