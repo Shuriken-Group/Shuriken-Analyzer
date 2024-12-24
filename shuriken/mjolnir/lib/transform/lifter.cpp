@@ -104,7 +104,7 @@ mlir::Type Lifter::get_type(DVMFundamental *fundamental) {
 }
 
 mlir::Type Lifter::get_type(DVMClass *cls) {
-    return ::mlir::shuriken::MjolnIR::DVMObjectType::get(&context, cls->get_class_name());
+    return ::mlir::shuriken::MjolnIR::DVMObjectType::get(&context, cls->get_raw_type());
 }
 
 mlir::Type Lifter::get_type(DVMType *type) {
@@ -114,7 +114,7 @@ mlir::Type Lifter::get_type(DVMType *type) {
         return get_type(reinterpret_cast<DVMClass *>(type));
     else if (type->get_type() == ARRAY) {
         DVMArray *dvm_array_p = reinterpret_cast<DVMArray *>(type);
-        return ::mlir::shuriken::MjolnIR::DVMArrayType::get(&context, dvm_array_p->print_type());
+        return ::mlir::shuriken::MjolnIR::DVMArrayType::get(&context, dvm_array_p->get_raw_type());
         // throw exceptions::LifterException("MjolnIRLIfter::get_type: type ARRAY not implemented yet...");
     } else
 
@@ -141,6 +141,8 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
 ::mlir::shuriken::MjolnIR::MethodOp Lifter::get_method(analysis::dex::MethodAnalysis *M) {
     auto encoded_method = M->get_encoded_method();
 
+    auto flags = encoded_method->get_flags();
+
     auto method = encoded_method->getMethodID();
 
     parser::dex::ProtoID *proto = method->get_prototype();
@@ -150,7 +152,7 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
 
     // now let's create a MethodOp, for that we will need first to retrieve
     // the type of the parameters
-    bool is_static = (encoded_method->get_flags() & shuriken::dex::TYPES::access_flags::ACC_STATIC) == shuriken::dex::TYPES::access_flags::ACC_STATIC;
+    bool is_static = (flags & shuriken::dex::TYPES::access_flags::ACC_STATIC) == shuriken::dex::TYPES::access_flags::ACC_STATIC;
     auto paramTypes = gen_prototype(proto, is_static, method->get_class());
 
     // now retrieve the return type
@@ -159,7 +161,7 @@ llvm::SmallVector<mlir::Type> Lifter::gen_prototype(ProtoID *proto, bool is_stat
     // create now the method type
     auto methodType = builder.getFunctionType(paramTypes, {retType});
 
-    auto methodOp = builder.create<::mlir::shuriken::MjolnIR::MethodOp>(method_location, name, methodType);
+    auto methodOp = builder.create<::mlir::shuriken::MjolnIR::MethodOp>(method_location, flags, name, methodType);
 
     /// declare the register parameters, these are used during the
     /// program

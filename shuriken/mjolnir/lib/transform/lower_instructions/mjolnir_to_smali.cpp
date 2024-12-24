@@ -126,7 +126,7 @@ namespace {
 
         if (auto arrayType = mlir::dyn_cast<::mlir::shuriken::MjolnIR::DVMArrayType>(type)) {
             auto type_name = arrayType.getArrayType();
-            return fmt::format("[{}", type_name.data());
+            return type_name.str();
         }
 
         return "ERROR";
@@ -144,6 +144,47 @@ namespace shuriken::MjolnIR {
         auto parameter_types = op.getArgumentTypes();
         auto ret_type = op.getResultTypes();
 
+
+        std::stringstream p;
+        bool first = true;
+
+        // Access modifiers first
+        if (op.isPublic()) {
+            p << "public";
+            first = false;
+        }
+        if (op.isPrivate()) {
+            if (!first) p << " ";
+            p << "private";
+            first = false;
+        }
+        if (op.isProtected()) {
+            if (!first) p << " ";
+            p << "protected";
+            first = false;
+        }
+
+        // Then static
+        if (op.isStatic()) {
+            if (!first) p << " ";
+            p << "static";
+            first = false;
+        }
+
+        // Then final
+        if (op.isFinal()) {
+            if (!first) p << " ";
+            p << "final";
+            first = false;
+        }
+
+        // Then synchronized
+        if (op.isSynchronized()) {
+            if (!first) p << " ";
+            p << "synchronized";
+            first = false;
+        }
+
         std::stringstream parameters;
         parameters << "(";
         for (auto parameter_type : parameter_types)
@@ -151,7 +192,8 @@ namespace shuriken::MjolnIR {
         parameters << ")";
 
 
-        SmaliLine prologue_line = fmt::format(".method {}{}{}", 
+        SmaliLine prologue_line = fmt::format(".method {} {}{}{}", 
+            p.str(),
             method_name, 
             parameters.str(), 
             ::get_dalviktype_from_mlir_type(ret_type[0]));

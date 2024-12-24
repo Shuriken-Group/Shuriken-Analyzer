@@ -89,5 +89,35 @@ def MjolnIR_FieldTypeAttr : I32EnumAttr<
     let cppNamespace = "::mlir::shuriken::MjolnIR";
 }
 
+//===----------------------------------------------------------------------===//
+// MjolnIR_MethodFlags
+// Attribute used for specifying the type of Method in a MethodOp
+//===----------------------------------------------------------------------===//
+def MjolnIR_MethodFlagsAttr : I32BitEnumAttr<
+   "MethodFlags", "Access and modifier flags for methods",
+   [
+       I32BitEnumAttrCase<"NONE", 0x0, "none">,
+       I32BitEnumAttrCase<"PUBLIC", 0x1, "public">,
+       I32BitEnumAttrCase<"PRIVATE", 0x2, "private">, 
+       I32BitEnumAttrCase<"PROTECTED", 0x4, "protected">,
+       I32BitEnumAttrCase<"STATIC", 0x8, "static">,
+       I32BitEnumAttrCase<"FINAL", 0x10, "final">,
+       I32BitEnumAttrCase<"SYNCHRONIZED", 0x20, "synchronized">,
+       I32BitEnumAttrCase<"VOLATILE", 0x40, "volatile">,
+       I32BitEnumAttrCase<"TRANSIENT", 0x80, "transient">,
+       I32BitEnumAttrCase<"NATIVE", 0x100, "native">,
+       I32BitEnumAttrCase<"INTERFACE", 0x200, "interface">,
+       I32BitEnumAttrCase<"ABSTRACT", 0x400, "abstract">,
+       I32BitEnumAttrCase<"STRICT", 0x800, "strict">,
+       I32BitEnumAttrCase<"SYNTHETIC", 0x1000, "synthetic">,
+       I32BitEnumAttrCase<"ANNOTATION", 0x2000, "annotation">,
+       I32BitEnumAttrCase<"ENUM", 0x4000, "enum">,
+       I32BitEnumAttrCase<"UNUSED", 0x8000, "unused">,
+       I32BitEnumAttrCase<"CONSTRUCTOR", 0x10000, "constructor">,
+       I32BitEnumAttrCase<"DECLARED_SYNCHRONIZED", 0x20000, "declared_synchronized">
+   ]> {
+   let cppNamespace = "::mlir::shuriken::MjolnIR";
+}
+
 
 #endif // SHURIKENPROJECT_MJOLNIR_TD
