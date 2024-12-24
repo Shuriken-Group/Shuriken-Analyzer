@@ -295,46 +295,85 @@ def MethodOp : MjolnIR_Op<"method", [
     DeclareOpInterfaceMethods<CallableOpInterface>,
     FunctionOpInterface,
     IsolatedFromAbove
-    ]>
-{
+    ]> {
     let summary = "Method from Dalvik";
 
     let description = [{
         A mjolnir.method describes a method from a class from Dalvik, defined
         by the programmer. These will contain instructions from MjolnIR.
+        
+        Example:
+        ```mlir
+        mjolnir.method @methodName(i32, i32) -> i32 {
+            flags = #mjolnir<method_flags Public|Static>
+        }
+        ```
     }];
 
     let arguments = (ins
         SymbolNameAttr:$sym_name,
         TypeAttrOf<FunctionType>:$function_type,
+        MjolnIR_MethodFlagsAttr:$mflags,
         OptionalAttr<DictArrayAttr>:$arg_attrs,
         OptionalAttr<DictArrayAttr>:$res_attrs
     );
 
     let regions = (region AnyRegion:$body);
 
-    let builders = [OpBuilder<(ins
-    "StringRef":$name, "FunctionType":$type,
-    CArg<"ArrayRef<NamedAttribute>", "{}">:$attrs)
-    >];
-    
-    let extraClassDeclaration = [{
-    //===------------------------------------------------------------------===//
-    // FunctionOpInterface Methods
-    //===------------------------------------------------------------------===//
-
-    // TODO: FunctionOpInterface methods are automatically declared, at least in mlir 18.
-    // making these redundant, consider removing them.
-
-    /// Returns the argument types of this function.
-    // ArrayRef<Type> getArgumentTypes() { return getFunctionType().getInputs(); }
-
-    /// Returns the result types of this function.
-    // ArrayRef<Type> getResultTypes() { return getFunctionType().getResults(); }
+    let assemblyFormat = [{
+        $mflags $sym_name `(` $function_type `)`
+        attr-dict-with-keyword regions
     }];
 
-    let hasCustomAssemblyFormat = 1;
+    let builders = [
+        OpBuilder<(ins
+            "uint32_t":$mflags,
+            "StringRef":$name,
+            "FunctionType":$type,
+            CArg<"ArrayRef<NamedAttribute>", "{}">:$attrs
+        )>,
+        // Convenience builder without flags (defaults to Public)
+        OpBuilder<(ins
+            "StringRef":$name,
+            "FunctionType":$type,
+            CArg<"ArrayRef<NamedAttribute>", "{}">:$attrs
+        )>
+    ];
     
+    let extraClassDeclaration = [{
+        //===------------------------------------------------------------------===//
+        // Flag manipulation methods
+        //===------------------------------------------------------------------===//
+
+        /// Check if method has a specific flag
+        bool hasFlag(MethodFlags flag) {
+            return static_cast<uint32_t>(getMflags()) & static_cast<uint32_t>(flag);
+        }
+
+        /// Check if method is public
+        bool isPublic() { return hasFlag(MethodFlags::PUBLIC); }
+
+        /// Check if method is private 
+        bool isPrivate() { return hasFlag(MethodFlags::PRIVATE); }
+
+        /// Check if method is protected
+        bool isProtected() { return hasFlag(MethodFlags::PROTECTED); }
+
+        /// Check if method is static
+        bool isStatic() { return hasFlag(MethodFlags::STATIC); }
+
+        /// Check if method is final
+        bool isFinal() { return hasFlag(MethodFlags::FINAL); }
+
+        /// Check if method is synchronized
+        bool isSynchronized() { return hasFlag(MethodFlags::SYNCHRONIZED); }
+
+        /// Check if method is a constructor
+        bool isConstructor() { return hasFlag(MethodFlags::CONSTRUCTOR); }
+    }];
+
+
+    let hasCustomAssemblyFormat = 1;
     let skipDefaultBuilders = 1;
 }
 
