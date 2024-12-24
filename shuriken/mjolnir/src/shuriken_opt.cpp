@@ -77,8 +77,9 @@ int main(int argc, char **argv) {
             }
             if (opt) {
                 std::cerr << "*****BEGIN Optimizer*****\n";
+                shuriken::MjolnIR::Opt::Opt opt;
                 for (auto &module: lifter.mlir_gen_result) {
-                    auto result = shuriken::MjolnIR::Opt::run(module.get());
+                    auto result = opt.remove_nop(module.get());
                     if (mlir::failed(result)) {
                         llvm::errs() << "Failed to optimize" << module.get().getName() << "\n";
                     } else {

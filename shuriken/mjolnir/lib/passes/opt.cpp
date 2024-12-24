@@ -30,45 +30,22 @@
 #include <mlir/Transforms/Passes.h>
 namespace shuriken::MjolnIR::Opt {
     using namespace mlir;
-    class Opt {
-        mlir::MLIRContext context;
-
-        mlir::PassManager pm;
-
-    public:
-        // TODO: explain PM::On
-        Opt();
-        mlir::LogicalResult run(mlir::ModuleOp &module);
-    };
-
-    class OptAdd : public mlir::OpRewritePattern<mlir::arith::AddIOp> {
-        OptAdd(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/3) {}
-
-        LogicalResult matchAndRewrite(mlir::arith::AddIOp op, mlir::PatternRewriter &rewriter) const override {
-            auto rhs = op.getRhs().getDefiningOp();
-            if (llvm::isa<mlir::arith::ConstantOp>(rhs)) return success();
-            else
-                return success();
-        }
-    };
-    class OptNop : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::Nop> {
-
-    public:
-        OptNop(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
-
-        LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::Nop op, mlir::PatternRewriter &rewriter) const override {
-            llvm::errs() << "Matching and rewriting FallthroughOp\n";
-            llvm::errs() << "Successfully erased FallthroughOp\n";
-            rewriter.eraseOp(op);
-            return success();
-        }
-    };
 
     /// The Lower class applies all lowering patterns that is added to it when it enters/encounters a FuncOp
-    class MjolnIROpt : public mlir::PassWrapper<MjolnIROpt, mlir::OperationPass<mlir::ModuleOp>> {
-        void registerMjolnIRToDalvikLowering(mlir::MLIRContext &context, mlir::RewritePatternSet &s) {
-            s.add<OptNop>(&context);
-        }
+    class MjolnIRRemoveNop : public mlir::PassWrapper<MjolnIRRemoveNop, mlir::OperationPass<mlir::ModuleOp>> {
+
+        class OptNop : public mlir::OpRewritePattern<mlir::shuriken::MjolnIR::Nop> {
+
+        public:
+            OptNop(mlir::MLIRContext *context) : OpRewritePattern(context, /*benefit=*/1) {}
+
+            LogicalResult matchAndRewrite(mlir::shuriken::MjolnIR::Nop op, mlir::PatternRewriter &rewriter) const override {
+                llvm::errs() << "Matching and rewriting FallthroughOp\n";
+                llvm::errs() << "Successfully erased FallthroughOp\n";
+                rewriter.eraseOp(op);
+                return success();
+            }
+        };
 
     public:
         void runOnOperation() override {
@@ -78,7 +55,7 @@ namespace shuriken::MjolnIR::Opt {
 
             // Create a RewritePatternSet and add your patterns
             mlir::RewritePatternSet patterns(&context);
-            registerMjolnIRToDalvikLowering(context, patterns);
+            patterns.add<OptNop>(&context);
 
             if (mlir::failed(mlir::applyPatternsAndFoldGreedily(module, std::move(patterns)))) {
                 return;
@@ -92,20 +69,13 @@ namespace shuriken::MjolnIR::Opt {
         context.getOrLoadDialect<::mlir::cf::ControlFlowDialect>();
         context.getOrLoadDialect<::mlir::arith::ArithDialect>();
         context.getOrLoadDialect<::mlir::func::FuncDialect>();
-        pm.addPass(std::make_unique<MjolnIROpt>());
-        pm.addPass(mlir::createSCCPPass());
     }
-    mlir::LogicalResult Opt::run(mlir::ModuleOp &module) {
+    mlir::LogicalResult Opt::remove_nop(mlir::ModuleOp &&module) {
+        pm.clear();
+        pm.addPass(std::make_unique<MjolnIRRemoveNop>());
         std::cerr << "Running a module\n";
         auto result = pm.run(module);
         return result;
     }
 
 }// namespace shuriken::MjolnIR::Opt
-namespace shuriken {
-    namespace MjolnIR::Opt {
-        mlir::LogicalResult run(mlir::ModuleOp &&module) {
-            return Opt().run(module);
-        }
-    }// namespace MjolnIR::Opt
-}// namespace shuriken
