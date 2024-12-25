@@ -13,13 +13,13 @@ include "MjolnIRTypes.td"
 include "MjolnIRDialect.td"
 
 include "mlir/IR/OpBase.td"
+include "mlir/Interfaces/ControlFlowInterfaces.td"
 include "mlir/Bytecode/BytecodeOpInterface.td"
 include "mlir/IR/AttrTypeBase.td"
 include "mlir/Interfaces/FunctionInterfaces.td"
 include "mlir/Interfaces/CallInterfaces.td"
 include "mlir/Interfaces/CastInterfaces.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
-include "mlir/Interfaces/ControlFlowInterfaces.td"
 
 // TODO: Should we restrict AnyType to at least MjolnirType
 
@@ -425,6 +425,7 @@ def ReturnOp : MjolnIR_Op<"return", [Pure, Terminator]> {
 //===----------------------------------------------------------------------===//
 
 def FallthroughOp : MjolnIR_Op<"fallthrough", [
+    DeclareOpInterfaceMethods<BranchOpInterface, ["getSuccessorForOperands"]>,
     Pure, Terminator
   ]> {
   let summary = "FallThrough jump";
