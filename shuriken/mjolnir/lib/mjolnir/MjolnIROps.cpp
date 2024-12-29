@@ -102,3 +102,11 @@ Operation::operand_range InvokeOp::getArgOperands() { return getInputs(); }
 void FallthroughOp::setDest(Block *block) { return setSuccessor(block); }
 
 void FallthroughOp::eraseOperand(unsigned index) { (*this)->eraseOperand(index); }
+
+SuccessorOperands FallthroughOp::getSuccessorOperands(unsigned index) {
+    assert(index == 0 && "invalid successor index");
+    return SuccessorOperands(getDestOperandsMutable());
+}
+Block *FallthroughOp::getSuccessorForOperands(ArrayRef<Attribute>) {
+    return getDest();
+}
