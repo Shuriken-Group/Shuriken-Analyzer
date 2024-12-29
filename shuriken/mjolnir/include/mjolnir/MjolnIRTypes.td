@@ -10,7 +10,7 @@
 
 include "mlir/IR/BuiltinTypes.td"
 include "mlir/IR/AttrTypeBase.td"
-include "MjolnIRDialect.td"
+include "mjolnir/MjolnIRDialect.td"
 
 class MjolnIRType<string typeName, string typeMnemonic, list<Trait> traits = []>
   : TypeDef<MjolnIR_Dialect, typeName, traits>
@@ -57,6 +57,6 @@ def DVMArray : MjolnIRType<"DVMArray", "dvmarray"> {
   }];
 }
 
-def DVM_BasicTypes : AnyTypeOf<[Builtin_Integer, Builtin_Float32, Builtin_Float64, DVMObject, DVMArray]>;
+def DVM_BasicTypes : AnyTypeOf<[Builtin_Integer, Builtin_Float32, Builtin_Float64, DVMObject, DVMVoid, DVMArray]>;
 
 #endif // DALVIK_MJOLNIRTYPES_TD

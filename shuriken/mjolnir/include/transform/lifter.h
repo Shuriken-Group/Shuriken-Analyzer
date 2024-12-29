@@ -30,23 +30,6 @@
 #include <mlir/IR/Block.h>
 #include <mlir/Support/LLVM.h>
 
-using namespace mlir::shuriken::MjolnIR;
-using shuriken::analysis::dex::BasicBlocks;
-using shuriken::analysis::dex::DVMBasicBlock;
-using shuriken::analysis::dex::MethodAnalysis;
-using shuriken::disassembler::dex::DexOpcodes;
-using shuriken::disassembler::dex::InstructionUtils;
-using shuriken::parser::dex::ARRAY;
-using shuriken::parser::dex::CLASS;
-using shuriken::parser::dex::DVMArray;
-using shuriken::parser::dex::DVMClass;
-using shuriken::parser::dex::DVMFundamental;
-using shuriken::parser::dex::DVMType;
-using shuriken::parser::dex::FieldID;
-using shuriken::parser::dex::FUNDAMENTAL;
-using shuriken::parser::dex::fundamental_e;
-using shuriken::parser::dex::MethodID;
-using shuriken::parser::dex::ProtoID;
 
 namespace exceptions {
     class LifterException : public std::exception {
@@ -64,15 +47,32 @@ namespace exceptions {
 
 namespace shuriken {
     namespace MjolnIR {
+        using namespace mlir::shuriken::MjolnIR;
         enum class BasicBlockType {
             NormalBlock,
             TryBlock,
             CatchBlock
         };
+        using ::shuriken::analysis::dex::BasicBlocks;
+        using ::shuriken::analysis::dex::DVMBasicBlock;
+        using ::shuriken::analysis::dex::MethodAnalysis;
+        using ::shuriken::disassembler::dex::DexOpcodes;
+        using ::shuriken::disassembler::dex::InstructionUtils;
+        using ::shuriken::parser::dex::ARRAY;
+        using ::shuriken::parser::dex::CLASS;
+        using ::shuriken::parser::dex::DVMArray;
+        using ::shuriken::parser::dex::DVMClass;
+        using ::shuriken::parser::dex::DVMFundamental;
+        using ::shuriken::parser::dex::DVMType;
+        using ::shuriken::parser::dex::FieldID;
+        using ::shuriken::parser::dex::FUNDAMENTAL;
+        using ::shuriken::parser::dex::fundamental_e;
+        using ::shuriken::parser::dex::MethodID;
+        using ::shuriken::parser::dex::ProtoID;
         class Lifter {
         public:
             using edge_t =
-                    std::pair<shuriken::analysis::dex::DVMBasicBlock *, shuriken::analysis::dex::DVMBasicBlock *>;
+                    std::pair<DVMBasicBlock *, DVMBasicBlock *>;
 
             struct BasicBlockDef {
                 /// Map a register to its definition in IR
@@ -94,14 +94,14 @@ namespace shuriken {
         private:
             /// @brief A map to keep the definitions of variables, and
             /// know if a basic block is completely analyzed
-            mlir::DenseMap<shuriken::analysis::dex::DVMBasicBlock *, BasicBlockDef> CurrentDef;
+            mlir::DenseMap<DVMBasicBlock *, BasicBlockDef> CurrentDef;
 
             /// @brief A map to know if a block is a normal, try or catch block
             mlir::DenseMap<::mlir::Block *, BasicBlockType> block_type_map;
 
             /// @brief Map for the Shuriken basic blocks and the
             /// mlir blocks
-            std::unordered_map<shuriken::analysis::dex::DVMBasicBlock *, mlir::Block *> map_blocks;
+            std::unordered_map<DVMBasicBlock *, mlir::Block *> map_blocks;
 
             /// @brief Write a declaration of a local register, this will be
             /// used for local value analysis
@@ -113,7 +113,7 @@ namespace shuriken {
             /// @param BB block where we find the assignment
             /// @param Reg register written
             /// @param Val
-            void writeVariable(shuriken::analysis::dex::DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
+            void writeVariable(DVMBasicBlock *BB, std::uint32_t Reg, mlir::Value Val) {
                 assert(BB && "Basic Block does not exist");
                 assert(Val && "Value does not exist");
                 CurrentDef[BB].Defs[Reg] = Val;
@@ -133,8 +133,8 @@ namespace shuriken {
             /// @param BBs basic blocks to retrieve the predecessors and successors
             /// @param Reg register to retrieve its Value
             /// @return value generated from an instruction.
-            mlir::Value readVariable(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                     shuriken::analysis::dex::BasicBlocks *BBs,
+            mlir::Value readVariable(DVMBasicBlock *BB,
+                                     BasicBlocks *BBs,
                                      std::uint32_t Reg) {
                 assert(BB && "Basic Block does not exist");
                 // INFO: Mismatch between algorithm paper and algorithm implementaiton:
@@ -168,8 +168,8 @@ namespace shuriken {
             //    val <- addPhiOperands(variable, val)
             //  writeVariable(variable, block, val)
             //  return val
-            mlir::Value readVariableRecursive(shuriken::analysis::dex::DVMBasicBlock *BB,
-                                              shuriken::analysis::dex::BasicBlocks *BBs,
+            mlir::Value readVariableRecursive(DVMBasicBlock *BB,
+                                              BasicBlocks *BBs,
                                               std::uint32_t Reg);
 
             /// @brief Reference to an MLIR Context
@@ -190,10 +190,10 @@ namespace shuriken {
             /// @brief Enable primitive logging for lifter
             const bool LOGGING;
             /// @brief Method currently analyzed, must be updated for each analyzed method
-            shuriken::analysis::dex::MethodAnalysis *current_method;
+            MethodAnalysis *current_method;
             /// @brief Basic block currently analyzed, must be updated for each basic
             /// block analyzed
-            shuriken::analysis::dex::DVMBasicBlock *current_basic_block;
+            DVMBasicBlock *current_basic_block;
             /// @brief name of the module where we will write all the methods
             std::string module_name;
 
@@ -235,91 +235,91 @@ namespace shuriken {
             /// @brief Given a prototype generate the types in MLIR
             /// @param proto prototype of the method
             /// @return vector with the generated types from the parameters
-            llvm::SmallVector<mlir::Type> gen_prototype(parser::dex::ProtoID *proto, bool is_static, DVMType *cls);
+            llvm::SmallVector<mlir::Type> gen_prototype(ProtoID *proto, bool is_static, DVMType *cls);
 
             /// @brief Generate a MethodOp from a EncodedMethod given
             /// @param method pointer to an encoded method to generate a MethodOp
             /// @return method operation from Dalvik
-            ::mlir::shuriken::MjolnIR::MethodOp get_method(shuriken::analysis::dex::MethodAnalysis *M);
+            ::mlir::shuriken::MjolnIR::MethodOp get_method(MethodAnalysis *M);
 
             //===----------------------------------------------------------------------===//
             // Lifting instructions, these class functions will be specialized for the
             // different function types.
             //===----------------------------------------------------------------------===//
-            void gen_instruction(shuriken::analysis::dex::Instruction31c *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction31c *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction31i *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction31i *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction32x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction32x *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction22x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction22x *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction21c *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction21c *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction35c *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction35c *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction51l *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction51l *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction21h *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction21h *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction21s *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction21s *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction11n *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction11n *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction10x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction10x *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction10t *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction10t *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction20t *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction20t *instr);
 
-            void gen_instruction(shuriken::analysis::dex::Instruction30t *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction30t *instr);
             /// @brief Lift an instruction of the type Instruction23x
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction23x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction23x *instr);
 
             /// @brief Lift an instruction of the type Instruction12x
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction12x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction12x *instr);
 
             /// @brief Lift an instruction of type Instruction22s
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction22s *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction22s *instr);
 
             /// @brief Lift an instruction of type Instruction22b
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction22b *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction22b *instr);
 
             /// @brief Lift an instruction of type Instruction22t
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction22t *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction22t *instr);
 
             /// @brief Lift an instruction of type Instruction21t
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction21t *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction21t *instr);
 
             /// @brief Lift an instruction of type Instruction11x
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction11x *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction11x *instr);
 
             /// @brief Lift an instruction of type Instruction22
             /// @param instr instruction to lift
-            void gen_instruction(shuriken::analysis::dex::Instruction22c *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction22c *instr);
 
             /// @brief Generate the IR from an instruction
             /// @param instr instruction from Dalvik to generate the IR
-            void gen_instruction(shuriken::analysis::dex::Instruction *instr);
+            void gen_instruction(::shuriken::analysis::dex::Instruction *instr);
 
             /// @brief Generate a block into an mlir::Block*, we will lift each
             /// instruction.
             /// @param bb DVMBasicBlock to lift
             /// @param method method where the basic block is
-            void gen_block(shuriken::analysis::dex::DVMBasicBlock *bb);
+            void gen_block(::shuriken::analysis::dex::DVMBasicBlock *bb);
 
-            void gen_terminators(shuriken::analysis::dex::DVMBasicBlock *bb);
+            void gen_terminators(::shuriken::analysis::dex::DVMBasicBlock *bb);
 
             /// @brief Generate a MethodOp from a MethodAnalysis
             /// @param method MethodAnalysis object to lift
-            void gen_method(shuriken::analysis::dex::MethodAnalysis *method);
+            void gen_method(::shuriken::analysis::dex::MethodAnalysis *method);
 
             /// @brief Initialize possible used types and other necessary stuff
             void init();
@@ -332,10 +332,10 @@ namespace shuriken {
             mlir::DialectRegistry registry;
 
 
-            std::unique_ptr<shuriken::parser::dex::Parser>
+            std::unique_ptr<::shuriken::parser::dex::Parser>
                     parser;
-            std::unique_ptr<shuriken::disassembler::dex::DexDisassembler> disassembler;
-            std::unique_ptr<shuriken::analysis::dex::Analysis> analysis;
+            std::unique_ptr<::shuriken::disassembler::dex::DexDisassembler> disassembler;
+            std::unique_ptr<::shuriken::analysis::dex::Analysis> analysis;
 
 
             /// @brief Generate a vector of ModuleOp with the lifted instructions from methods from this->analysis

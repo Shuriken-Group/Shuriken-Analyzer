@@ -24,6 +24,7 @@ message("LLVM dir is ${LLVM_DIR}")
 message("MLIR dir is ${MLIR_DIR}")
 message(${CMAKE_CURRENT_SOURCE_DIR})
 message(${CMAKE_CURRENT_BINARY_DIR})
+message("LLVM INCLUDE DIR ": ${LLVM_INCLUDE_DIRS})
 add_subdirectory(include)
 add_subdirectory(lib)
 
@@ -34,11 +35,14 @@ target_link_libraries(shuriken-opt
     fmt::fmt
     shuriken
     MjolnIRLib
-    MjolnIRTransformLib
+    MjolnIRLifterLib
+    MjolnIRLowerLib
     MjolnIRPasses
 )
+add_dependencies(shuriken-opt ShurikenTblGen)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_BINARY_DIR}/include/)
+target_include_directories(shuriken-opt SYSTEM PUBLIC ${LLVM_INCLUDE_DIRS})
 target_compile_options(shuriken-opt PRIVATE -fexceptions)
 
 

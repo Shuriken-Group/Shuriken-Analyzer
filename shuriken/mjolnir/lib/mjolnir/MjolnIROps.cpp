@@ -17,6 +17,7 @@
 #include <mlir/IR/OpImplementation.h>
 #include <mlir/IR/ValueRange.h>
 #include <mlir/Interfaces/ControlFlowInterfaces.h>
+
 #include <mlir/Interfaces/FunctionImplementation.h>
 #include <mlir/Support/LLVM.h>
 #include <mlir/TableGen/Operator.h>
@@ -49,41 +50,31 @@ using namespace ::mlir::shuriken::MjolnIR;
 //===----------------------------------------------------------------------===//
 
 void MethodOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
-                     llvm::StringRef name, mlir::FunctionType type,
+                     uint32_t mflags, llvm::StringRef name, mlir::FunctionType type,
                      llvm::ArrayRef<mlir::NamedAttribute> attrs) {
-    // FunctionOpInterface provides a convenient `build` method that will populate
-    // the stateof our MethodOp, and create an entry block
+    // Add the flag attribute
+    state.addAttribute("mflags", ::mlir::shuriken::MjolnIR::MethodFlagsAttr::get(builder.getContext(), 
+                static_cast<::mlir::shuriken::MjolnIR::MethodFlags>(mflags)));
+    // Build the rest using FunctionOpInterface
     buildWithEntryBlock(builder, state, name, type, attrs, type.getInputs());
 }
 
-mlir::ParseResult MethodOp::parse(mlir::OpAsmParser &parser,
-                                  mlir::OperationState &result) {
-    auto buildFuncType =
-            [](mlir::Builder &builder, llvm::ArrayRef<mlir::Type> argTypes,
-               llvm::ArrayRef<mlir::Type> results,
-               mlir::function_interface_impl::VariadicFlag,
-               std::string &) { return builder.getFunctionType(argTypes, results); };
-
-    return mlir::function_interface_impl::parseFunctionOp(
-            parser, result, /*allowVariadic=*/false,
-            getFunctionTypeAttrName(result.name), buildFuncType,
-            getArgAttrsAttrName(result.name), getResAttrsAttrName(result.name));
+// Convenience builder without flags (defaults to PUBLIC)
+void MethodOp::build(mlir::OpBuilder &builder, mlir::OperationState &state,
+                     llvm::StringRef name, mlir::FunctionType type,
+                     llvm::ArrayRef<mlir::NamedAttribute> attrs) {
+    // Add default PUBLIC flag (or any other default you want)
+    state.addAttribute("mflags", ::mlir::shuriken::MjolnIR::MethodFlagsAttr::get(builder.getContext(), 
+                ::mlir::shuriken::MjolnIR::MethodFlags::PUBLIC));
+    // Build the rest using FunctionOpInterface
+    buildWithEntryBlock(builder, state, name, type, attrs, type.getInputs());
 }
 
-void MethodOp::print(mlir::OpAsmPrinter &p) {
-    // Dispatch to the FunctionOpInterface provided utility method that prints the
-    // function operation.
-    mlir::function_interface_impl::printFunctionOp(
-            p, *this, /*isVariadic=*/false, getFunctionTypeAttrName(),
-            getArgAttrsAttrName(), getResAttrsAttrName());
-}
-
-/// Returns the region on the function operation that is callable.
+// Rest remains the same
 mlir::Region *MethodOp::getCallableRegion() { return &getBody(); }
 
 ArrayRef<Type> MethodOp::getArgumentTypes() { return getFunctionType().getInputs(); }
 
-/// Returns the result types of this function.
 ArrayRef<Type> MethodOp::getResultTypes() { return getFunctionType().getResults(); }
 
 //===----------------------------------------------------------------------===//
