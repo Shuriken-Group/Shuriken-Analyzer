@@ -2,13 +2,13 @@
 #------------------------------------------------------------- Installation Flags
 # Default paths for installation
 # Set CMake MacOS runtime path to find .so files on mac
-set(CMAKE_MACOSX_RPATH 1)
 # Append runtime path to find .so files on unix, needed before install
 list( APPEND CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
 
 # Check for operating system and set install paths accordingly
 # Conditional installation paths for different platforms
 if(APPLE)
+    set(CMAKE_MACOSX_RPATH 1)
     find_program(HOMEBREW_FOUND brew)
     if(HOMEBREW_FOUND)
         execute_process(COMMAND brew --prefix
@@ -18,6 +18,9 @@ if(APPLE)
         set(library_install_path "${HOMEBREW_PREFIX}/lib")
         set(CMAKE_INSTALL_PREFIX "${HOMEBREW_PREFIX}")
     endif()
+
+    # list( APPEND CMAKE_INSTALL_RPATH "/opt/homebrew/lib/" )
+    message("The install rpath from mac os is  ${CMAKE_INSTALL_RPATH}")
 elseif(UNIX AND NOT APPLE) # Explicitly differentiate UNIX from APPLE
     # Linux specific paths (already set as default)
     if(NOT DEFINED CMAKE_INSTALL_PREFIX)
