@@ -53,6 +53,8 @@ namespace shuriken::MjolnIR {
             counter = 0;
             counter_map.clear();
         }
+
+        size_t get_size() const { return counter_map.size(); }
     };
 
 
