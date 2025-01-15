@@ -56,6 +56,7 @@ option(DEX_TESTS "Compile all the tests for DEX files" OFF)
 option(SANITIZE "Enable sanitizers for the project" OFF)
 option(MJOLNIR "Enable the compilation of MjolnIR, it needs LLVM and MLIR on the system" OFF)
 option(MACHO "Enable the MACHO analysis from the library" OFF)
+option(MACHO_TESTS "Compile all the tests for Macho files" OFF)
 
 ##############################################################
 
@@ -148,7 +149,7 @@ if (MACHO)
     )
 
     # Macho files
-    add_subdirectory(../../Shuriken-Analyzer/shuriken/lib/parser/Macho)
+    add_subdirectory(lib/parser/Macho)
 
     target_link_libraries(macho-obj PRIVATE spdlog::spdlog)
     target_link_libraries(macho-obj PRIVATE zip)
@@ -204,6 +205,15 @@ else ()
 endif ()
 
 message(STATUS "Path to DEX Folder: ${DEX_FILES_FOLDER}")
+
+if (MACHO_TESTS)
+    message(STATUS "Using precompiled MACHO")
+    set(MACHO_FILES_FOLDER
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled-macho/")
+endif ()
+
+message(STATUS "Path to MACHO Folder: ${MACHO_FILES_FOLDER}")
+
 add_subdirectory(tests)
 
 # Assuming this variable points to your project's include directory

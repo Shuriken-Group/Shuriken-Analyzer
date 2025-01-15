@@ -9,13 +9,12 @@
 #define SHURIKENLIB_MACHO_HEADER_H
 
 #include "shuriken/common/shurikenstream.h"
-
-#include "cstring"
+#include <cstring>
+#include <iostream>
 
 namespace shuriken::parser::macho {
     class MachoHeader {
     public:
-#pragma pack(1)
         /// @brief Structure with the definition of the MACHO header
         /// all these values are later used for parsing the header
         /// from MACHO
@@ -29,7 +28,6 @@ namespace shuriken::parser::macho {
             std::uint32_t flags;        //! flags
             std::uint32_t reserved;     //! reserved
         };
-#pragma pack()
     private:
         /// @brief struct with the header from the macho
         struct machoheader_t machoheader;
@@ -47,6 +45,11 @@ namespace shuriken::parser::macho {
         /// @brief Parse the header from a ShurikenStream file
         /// @param stream ShurikenStream where to read the header.
         void parse_header(common::ShurikenStream &stream);
+
+        /// @brief Obtain a reference of the macho header struct
+        /// if not value will be modified, use this function
+        /// @return const reference to header structure
+        const machoheader_t &get_macho_header_const() const;
     };
 }// namespace shuriken::parser::macho
 
