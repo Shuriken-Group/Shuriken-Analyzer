@@ -1,0 +1,67 @@
+name: CMake on Windows
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
+    name: windows-msvc-${{ matrix.build_type }}
+            
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Display compiler version
+      run: cl.exe
+
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DDEX_TESTS=ON
+
+    - name: Build
+      run: cmake --build build/ --config ${{ matrix.build_type }}
+
+    - name: Install
+      run: cmake --install build/ --config ${{ matrix.build_type }}
+      
+    - name: Run tests
+      run: ctest --test-dir build/ --output-on-failure -C ${{ matrix.build_type }}
+
+    - name: Verify shuriken-dump exit code
+      run: |
+        $ErrorActionPreference = "Continue"
+        shuriken-dump.exe
+        if ($LASTEXITCODE -eq 255) {
+          Write-Host "shuriken-dump exited with the expected exit code."
+          exit 0
+        } else {
+          Write-Host "Unexpected exit code from shuriken-dump: $LASTEXITCODE"
+          exit 1
+        }
+      shell: pwsh
+
+    - name: Uninstall target and verify
+      run: |
+        cmake --build build/ --target uninstall
+        $result = Get-ChildItem -Path "C:/Program Files/" -Recurse | Where-Object { $_.Name -match "shuriken" }
+        if ($null -eq $result) {
+          Write-Host "Uninstall target worked as expected"
+          exit 0
+        } else {
+          Write-Host "Uninstall target did not work as expected"
+          exit 1
+        }
+      shell: pwsh
