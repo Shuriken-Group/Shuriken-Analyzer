@@ -1,0 +1,15 @@
+<map id="shuriken::analysis::dex::ClassAnalysis::ClassAnalysis" name="shuriken::analysis::dex::ClassAnalysis::ClassAnalysis">
+<area shape="rect" id="Node000001" title=" " alt="" coords="213,205,348,261"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#a30c38c05cd3be00027e2842e76064772" title="Add a cross reference of a field read." alt="" coords="16,5,154,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="255,194,216,134,191,103,163,75,147,64,150,59,166,71,195,99,220,131,259,191"/>
+<area shape="rect" id="Node000003" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#afbf816ea0b76b146338f19c03240461f" title="Add a cross reference of a field write." alt="" coords="14,85,156,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,198,163,155,143,144,145,139,166,151,230,194"/>
+<area shape="rect" id="Node000004" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#a87c7b484d7145108681ef814d49978c6" title="Add a cross reference of a method called from." alt="" coords="5,165,165,221"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="197,219,165,212,166,207,198,214"/>
+<area shape="rect" id="Node000005" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#ac97523355472f0cd4b14ba355fcf0bce" title="Add a cross reference of a method called to." alt="" coords="13,245,157,301"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="198,253,158,261,157,256,197,247"/>
+<area shape="rect" id="Node000006" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#ae8d45a513c5beb9106d0ff1cb4d0c371" title="Add xref from another class." alt="" coords="17,325,153,381"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="230,273,166,315,145,327,143,322,163,311,227,268"/>
+<area shape="rect" id="Node000007" href="$classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#ac56a0d2183eb023175edb39bf67679b2" title="Add xref to another class." alt="" coords="17,405,153,461"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="259,276,220,336,195,367,166,395,150,407,147,403,163,391,191,363,216,333,255,273"/>
+</map>

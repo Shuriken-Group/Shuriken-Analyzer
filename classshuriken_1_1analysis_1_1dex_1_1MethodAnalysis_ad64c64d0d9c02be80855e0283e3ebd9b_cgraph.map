@@ -1,0 +1,5 @@
+<map id="shuriken::analysis::dex::MethodAnalysis::add_xrefto" name="shuriken::analysis::dex::MethodAnalysis::add_xrefto">
+<area shape="rect" id="Node000001" title="Add a new cross&#45;reference of a method called from this method." alt="" coords="5,5,151,61"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ac57556fcf2f5ccfe1db8aaf60863e9e5" title=" " alt="" coords="199,5,344,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,30,183,30,183,36,151,36"/>
+</map>

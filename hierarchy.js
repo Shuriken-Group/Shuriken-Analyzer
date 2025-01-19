@@ -52,9 +52,11 @@ var hierarchy =
     [ "shuriken::analysis::dex::ExternalField", "classshuriken_1_1analysis_1_1dex_1_1ExternalField.html", null ],
     [ "shuriken::analysis::dex::ExternalMethod", "classshuriken_1_1analysis_1_1dex_1_1ExternalMethod.html", null ],
     [ "std::false_type", null, [
+      [ "shuriken::is_container_of_reference_wrapper< T, std::void_t< typename T::value_type > >", "structshuriken_1_1is__container__of__reference__wrapper_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1value__type_01_4_01_4.html", null ],
       [ "shuriken::is_reference_wrapper< T::value_type >", "structshuriken_1_1is__reference__wrapper.html", [
         [ "shuriken::is_container_of_reference_wrapper< T, std::void_t< typename T::value_type > >", "structshuriken_1_1is__container__of__reference__wrapper_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1value__type_01_4_01_4.html", null ]
       ] ],
+      [ "shuriken::is_reference_wrapper< std::reference_wrapper< U > >", "structshuriken_1_1is__reference__wrapper_3_01std_1_1reference__wrapper_3_01U_01_4_01_4.html", null ],
       [ "shuriken::is_container_of_reference_wrapper< T, typename >", "structshuriken_1_1is__container__of__reference__wrapper.html", null ],
       [ "shuriken::is_reference_wrapper< T >", "structshuriken_1_1is__reference__wrapper.html", null ]
     ] ],

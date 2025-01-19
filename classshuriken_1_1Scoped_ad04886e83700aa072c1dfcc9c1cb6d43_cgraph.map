@@ -1,7 +1,12 @@
 <map id="shuriken::Scoped::Scoped" name="shuriken::Scoped::Scoped">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,176,38"/>
-<area shape="rect" id="Node000002" href="$classshuriken_1_1Scoped.html#a40c04b3c1ac04a77e79c11387d8ba385" title=" " alt="" coords="224,5,368,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,23,208,23,208,28,176,28"/>
-<area shape="rect" id="Node000003" href="$namespaceshuriken.html#a5de1a7178b8d936d493b2238584151fc" title="Change the logging level (hierarchical)" alt="" coords="416,13,544,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="368,23,400,23,400,28,368,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,176,60"/>
+<area shape="rect" id="Node000002" href="$namespaceshuriken.html#aceb02862bcb966b255144ea5b8ee58cc" title=" " alt="" coords="232,5,360,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,33,216,27,217,32,176,38"/>
+<area shape="rect" id="Node000003" href="$classshuriken_1_1Scoped.html#a40c04b3c1ac04a77e79c11387d8ba385" title=" " alt="" coords="224,55,368,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,56,209,61,208,66,176,62"/>
+<area shape="rect" id="Node000004" href="$classshuriken_1_1Scoped.html#a30e528cd60e4d3e692626d485244f326" title=" " alt="" coords="416,37,586,63"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="368,64,400,60,401,65,369,69"/>
+<area shape="rect" id="Node000005" href="$namespaceshuriken.html#a5de1a7178b8d936d493b2238584151fc" title="Change the logging level (hierarchical)" alt="" coords="437,87,565,112"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="369,81,422,88,421,93,368,87"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="467,39,460,29,464,19,478,13,501,11,526,13,539,20,537,25,525,18,501,16,480,18,468,23,465,28,471,35"/>
 </map>

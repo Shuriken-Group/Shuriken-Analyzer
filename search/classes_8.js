@@ -38,5 +38,18 @@ var searchData=
   ['is_5freference_5fwrapper_3c_20std_3a_3areference_5fwrapper_3c_20u_20_3e_20_3e_35',['is_reference_wrapper&lt; std::reference_wrapper&lt; U &gt; &gt;',['../structshuriken_1_1is__reference__wrapper_3_01std_1_1reference__wrapper_3_01U_01_4_01_4.html',1,'shuriken']]],
   ['is_5freference_5fwrapper_3c_20t_3a_3avalue_5ftype_20_3e_36',['is_reference_wrapper&lt; T::value_type &gt;',['../structshuriken_1_1is__reference__wrapper.html',1,'shuriken']]],
   ['iterator_37',['iterator',['../structshuriken_1_1deref__iterator__range_1_1iterator.html',1,'shuriken::deref_iterator_range']]],
-  ['iterator_5frange_38',['iterator_range',['../classshuriken_1_1iterator__range.html',1,'shuriken']]]
+  ['iterator_5frange_38',['iterator_range',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20const_20map_5fdata_5fitem_5ft_3a_3aiterator_20_3e_39',['iterator_range&lt; const map_data_item_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20const_20parameters_5ftype_5ft_3a_3aiterator_20_3e_40',['iterator_range&lt; const parameters_type_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20data_5fbuffer_5ft_3a_3aiterator_20_3e_41',['iterator_range&lt; data_buffer_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20exceptions_5fdata_5ft_3a_3aiterator_20_3e_42',['iterator_range&lt; exceptions_data_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20field_5fannotations_5fid_5ft_3a_3aiterator_20_3e_43',['iterator_range&lt; field_annotations_id_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20handler_5fpairs_5ft_3a_3aiterator_20_3e_44',['iterator_range&lt; handler_pairs_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20instructions_5fraw_5ft_3a_3aiterator_20_3e_45',['iterator_range&lt; instructions_raw_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20interfaces_5flist_5ft_3a_3aiterator_20_3e_46',['iterator_range&lt; interfaces_list_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20map_5fdata_5fitem_5ft_3a_3aiterator_20_3e_47',['iterator_range&lt; map_data_item_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20method_5fannotations_5fid_5ft_3a_3aiterator_20_3e_48',['iterator_range&lt; method_annotations_id_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20parameter_5fannotations_5fid_5ft_3a_3aiterator_20_3e_49',['iterator_range&lt; parameter_annotations_id_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20parameters_5ftype_5ft_3a_3aiterator_20_3e_50',['iterator_range&lt; parameters_type_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]],
+  ['iterator_5frange_3c_20try_5fitems_5ft_3a_3aiterator_20_3e_51',['iterator_range&lt; try_items_t::iterator &gt;',['../classshuriken_1_1iterator__range.html',1,'shuriken']]]
 ];

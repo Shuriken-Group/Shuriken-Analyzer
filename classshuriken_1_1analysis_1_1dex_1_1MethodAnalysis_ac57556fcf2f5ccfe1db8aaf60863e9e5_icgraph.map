@@ -1,0 +1,7 @@
+<map id="shuriken::analysis::dex::MethodAnalysis::MethodAnalysis" name="shuriken::analysis::dex::MethodAnalysis::MethodAnalysis">
+<area shape="rect" id="Node000001" title=" " alt="" coords="199,45,344,101"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ab1369520bac2e3c10bd9e77b195f52c9" title="Add a new cross&#45;reference of a method that calls this method." alt="" coords="5,5,151,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,58,151,51,152,46,184,52"/>
+<area shape="rect" id="Node000003" href="$classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html#ad64c64d0d9c02be80855e0283e3ebd9b" title="Add a new cross&#45;reference of a method called from this method." alt="" coords="5,85,151,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="184,94,152,101,151,95,183,89"/>
+</map>

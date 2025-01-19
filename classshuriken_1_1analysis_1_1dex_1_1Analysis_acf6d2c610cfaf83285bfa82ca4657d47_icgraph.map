@@ -1,0 +1,7 @@
+<map id="shuriken::analysis::dex::Analysis::create_xrefs" name="shuriken::analysis::dex::Analysis::create_xrefs">
+<area shape="rect" id="Node000001" title="Create class, method, string and field cross references if you are using multiple DEX files,..." alt="" coords="211,39,390,79"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1analysis_1_1dex_1_1Analysis.html#a57bb8b9fe374c1454f19e9b3b05050f4" title=" " alt="" coords="5,5,163,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,45,163,40,164,35,196,40"/>
+<area shape="rect" id="Node000003" href="$classshuriken_1_1analysis_1_1dex_1_1Analysis.html#a8d35b866454e85694c01aacfe606a73b" title=" " alt="" coords="5,71,163,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,77,164,82,163,77,195,72"/>
+</map>

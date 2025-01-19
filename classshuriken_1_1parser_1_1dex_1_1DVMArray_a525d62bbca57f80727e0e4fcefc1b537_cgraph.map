@@ -1,0 +1,5 @@
+<map id="shuriken::parser::dex::DVMArray::get_array_base_type" name="shuriken::parser::dex::DVMArray::get_array_base_type">
+<area shape="rect" id="Node000001" title="Get the base type of the array as a pointer to DVMType." alt="" coords="5,5,151,61"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1parser_1_1dex_1_1DVMType.html#a6ea26ba93aade9eb2c5159827ab1a5ed" title="Constructor of DVMType." alt="" coords="199,13,346,54"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,30,183,30,183,36,151,36"/>
+</map>

@@ -74,10 +74,10 @@ var NAVTREEINDEX =
 "classshuriken_1_1parser_1_1dex_1_1DVMArray.html",
 "classshuriken_1_1parser_1_1dex_1_1DexStrings.html#acd06edc4ef141b8f4e0fe165bc1a98c5",
 "classshuriken_1_1parser_1_1dex_1_1Parser.html#afd17091e6a71f4f697fa64f8320a27e6",
-"functions_t.html",
-"shuriken__core__data_8h.html#a217f703e5a5c4aaf9e37c4365a0206ce",
-"structshuriken_1_1deref__iterator__range.html"
+"namespaceshuriken_1_1dex_1_1TYPES.html#ae3b5dca787a2792d0be4a274d049bd5ca744ce88584d8105109069a1b4472eb5a",
+"structhdvm__class__idx__t__.html",
+"structshuriken_1_1parser_1_1dex_1_1DexMapList_1_1map__item.html#a03d6e2dd1e4006ab047c8e7c37fc890b"
 ];
 
-var SYNCONMSG = 'click to disable panel synchronisation';
-var SYNCOFFMSG = 'click to enable panel synchronisation';
+var SYNCONMSG = 'click to disable panel synchronization';
+var SYNCOFFMSG = 'click to enable panel synchronization';

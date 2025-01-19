@@ -1,0 +1,7 @@
+<map id="shuriken::analysis::dex::BasicBlocks::BasicBlocks" name="shuriken::analysis::dex::BasicBlocks::BasicBlocks">
+<area shape="rect" id="Node000001" title=" " alt="" coords="186,45,318,101"/>
+<area shape="rect" id="Node000002" href="$classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a9a1e8d30007952873d31008d76df6a0a" title="avoid any kind of copy constructor" alt="" coords="5,5,138,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,58,137,50,139,45,171,53"/>
+<area shape="rect" id="Node000003" href="$classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a3e38cb0f5bbede604209e3cde00c1a8d" title=" " alt="" coords="5,85,138,141"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="171,94,139,101,137,96,170,89"/>
+</map>
