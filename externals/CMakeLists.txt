@@ -45,6 +45,11 @@ endif ()
 # Download the Logging utility from spdlog
 # repo
 # ------------------------------------
+# Add this before the spdlog FetchContent_Declare
+if(MSVC)
+    add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+endif()
+
 FetchContent_Declare(
         extern_spdlog
 
