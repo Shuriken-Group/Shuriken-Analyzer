@@ -42,10 +42,17 @@ jobs:
         cmake --build build/ --target uninstall
         $installPath = "C:/Program Files (x86)/ShurikenProject"
         if (Test-Path $installPath) {
-          Write-Host "Uninstall target did not work as expected - directory still exists: $installPath"
-          exit 1
+            $remainingFiles = Get-ChildItem -Path $installPath -Recurse
+            if ($remainingFiles) {
+                Write-Host "Uninstall target did not work as expected - files remain in directory: $installPath"
+                $remainingFiles | ForEach-Object { Write-Host $_.FullName }
+                exit 1
+            } else {
+                Write-Host "Uninstall target worked as expected - directory is empty"
+                exit 0
+            }
         } else {
-          Write-Host "Uninstall target worked as expected"
-          exit 0
+            Write-Host "Uninstall target worked as expected - directory was removed"
+            exit 0
         }
       shell: pwsh
