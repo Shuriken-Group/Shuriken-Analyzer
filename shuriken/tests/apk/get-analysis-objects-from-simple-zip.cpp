@@ -22,12 +22,12 @@ int main() {
          i++) {
         const char * dex_file = get_dex_file_by_index(apk_context, i);
 
-        size_t number_of_strings = get_number_of_strings_from_dex(apk_context, dex_file);
+        int number_of_strings = get_number_of_strings_from_dex(apk_context, dex_file);
 
         /**
          * Get the strings
          */
-        for (size_t j = 0;
+        for (int j = 0;
                  j < number_of_strings;
              j++) {
             [[maybe_unused]] auto * str = get_string_by_id_from_dex(apk_context, dex_file, j);
