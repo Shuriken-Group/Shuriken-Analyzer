@@ -1,0 +1,38 @@
+name: CMake on Windows
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_type: [Debug, Release]
+
+    name: windows-msvc-${{ matrix.build_type }}
+            
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+
+    - name: Display compiler version
+      run: cl.exe
+
+    - name: Configure CMake
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DDEX_TESTS=ON
+
+    - name: Build
+      run: cmake --build build/ --config ${{ matrix.build_type }}
+
+    - name: Install
+      run: cmake --install build/ --config ${{ matrix.build_type }}
