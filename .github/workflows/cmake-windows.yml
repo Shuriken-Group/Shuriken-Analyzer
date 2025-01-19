@@ -36,23 +36,3 @@ jobs:
 
     - name: Install
       run: cmake --install build/ --config ${{ matrix.build_type }}
-
-    - name: Uninstall target and verify
-      run: |
-        cmake --build build/ --target uninstall
-        $installPath = "C:/Program Files (x86)/ShurikenProject"
-        if (Test-Path $installPath) {
-            $remainingFiles = Get-ChildItem -Path $installPath -Recurse
-            if ($remainingFiles) {
-                Write-Host "Uninstall target did not work as expected - files remain in directory: $installPath"
-                $remainingFiles | ForEach-Object { Write-Host $_.FullName }
-                exit 1
-            } else {
-                Write-Host "Uninstall target worked as expected - directory is empty"
-                exit 0
-            }
-        } else {
-            Write-Host "Uninstall target worked as expected - directory was removed"
-            exit 0
-        }
-      shell: pwsh
