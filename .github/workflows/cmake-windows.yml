@@ -37,15 +37,28 @@ jobs:
     - name: Install
       run: cmake --install build/ --config ${{ matrix.build_type }}
 
+    - name: Verify shuriken-dump exit code
+      run: |
+        $ErrorActionPreference = "Continue"
+        shuriken-dump.exe
+        if ($LASTEXITCODE -eq 255) {
+          Write-Host "shuriken-dump exited with the expected exit code."
+          exit 0
+        } else {
+          Write-Host "Unexpected exit code from shuriken-dump: $LASTEXITCODE"
+          exit 1
+        }
+      shell: pwsh
+
     - name: Uninstall target and verify
       run: |
         cmake --build build/ --target uninstall
-        $result = Get-ChildItem -Path "C:/Program Files/" -Recurse | Where-Object { $_.Name -match "shuriken" }
-        if ($null -eq $result) {
+        $installPath = "C:/Program Files (x86)/ShurikenProject"
+        if (Test-Path $installPath) {
+          Write-Host "Uninstall target did not work as expected - directory still exists: $installPath"
+          exit 1
+        } else {
           Write-Host "Uninstall target worked as expected"
           exit 0
-        } else {
-          Write-Host "Uninstall target did not work as expected"
-          exit 1
         }
       shell: pwsh
