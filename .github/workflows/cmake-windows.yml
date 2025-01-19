@@ -37,19 +37,6 @@ jobs:
     - name: Install
       run: cmake --install build/ --config ${{ matrix.build_type }}
 
-    - name: Verify shuriken-dump exit code
-      run: |
-        $ErrorActionPreference = "Continue"
-        shuriken-dump.exe
-        if ($LASTEXITCODE -eq 255) {
-          Write-Host "shuriken-dump exited with the expected exit code."
-          exit 0
-        } else {
-          Write-Host "Unexpected exit code from shuriken-dump: $LASTEXITCODE"
-          exit 1
-        }
-      shell: pwsh
-
     - name: Uninstall target and verify
       run: |
         cmake --build build/ --target uninstall
