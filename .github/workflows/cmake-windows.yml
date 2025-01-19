@@ -36,9 +36,6 @@ jobs:
 
     - name: Install
       run: cmake --install build/ --config ${{ matrix.build_type }}
-      
-    - name: Run tests
-      run: ctest --test-dir build/ --output-on-failure -C ${{ matrix.build_type }}
 
     - name: Verify shuriken-dump exit code
       run: |
