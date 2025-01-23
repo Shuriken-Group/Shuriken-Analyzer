@@ -459,7 +459,7 @@ class Apk(object):
         )
         if not string:
             return None
-        return string.decode()
+        return string.decode('utf-8', errors='replace')
 
     def get_disassembled_method_from_apk(self, method_name: str) -> dvmdisassembled_method_t | None:
         """
