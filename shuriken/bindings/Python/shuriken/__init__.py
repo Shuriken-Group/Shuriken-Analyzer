@@ -459,7 +459,29 @@ class Apk(object):
         )
         if not string:
             return None
-        return string.decode('utf-8', errors='replace')
+        return string.decode('utf-8', errors='backslashreplace')
+    
+    def get_string_by_id_from_dex_as_bytearray(self, dex_file: str, idx: ctypes.c_uint32) -> bytearray:
+        """
+        :param dex_file: DEX file from the APK
+        :param idx: index of the DEX file for the string  
+        :return: bytearray of string data from the dex file, or None if not found
+        """
+        _shuriken.get_string_by_id_from_dex.restype = ctypes.c_char_p
+        _shuriken.get_string_by_id_from_dex.argtypes = [
+            ctypes.c_void_p,
+            ctypes.c_char_p,
+            ctypes.c_uint32
+        ]
+        # call the function
+        string = _shuriken.get_string_by_id_from_dex(
+            self.apk_context_object,
+            ctypes.c_char_p(dex_file.encode("utf-8")),
+            idx
+        )
+        if not string:
+            return None
+        return bytearray(string)
 
     def get_disassembled_method_from_apk(self, method_name: str) -> dvmdisassembled_method_t | None:
         """
