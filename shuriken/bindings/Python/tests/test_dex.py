@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from shuriken import *
+
 
 def print_hdvmclass_data(class_: hdvmclass_t):
     for i in range(class_.direct_methods_size):
@@ -48,6 +49,7 @@ def print_hdvmclass_data(class_: hdvmclass_t):
         print("\tField Type Value:", static_field.type_value)
         print("\tAccess Flags:", static_field.access_flags)
 
+
 def print_disassembly_data(dex: Dex, class_: hdvmclass_t):
     for i in range(class_.direct_methods_size):
         direct_method = class_.direct_methods[i]
@@ -62,18 +64,16 @@ def print_disassembly_data(dex: Dex, class_: hdvmclass_t):
         disassembler_str = disassembled_method.method_string
         print(f"{disassembler_str.decode()}\n")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     path = "../../../tests/compiled/"
     for file in os.listdir(path):
-
         if not file.endswith(".dex"):
             continue
 
         print(f"Parsing of file: {os.path.join(path, file)}")
 
-        dex = Dex(
-            os.path.join(path, file)
-        )
+        dex = Dex(os.path.join(path, file))
 
         print(f"Number of strings: {dex.get_number_of_strings()}")
         print(f"Number of classes: {dex.get_number_of_classes()}")
@@ -110,7 +110,9 @@ if __name__ == '__main__':
                 print("True")
             print("Method Analysis Information")
             for i in range(int(class_analysis.n_of_methods)):
-                method_analysis: hdvmmethodanalysis_t = class_analysis.methods[i].contents
+                method_analysis: hdvmmethodanalysis_t = class_analysis.methods[
+                    i
+                ].contents
                 print(f"Method name: {method_analysis.full_name.decode()}")
                 if method_analysis.method_string is not None:
                     print(f"{method_analysis.method_string.decode()}")
