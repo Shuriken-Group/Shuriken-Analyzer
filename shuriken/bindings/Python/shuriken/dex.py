@@ -10,6 +10,7 @@ import ctypes.util
 
 # C enums
 
+
 class htype_e(ctypes.c_int):
     """
     DexTypes of the DVM we have by default fundamental,
@@ -90,6 +91,7 @@ class accessflags_e(ctypes.c_uint16):
     - ACC_CONSTRUCTOR: constructor type
     - ACC_DECLARED_SYNCHRONIZED:
     """
+
     ACCESS_FLAGS_NONE = 0x0
     ACC_PUBLIC = 0x1
     ACC_PRIVATE = 0x2
@@ -121,7 +123,7 @@ class accessflags_e(ctypes.c_uint16):
             flag_value = getattr(self, attr_name)
             if isinstance(flag_value, int) and flag_value & value:
                 flags.append(attr_name)
-        return '|'.join(flags)
+        return "|".join(flags)
 
 
 ## dexinsttype_e
@@ -129,7 +131,7 @@ class dexinsttype_e(ctypes.c_int):
     """
     Instruction types from the Dalvik Virtual Machine
     """
-    
+
     DEX_INSTRUCTION00X = 0
     DEX_INSTRUCTION10X = 1
     DEX_INSTRUCTION12X = 2
@@ -175,9 +177,9 @@ class dexinsttype_e(ctypes.c_int):
 ## ref_type
 class dexref_type_e(ctypes.c_int):
     REF_NEW_INSTANCE = 0x22
-    REF_CLASS_USAGE = 0x1c
-    INVOKE_VIRTUAL = 0x6e
-    INVOKE_SUPER = 0x6f
+    REF_CLASS_USAGE = 0x1C
+    INVOKE_VIRTUAL = 0x6E
+    INVOKE_SUPER = 0x6F
     INVOKE_DIRECT = 0x70
     INVOKE_STATIC = 0x71
     INVOKE_INTERFACE = 0x72
@@ -196,6 +198,7 @@ class dexref_type_e(ctypes.c_int):
 
 # C structures but in Python
 
+
 class hdvmfield_t(ctypes.Structure):
     """
     Structure which keeps information from a field
@@ -212,12 +215,12 @@ class hdvmfield_t(ctypes.Structure):
     """
 
     _fields_ = (
-        ('class_name', ctypes.c_char_p),
-        ('name', ctypes.c_char_p),
-        ('type', htype_e),
-        ('fundamental_value', hfundamental_e),
-        ('type_value', ctypes.c_char_p),
-        ('access_flags', accessflags_e)
+        ("class_name", ctypes.c_char_p),
+        ("name", ctypes.c_char_p),
+        ("type", htype_e),
+        ("fundamental_value", hfundamental_e),
+        ("type_value", ctypes.c_char_p),
+        ("access_flags", accessflags_e),
     )
 
 
@@ -236,15 +239,16 @@ class hdvmmethod_t(ctypes.Structure):
     - dalvik_name (type: c_char_p): Full Dalvik name
     - demangled_name (type: c_char_p): Demangled name
     """
+
     _fields_ = (
-        ('class_name', ctypes.c_char_p),
-        ('method_name', ctypes.c_char_p),
-        ('prototype', ctypes.c_char_p),
-        ('access_flags', accessflags_e),
-        ('code_size', ctypes.c_uint32),
-        ('code', ctypes.POINTER(ctypes.c_uint8)),
-        ('dalvik_name', ctypes.c_char_p),
-        ('demangled_name', ctypes.c_char_p)
+        ("class_name", ctypes.c_char_p),
+        ("method_name", ctypes.c_char_p),
+        ("prototype", ctypes.c_char_p),
+        ("access_flags", accessflags_e),
+        ("code_size", ctypes.c_uint32),
+        ("code", ctypes.POINTER(ctypes.c_uint8)),
+        ("dalvik_name", ctypes.c_char_p),
+        ("demangled_name", ctypes.c_char_p),
     )
 
 
@@ -266,19 +270,20 @@ class hdvmclass_t(ctypes.Structure):
     - static_fields_size (type: c_uint16): number of static fields
     - static_fields (type: POINTER(hdvmfield_t): static fields
     """
+
     _fields_ = (
-        ('class_name', ctypes.c_char_p),
-        ('super_class', ctypes.c_char_p),
-        ('source_file', ctypes.c_char_p),
-        ('access_flags', accessflags_e),
-        ('direct_methods_size', ctypes.c_uint16),
-        ('direct_methods', ctypes.POINTER(hdvmmethod_t)),
-        ('virtual_methods_size', ctypes.c_uint16),
-        ('virtual_methods', ctypes.POINTER(hdvmmethod_t)),
-        ('instance_fields_size', ctypes.c_uint16),
-        ('instance_fields', ctypes.POINTER(hdvmfield_t)),
-        ('static_fields_size', ctypes.c_uint16),
-        ('static_fields', ctypes.POINTER(hdvmfield_t))
+        ("class_name", ctypes.c_char_p),
+        ("super_class", ctypes.c_char_p),
+        ("source_file", ctypes.c_char_p),
+        ("access_flags", accessflags_e),
+        ("direct_methods_size", ctypes.c_uint16),
+        ("direct_methods", ctypes.POINTER(hdvmmethod_t)),
+        ("virtual_methods_size", ctypes.c_uint16),
+        ("virtual_methods", ctypes.POINTER(hdvmmethod_t)),
+        ("instance_fields_size", ctypes.c_uint16),
+        ("instance_fields", ctypes.POINTER(hdvmfield_t)),
+        ("static_fields_size", ctypes.c_uint16),
+        ("static_fields", ctypes.POINTER(hdvmfield_t)),
     )
 
 
@@ -293,12 +298,13 @@ class hdvminstruction_t(ctypes.Structure):
     - op (type: c_uint32): opcode of the instruction
     - disassembly (type: c_char_p): disassembly of the instruction
     """
+
     _fields_ = [
         ("instruction_type", dexinsttype_e),
         ("instruction_length", ctypes.c_uint32),
         ("address", ctypes.c_uint64),
         ("op", ctypes.c_uint32),
-        ("disassembly", ctypes.c_char_p)
+        ("disassembly", ctypes.c_char_p),
     ]
 
 
@@ -310,9 +316,10 @@ class dvmhandler_data_t(ctypes.Structure):
     - handler_type (type: c_char_p): type of handled exception
     - handler_start_addr (type: c_uint64): start address of the handler
     """
+
     _fields_ = [
         ("handler_type", ctypes.c_char_p),
-        ("handler_start_addr", ctypes.c_uint64)
+        ("handler_start_addr", ctypes.c_uint64),
     ]
 
 
@@ -327,11 +334,12 @@ class dvmexceptions_data_t(ctypes.Structure):
     - n_of_handlers (type: c_size_t): number of handlers associated with the try
     - handler (type: POINTER(dvmhandler_data_t)): pointer to an array of dvmhandler_data_t
     """
+
     _fields_ = [
         ("try_value_start_addr", ctypes.c_uint64),
         ("try_value_end_addr", ctypes.c_uint64),
         ("n_of_handlers", ctypes.c_size_t),
-        ("handler", ctypes.POINTER(dvmhandler_data_t))
+        ("handler", ctypes.POINTER(dvmhandler_data_t)),
     ]
 
 
@@ -349,6 +357,7 @@ class dvmdisassembled_method_t(ctypes.Structure):
     - instructions (type: hdvminstruction_t): array of all the instructions in the method
     - method_string (type: c_char_p): full disassembled method
     """
+
     _fields_ = [
         ("method_id", ctypes.POINTER(hdvmmethod_t)),
         ("n_of_registers", ctypes.c_uint16),
@@ -356,7 +365,7 @@ class dvmdisassembled_method_t(ctypes.Structure):
         ("exception_information", ctypes.POINTER(dvmexceptions_data_t)),
         ("n_of_instructions", ctypes.c_size_t),
         ("instructions", ctypes.POINTER(hdvminstruction_t)),
-        ("method_string", ctypes.c_char_p)
+        ("method_string", ctypes.c_char_p),
     ]
 
 
@@ -383,7 +392,9 @@ class hdvmclassanalysis_t(ctypes.Structure):
     - n_of_xreffrom (type: c_size_t): number of xreffrom
     - xreffrom (type: POINTER(hdvm_classxref_t)): Classes that call this class
     """
+
     pass
+
 
 class hdvmmethodanalysis_t(ctypes.Structure):
     """
@@ -411,6 +422,7 @@ class hdvmmethodanalysis_t(ctypes.Structure):
     - xrefconstclass (type: POINTER(hdvm_class_idx_t)): Pointer to the const classes used by this method.
     - method_string (type: c_char_p): Cache of the method string.
     """
+
     pass
 
 
@@ -425,7 +437,9 @@ class hdvmfieldanalysis_t(ctypes.Structure):
     - n_of_xrefwrite (type: c_size_t): Number of references where the field is written to.
     - xrefwrite (type: POINTER(hdvm_class_method_idx_t)): Pointer to the methods where the field is written to.
     """
+
     pass
+
 
 class hdvmstringanalysis_t(ctypes.Structure):
     """
@@ -436,7 +450,9 @@ class hdvmstringanalysis_t(ctypes.Structure):
     - n_of_xreffrom (type: c_size_t): Number of references where the string is read.
     - xreffrom (type: POINTER(hdvm_class_method_idx_t)): Pointer to the methods where the string is read.
     """
+
     pass
+
 
 class hdvm_class_method_idx_t(ctypes.Structure):
     """
@@ -447,10 +463,11 @@ class hdvm_class_method_idx_t(ctypes.Structure):
     - method (type: POINTER(hdvmmethodanalysis_t)): Pointer to the method of the xref.
     - idx (type: c_int64): Instruction address or index.
     """
+
     _fields_ = [
         ("cls", ctypes.POINTER(hdvmclassanalysis_t)),
         ("method", ctypes.POINTER(hdvmmethodanalysis_t)),
-        ("idx", ctypes.c_int64)
+        ("idx", ctypes.c_int64),
     ]
 
 
@@ -463,10 +480,11 @@ class hdvm_class_field_idx_t(ctypes.Structure):
     - field (type: POINTER(hdvmfieldanalysis_t)): Pointer to the field of the xref.
     - idx (type: c_int64): Instruction address or index.
     """
+
     _fields_ = [
         ("cls", ctypes.POINTER(hdvmclassanalysis_t)),
         ("field", ctypes.POINTER(hdvmfieldanalysis_t)),
-        ("idx", ctypes.c_int64)
+        ("idx", ctypes.c_int64),
     ]
 
 
@@ -478,24 +496,23 @@ class hdvm_method_idx_t(ctypes.Structure):
     - method (type: POINTER(hdvmmethodanalysis_t)): Pointer to the method of the xref.
     - idx (type: c_int64): Instruction address or index.
     """
+
     _fields_ = [
         ("method", ctypes.POINTER(hdvmmethodanalysis_t)),
-        ("idx", ctypes.c_int64)
+        ("idx", ctypes.c_int64),
     ]
 
 
 class hdvm_class_idx_t(ctypes.Structure):
-    '''
+    """
     Xref that contains class and instruction address
 
     Fields:
     - cls (type: POINTER(hdvmclassanalysis_t)): class of the xref
     - idx (type: c_int64): Instruction address
-    '''
-    _fields_ = [
-        ("cls", ctypes.POINTER(hdvmclassanalysis_t)),
-        ("idx", ctypes.c_int64)
-    ]
+    """
+
+    _fields_ = [("cls", ctypes.POINTER(hdvmclassanalysis_t)), ("idx", ctypes.c_int64)]
 
 
 class hdvm_reftype_method_idx_t(ctypes.Structure):
@@ -508,10 +525,11 @@ class hdvm_reftype_method_idx_t(ctypes.Structure):
     - methodAnalysis (type: POINTER(hdvmmethodanalysis_t)): Pointer to the method of the xref
     - idx (type: c_uint64): Index of the reference
     """
+
     _fields_ = [
         ("refType", dexref_type_e),
         ("methodAnalysis", ctypes.POINTER(hdvmmethodanalysis_t)),
-        ("idx", ctypes.c_uint64)
+        ("idx", ctypes.c_uint64),
     ]
 
 
@@ -524,10 +542,11 @@ class hdvm_classxref_t(ctypes.Structure):
     - n_of_reftype_method_idx (type: c_size_t): number of references of type `hdvm_reftype_method_idx_t`
     - hdvmReftypeMethodIdx (type: POINTER(hdvm_reftype_method_idx_t)): array of `hdvm_reftype_method_idx_t` references
     """
+
     _fields_ = [
         ("classAnalysis", ctypes.POINTER(hdvmclassanalysis_t)),
         ("n_of_reftype_method_idx", ctypes.c_size_t),
-        ("hdvmReftypeMethodIdx", ctypes.POINTER(hdvm_reftype_method_idx_t))
+        ("hdvmReftypeMethodIdx", ctypes.POINTER(hdvm_reftype_method_idx_t)),
     ]
 
 
@@ -544,6 +563,7 @@ class hdvmbasicblock_t(ctypes.Structure):
     - name (type: c_char_p): Name of the basic block.
     - block_string (type: c_char_p): String representation of the entire basic block.
     """
+
     _fields_ = [
         ("n_of_instructions", ctypes.c_size_t),
         ("instructions", ctypes.POINTER(hdvminstruction_t)),
@@ -556,18 +576,20 @@ class hdvmbasicblock_t(ctypes.Structure):
 
 
 class basic_blocks_t(ctypes.Structure):
-    '''
+    """
     Structure that stores all the basic blocks
     from a method.
 
     Fields:
     - n_of_blocks (type: c_size_t): number of blocks in the method
     - block (type: POINTER(hdvmbasicblock_t)): Pointer to the basic blocks.
-    '''
+    """
+
     _fields_ = [
         ("n_of_blocks", ctypes.c_size_t),
-        ("blocks", ctypes.POINTER(hdvmbasicblock_t))
+        ("blocks", ctypes.POINTER(hdvmbasicblock_t)),
     ]
+
 
 hdvmstringanalysis_t._fields_ = [
     ("value", ctypes.c_char_p),
