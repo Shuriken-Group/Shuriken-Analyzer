@@ -153,7 +153,7 @@ setup(
     author="Fare9",
     author_email="kunai.static.analysis@gmail.com",
     description="Shuriken-Analyzer: A library for Dalvik Analysis",
-    url="https://github.com/Fare9/Shuriken-Analyzer",
+    url="https://github.com/Shuriken-Group/Shuriken-Analyzer/",
     packages=find_packages(),
     cmdclass=cmdclass,
     classifiers=[
