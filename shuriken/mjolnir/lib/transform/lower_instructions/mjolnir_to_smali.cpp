@@ -136,9 +136,6 @@ namespace {
 namespace shuriken::MjolnIR {
     /// INFO: MJOLNIR
     std::tuple<SmaliLines, SmaliLines> MjolnIRToSmali::from_mjolnir_method_op(MethodOp op) {
-        // for every method, reset the counter
-        vrc.clean_counter();
-
         // extract the whole method information
         auto method_name = op.getName().data();
         auto parameter_types = op.getArgumentTypes();
