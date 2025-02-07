@@ -74,7 +74,7 @@ jobs:
     - name: Set up venv and test user installation
       run: |
         python3 -m venv .venv && source .venv/bin/activate
-        pip install -vvv git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/ --install-option="--user-install"
+        pip install --user -vvv git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/
         # Verify installation in user space
         python3 -c "import os; from pathlib import Path; assert (Path.home() / '.local').exists(), 'User installation directory not found'"
         python3 -c "from shuriken import *"
