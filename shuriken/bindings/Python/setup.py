@@ -149,7 +149,7 @@ cmdclass = {
 
 setup(
     name="ShurikenAnalyzer",
-    version="0.0.5",
+    version="0.0.6",
     author="Fare9",
     author_email="kunai.static.analysis@gmail.com",
     description="Shuriken-Analyzer: A library for Dalvik Analysis",
