@@ -13,11 +13,15 @@ if(APPLE)
     if(HOMEBREW_FOUND)
         execute_process(COMMAND brew --prefix
                 OUTPUT_VARIABLE HOMEBREW_PREFIX
-                 OUTPUT_STRIP_TRAILING_WHITESPACE)
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
         set(include_install_path "${HOMEBREW_PREFIX}/include")
         set(library_install_path "${HOMEBREW_PREFIX}/lib")
         set(CMAKE_INSTALL_PREFIX "${HOMEBREW_PREFIX}")
-    endif()
+
+        # Ensure RPATH includes Homebrew's lib path for runtime linking
+        list(APPEND CMAKE_INSTALL_RPATH "${HOMEBREW_PREFIX}/lib")
+        set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+endif()
 elseif(UNIX AND NOT APPLE) # Explicitly differentiate UNIX from APPLE
     # Linux specific paths (already set as default)
     if(NOT DEFINED CMAKE_INSTALL_PREFIX)
