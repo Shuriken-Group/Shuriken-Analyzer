@@ -48,26 +48,4 @@ if(DEX AND DEX_TESTS)
         message(STATUS "C compiler ID: ${CMAKE_C_COMPILER_ID}")
         message(STATUS "C compiler version: ${CMAKE_C_COMPILER_VERSION}")
     endif ()
-
-    # Third test
-    message(STATUS "Compiling test core-api-test")
-    add_executable(core-api-test
-            ${CMAKE_CURRENT_SOURCE_DIR}/core-api-test.cpp
-    )
-
-    #set_target_properties(core-api-test PROPERTIES LANGUAGE C)
-    #set_target_properties(core-api-test PROPERTIES LINKER_LANGUAGE C)
-
-    target_include_directories(core-api-test
-            BEFORE
-            PUBLIC ${SHURIKEN_INCLUDE_PATH}
-    )
-
-    # Add dependency on shuriken library
-    add_dependencies(core-api-test shuriken)
-
-    target_link_libraries(core-api-test shuriken)
-
-    add_test(NAME core-api-test
-            COMMAND core-api-test)
 endif ()

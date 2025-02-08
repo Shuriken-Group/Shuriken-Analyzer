@@ -12,7 +12,7 @@
 #include <cassert>
 
 int main() {
-    std::string zip_file = std::string(DEX_FILES_FOLDER) + "test_zip.apk";
+    std::string zip_file = std::string(APK_FILES_FOLDER) + "test_zip.apk";
 
     hApkContext apk_context = parse_apk(zip_file.c_str(), TRUE);
 

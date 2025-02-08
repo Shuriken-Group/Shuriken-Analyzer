@@ -166,7 +166,8 @@ include(CTest)
 if (DEX_TESTS AND JAVAC_BINARY STREQUAL "" AND D8_BINARY STREQUAL "")
     message(STATUS "Test option used but not compilers for DEX provided, using precompiled DEX")
     set(DEX_FILES_FOLDER
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/")
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/dex_files/")
+    set(APK_FILES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/apk_files/")
 else ()
     message(STATUS "Test option used and compilers path provided, compiling DEX files")
     set(DEX_FILES_FOLDER
