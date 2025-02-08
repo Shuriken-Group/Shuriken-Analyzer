@@ -38,42 +38,17 @@ jobs:
     - name: Display compiler version
       run: $CC --version
     
-    - name: Set up venv
+    - name: Set up and install via .venv
       run: |
         python3 -m venv .venv && source .venv/bin/activate
         pip install -vvv git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/
-        python3 -c "from shuriken import *"
-
-  user-install:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: [ubuntu-24.04, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-    - uses: actions/checkout@v3
-    
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-   
-    - name: Install system dependencies
-      uses: ConorMacBride/install-package@v1
-      with:
-        apt: gcc-13 g++-13 cmake git
-        brew: gcc@13 cmake git
-    
-    - name: Setup compiler environment
-      run: |
-        echo "CC=gcc-13" >> $GITHUB_ENV
-        echo "CXX=g++-13" >> $GITHUB_ENV
-    
-    - name: Display compiler version
-      run: $CC --version
-    
-    - name: Set up venv and test user installation
-      run: |
-        pip install --user -vvv git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/
-        # Verify installation in user space
         python3 -c "import os; from pathlib import Path; assert (Path.home() / '.local').exists(), 'User installation directory not found'"
         python3 -c "from shuriken import *"
+        rm -rf .venv/
+
+    - name: Set up and install via --user 
+      run: |
+        pip install --user -vvv git+https://github.com/Fare9/Shuriken-Analyzer.git@main#subdirectory=shuriken/bindings/Python/
+        python3 -c "import os; from pathlib import Path; assert (Path.home() / '.local').exists(), 'User installation directory not found'"
+        python3 -c "from shuriken import *"
+
