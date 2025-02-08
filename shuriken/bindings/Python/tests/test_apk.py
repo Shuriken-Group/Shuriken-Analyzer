@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 from shuriken import *
+
 
 def print_hdvmclass_data(class_: hdvmclass_t):
     for i in range(class_.direct_methods_size):
@@ -48,6 +49,7 @@ def print_hdvmclass_data(class_: hdvmclass_t):
         print("\tField Type Value:", static_field.type_value)
         print("\tAccess Flags:", static_field.access_flags)
 
+
 def print_disassembly_data(apk: Apk, class_: hdvmclass_t):
     for i in range(class_.direct_methods_size):
         direct_method = class_.direct_methods[i]
@@ -62,16 +64,14 @@ def print_disassembly_data(apk: Apk, class_: hdvmclass_t):
         disassembler_str = disassembled_method.method_string
         print(f"{disassembler_str.decode()}\n")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     path = "../../../tests/compiled/"
     for file in os.listdir(path):
-
         if not file.endswith(".apk"):
             continue
 
-        apk = Apk(
-            os.path.join(path, file), True
-        )
+        apk = Apk(os.path.join(path, file), True)
 
         print(f"Number of dex files: {apk.get_number_of_dex_files()}")
 
@@ -80,7 +80,9 @@ if __name__ == '__main__':
 
             print(f"Dex file {j}: {dex_file}")
 
-            print(f"Number of strings for the dex file: {apk.get_number_of_strings_from_dex(dex_file)}")
+            print(
+                f"Number of strings for the dex file: {apk.get_number_of_strings_from_dex(dex_file)}"
+            )
 
             for i in range(apk.get_number_of_strings_from_dex(dex_file)):
                 str_raw = apk.get_string_by_id_from_dex(dex_file, i)
@@ -89,12 +91,17 @@ if __name__ == '__main__':
                 if str_analysis is None:
                     print(f"{str_raw} does not contain any analysis")
                 else:
-                    print(f"{str_analysis.value} contains analysis {str_analysis.n_of_xreffrom} xrefs")
+                    print(
+                        f"{str_analysis.value} contains analysis {str_analysis.n_of_xreffrom} xrefs"
+                    )
                     for k in range(str_analysis.n_of_xreffrom):
-                        print(f"\tCalled from Class: {str_analysis.xreffrom[k].cls.contents.name_}, Method: {str_analysis.xreffrom[k].method.contents.name}, IDX: {str_analysis.xreffrom[k].idx}")
+                        print(
+                            f"\tCalled from Class: {str_analysis.xreffrom[k].cls.contents.name_}, Method: {str_analysis.xreffrom[k].method.contents.name}, IDX: {str_analysis.xreffrom[k].idx}"
+                        )
 
-
-            print(f"Number of classes for the dex file: {apk.get_number_of_classes_for_dex_file(dex_file)}")
+            print(
+                f"Number of classes for the dex file: {apk.get_number_of_classes_for_dex_file(dex_file)}"
+            )
 
             for i in range(apk.get_number_of_classes_for_dex_file(dex_file)):
                 class_: hdvmclass_t = apk.get_hdvmclass_from_dex_by_index(dex_file, i)
@@ -106,7 +113,9 @@ if __name__ == '__main__':
 
                 class_name = class_.class_name.decode()
 
-                class_analysis: hdvmclassanalysis_t = apk.get_analyzed_class_from_apk(class_name)
+                class_analysis: hdvmclassanalysis_t = apk.get_analyzed_class_from_apk(
+                    class_name
+                )
 
                 print("Class Analysis Information")
                 print(f"Class analyzed name: {class_analysis.name_.decode()}")
@@ -121,11 +130,15 @@ if __name__ == '__main__':
                     print("True")
                 print("Method Analysis Information")
                 for i in range(int(class_analysis.n_of_methods)):
-                    method_analysis: hdvmmethodanalysis_t = class_analysis.methods[i].contents
+                    method_analysis: hdvmmethodanalysis_t = class_analysis.methods[
+                        i
+                    ].contents
                     print(f"Method name: {method_analysis.full_name.decode()}")
                     if method_analysis.method_string is not None:
                         print(f"{method_analysis.method_string.decode()}")
                 print("Field Analysis Information")
                 for i in range(int(class_analysis.n_of_fields)):
-                    field_analysis: hdvmfieldanalysis_t = class_analysis.fields[i].contents
+                    field_analysis: hdvmfieldanalysis_t = class_analysis.fields[
+                        i
+                    ].contents
                     print(f"Field name: {field_analysis.name.decode()}")
