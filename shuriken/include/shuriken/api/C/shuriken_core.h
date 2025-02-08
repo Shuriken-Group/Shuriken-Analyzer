@@ -154,30 +154,30 @@ SHURIKENCOREAPI int get_number_of_dex_files(hApkContext context);
 /// @brief Given an idx retrieve the name of one of the dex files
 /// @param idx index of the dex file to retrieve
 /// @return a string with the path of the dex file in the apk
-SHURIKENCOREAPI const char * get_dex_file_by_index(hApkContext context, unsigned int idx);
+SHURIKENCOREAPI const char *get_dex_file_by_index(hApkContext context, unsigned int idx);
 
 /// @brief Every dex file contains a number of classes, retrieve it by
 /// the name of the dex file
 /// @param dex_file file to retrieve the number of classes
 /// @return number of classes in the dex file
-SHURIKENCOREAPI int get_number_of_classes_for_dex_file(hApkContext context, const char * dex_file);
+SHURIKENCOREAPI int get_number_of_classes_for_dex_file(hApkContext context, const char *dex_file);
 
 /// @brief retrieve one of the hdvmclass_t from a dex file
 /// @param dex_file dex file from where to retrieve the class
 /// @param idx index of the class to retrieve
 /// @return hdvmclass_t in the given position
-SHURIKENCOREAPI hdvmclass_t * get_hdvmclass_from_dex_by_index(hApkContext context, const char * dex_file, unsigned int idx);
+SHURIKENCOREAPI hdvmclass_t *get_hdvmclass_from_dex_by_index(hApkContext context, const char *dex_file, unsigned int idx);
 
 /// @brief retrieve the number of strings from a given dex
 /// @param dex_file file to get the number of strings
 /// @return number of strings in dex
-SHURIKENCOREAPI int get_number_of_strings_from_dex(hApkContext context, const char * dex_file);
+SHURIKENCOREAPI int get_number_of_strings_from_dex(hApkContext context, const char *dex_file);
 
 /// @brief get a string from a dex by an id
 /// @param dex_file file to get the string
 /// @param i index of the string to retrieve
 /// @return string from the dex with id
-SHURIKENCOREAPI const char *get_string_by_id_from_dex(hApkContext context, const char * dex_file, unsigned int i);
+SHURIKENCOREAPI const char *get_string_by_id_from_dex(hApkContext context, const char *dex_file, unsigned int i);
 
 //------------------------------------ Disassembly API
 
@@ -222,7 +222,7 @@ SHURIKENCOREAPI size_t get_number_of_methodanalysis_objects(hApkContext context)
 /// @param context APK context from the CORE API
 /// @param idx index of the MethodAnalysis to retrieve
 /// @return pointer to hdvmmethodanalysis_t
-SHURIKENCOREAPI hdvmmethodanalysis_t * get_analyzed_method_by_idx(hApkContext context, size_t idx);
+SHURIKENCOREAPI hdvmmethodanalysis_t *get_analyzed_method_by_idx(hApkContext context, size_t idx);
 
 /// @brief Obtain a hdvmstringanalysis_t given a string
 /// @param context APK context from the CORE API
