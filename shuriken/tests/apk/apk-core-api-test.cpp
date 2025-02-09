@@ -12,7 +12,7 @@
 #include <iostream>
 
 
-const char *file = DEX_FILES_FOLDER
+const char *file = APK_FILES_FOLDER
         "test_zip.apk";
 
 int main() {

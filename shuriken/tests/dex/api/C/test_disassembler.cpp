@@ -7,7 +7,7 @@
 // this API is the one that is used for doing bindings
 // in other languages
 
-#include "../../../include/shuriken/api/C/shuriken_core.h"
+#include "shuriken/api/C/shuriken_core.h"
 #include "dex-files-folder.inc"
 #include <assert.h>
 #include <iostream>
