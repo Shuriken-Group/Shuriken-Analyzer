@@ -79,8 +79,8 @@ namespace {
             if (core_exception_data->n_of_handlers > 0) {
                 core_exception_data->handler = new dvmhandler_data_t[core_exception_data->n_of_handlers];
                 for (size_t i = 0; i < core_exception_data->n_of_handlers; i++) {
-                    core_exception_data->handler->handler_start_addr = exception_data->handler[i].handler_start_addr;
-                    core_exception_data->handler->handler_type = exception_data->handler[i].handler_type->get_raw_type().data();
+                    core_exception_data->handler[i].handler_start_addr = exception_data->handler[i].handler_start_addr;
+                    core_exception_data->handler[i].handler_type = exception_data->handler[i].handler_type->get_raw_type().data();
                 }
             }
         }

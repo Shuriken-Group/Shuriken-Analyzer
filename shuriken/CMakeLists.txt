@@ -16,12 +16,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 # enable compiler warnings
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    add_compile_options(-Wall -Wextra -Werror -Wno-unused-parameter)
-    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	add_compile_options(-Wno-zero-length-array)
-    elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	add_compile_options(-Wno-strict-flex-arrays -Wno-multichar)
-    endif()
+        add_compile_options(-Wall -Wextra -Werror -Wno-unused-parameter)
+        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+                add_compile_options(-Wno-zero-length-array)
+        elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+                add_compile_options(-Wno-strict-flex-arrays -Wno-multichar)
+        endif()
 elseif(MSVC)
         add_compile_options(/W4 /WX /wd4200 /wd4458 /wd4456 /wd4297)
         add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
@@ -29,22 +29,22 @@ endif()
 
 # Compiler for the project
 if(CMAKE_CXX_COMPILER_LOADED)
-    message(STATUS "C++ compiler ID: ${CMAKE_CXX_COMPILER_ID}")
-    message(STATUS "C++ compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
+        message(STATUS "C++ compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+        message(STATUS "C++ compiler version: ${CMAKE_CXX_COMPILER_VERSION}")
 endif()
 
 # Build type
 if(NOT CMAKE_BUILD_TYPE)
-    message(STATUS "Build type not set, setting to Release")
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+        message(STATUS "Build type not set, setting to Release")
+        set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
 endif()
 
 message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
 
 # for debug configuration set specific flags
 if(NOT WIN32)
-    set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O0 -DNDEBUG")
+        set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -DDEBUG")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O0 -DNDEBUG")
 endif()
 ##############################################################
 
@@ -60,18 +60,15 @@ option(MJOLNIR "Enable the compilation of MjolnIR, it needs LLVM and MLIR on the
 ##############################################################
 
 
-if ((CMAKE_BUILD_TYPE STREQUAL "Debug" ) AND SANITIZE)
-    message(STATUS "Debug build")
-    message(STATUS "Sanitizers enabled by debug mode")
-    # Set up sanitizer for address and undefined behavior
-    set(SANITIZER_FLAGS "-fsanitize=address,undefined")
-    message(STATUS "Sanitizer flags: ${SANITIZER_FLAGS}")
-    add_compile_options(${SANITIZER_FLAGS} -fno-omit-frame-pointer)
-    add_link_options(${SANITIZER_FLAGS} -fno-omit-frame-pointer)
+if((CMAKE_BUILD_TYPE STREQUAL "Debug") AND SANITIZE)
+        message(STATUS "Debug build")
+        message(STATUS "Sanitizers enabled by debug mode")
+        # Set up sanitizer for address and undefined behavior
+        set(SANITIZER_FLAGS "-fsanitize=address,undefined")
+        message(STATUS "Sanitizer flags: ${SANITIZER_FLAGS}")
+        add_compile_options(${SANITIZER_FLAGS} -fno-omit-frame-pointer)
+        add_link_options(${SANITIZER_FLAGS} -fno-omit-frame-pointer)
 endif()
-# Variables that need to be set for compiling dalvik files
-set(JAVAC_BINARY "" CACHE FILEPATH "Path to javac binary for compiling java files")
-set(D8_BINARY "" CACHE FILEPATH "Path to d8 binary for compiling dex files")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
 
@@ -101,38 +98,38 @@ list(APPEND LIB_MODULES
 )
 
 # Compile the object files for DEX
-if (DEX)
-    message(STATUS "Generating Shuriken DEX object files")
+if(DEX)
+        message(STATUS "Generating Shuriken DEX object files")
 
-    add_library(dex-obj
-            OBJECT
-    )
+        add_library(dex-obj
+                OBJECT
+        )
 
-    set_target_properties(dex-obj
-            PROPERTIES
-            POSITION_INDEPENDENT_CODE 1
-    )
+        set_target_properties(dex-obj
+                PROPERTIES
+                POSITION_INDEPENDENT_CODE 1
+        )
 
-    # Dex files
-    add_subdirectory(lib/parser/Dex)
-    add_subdirectory(lib/disassembler/Dex)
-    add_subdirectory(lib/analysis/Dex)
-    add_subdirectory(lib/api/Dex)
-    # APK files
-    add_subdirectory(lib/parser/Apk)
+        # Dex files
+        add_subdirectory(lib/parser/Dex)
+        add_subdirectory(lib/disassembler/Dex)
+        add_subdirectory(lib/analysis/Dex)
+        add_subdirectory(lib/api/Dex)
+        # APK files
+        add_subdirectory(lib/parser/Apk)
 
-    target_link_libraries(dex-obj PRIVATE spdlog::spdlog)
-    target_link_libraries(dex-obj PRIVATE zip)
+        target_link_libraries(dex-obj PRIVATE spdlog::spdlog)
+        target_link_libraries(dex-obj PRIVATE zip)
 
-    target_include_directories(dex-obj
-            BEFORE
-            PUBLIC ${SHURIKEN_INCLUDE_PATH}
-    )
+        target_include_directories(dex-obj
+                BEFORE
+                PUBLIC ${SHURIKEN_INCLUDE_PATH}
+        )
 
-    list(APPEND LIB_MODULES
-            $<TARGET_OBJECTS:dex-obj>
-    )
-endif ()
+        list(APPEND LIB_MODULES
+                $<TARGET_OBJECTS:dex-obj>
+        )
+endif()
 
 message(STATUS "Generating Shuriken shared library")
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -154,7 +151,7 @@ target_include_directories(shuriken
 #############################################################
 
 if(MJOLNIR)
-    add_subdirectory(mjolnir)
+        add_subdirectory(mjolnir)
 endif(MJOLNIR)
 
 
@@ -163,17 +160,12 @@ endif(MJOLNIR)
 #############################################################
 include(CTest)
 
-if (DEX_TESTS AND JAVAC_BINARY STREQUAL "" AND D8_BINARY STREQUAL "")
-    message(STATUS "Test option used but not compilers for DEX provided, using precompiled DEX")
-    set(DEX_FILES_FOLDER
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/dex_files/")
-    set(APK_FILES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/apk_files/")
-else ()
-    message(STATUS "Test option used and compilers path provided, compiling DEX files")
-    set(DEX_FILES_FOLDER
-        "${CMAKE_CURRENT_BINARY_DIR}/tests/code/java/")
-    set(COMPILE_DEX_FILES ON)
-endif ()
+if(DEX_TESTS)
+        message(STATUS "Test option used but not compilers for DEX provided, using precompiled DEX")
+        set(DEX_FILES_FOLDER
+                "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/dex_files/")
+        set(APK_FILES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/apk_files/")
+endif()
 
 message(STATUS "Path to DEX Folder: ${DEX_FILES_FOLDER}")
 add_subdirectory(tests)
@@ -201,7 +193,3 @@ if (NOT WIN32)
                 PATTERN "*.def"
         )
 endif()
-
-# Optional: if you have public headers in other directories added by subdirectories,
-# you should install them as well using additional install(DIRECTORY ...) commands.
-

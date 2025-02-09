@@ -11,4 +11,3 @@ add_subdirectory(dex/api/C)
 # APK analysis tests
 # include the paths for the different tests
 add_subdirectory(apk)
-add_subdirectory(code)
