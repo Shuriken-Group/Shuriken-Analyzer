@@ -17,8 +17,8 @@ int main() {
 
     // Test instance fields
     assert(test_class->instance_fields_size > 0 && "No instance fields found");
-    bool found_private_field = false;
-    bool found_public_field = false;
+    [[maybe_unused]] bool found_private_field = false;
+    [[maybe_unused]] bool found_public_field = false;
 
     for (uint16_t i = 0; i < test_class->instance_fields_size; i++) {
         hdvmfield_t* field = &test_class->instance_fields[i];

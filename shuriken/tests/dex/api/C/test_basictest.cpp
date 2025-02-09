@@ -12,23 +12,23 @@ int main() {
     assert(context != nullptr && "Failed to parse DEX file");
 
     // Test string retrieval
-    size_t str_count = get_number_of_strings(context);
+    [[maybe_unused]] size_t str_count = get_number_of_strings(context);
     assert(str_count > 0 && "No strings found in DEX");
 
-    const char *first_string = get_string_by_id(context, 0);
+    [[maybe_unused]] const char *first_string = get_string_by_id(context, 0);
     assert(first_string != nullptr && "Failed to get first string");
 
     // Test class count
-    uint16_t class_count = get_number_of_classes(context);
+    [[maybe_unused]] uint16_t class_count = get_number_of_classes(context);
     assert(class_count > 0 && "No classes found in DEX");
 
     // Test class retrieval by id
-    hdvmclass_t *first_class = get_class_by_id(context, 0);
+    [[maybe_unused]] hdvmclass_t *first_class = get_class_by_id(context, 0);
     assert(first_class != nullptr && "Failed to get first class");
     assert(first_class->class_name != nullptr && "Class name is null");
 
     // Test class retrieval by name
-    hdvmclass_t *basic_class = get_class_by_name(context, "BasicTest");
+    [[maybe_unused]] hdvmclass_t *basic_class = get_class_by_name(context, "BasicTest");
     assert(basic_class != nullptr && "Failed to get BasicTest class");
 
     // Test invalid cases

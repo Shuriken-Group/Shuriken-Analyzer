@@ -18,8 +18,8 @@ int main() {
 
     // Test direct methods (constructor and private methods)
     assert(test_class->direct_methods_size > 0 && "No direct methods found");
-    bool found_constructor = false;
-    bool found_private_method = false;
+    [[maybe_unused]] bool found_constructor = false;
+    [[maybe_unused]] bool found_private_method = false;
 
     for (uint16_t i = 0; i < test_class->direct_methods_size; i++) {
         hdvmmethod_t* method = &test_class->direct_methods[i];
@@ -64,7 +64,7 @@ int main() {
     assert(test_method != nullptr && "Failed to get test method");
     
     // Get disassembled method
-    dvmdisassembled_method_t* disassembled = get_disassembled_method(context, test_method->dalvik_name);
+    [[maybe_unused]] dvmdisassembled_method_t* disassembled = get_disassembled_method(context, test_method->dalvik_name);
     assert(disassembled != nullptr && "Failed to get disassembled method");
     assert(disassembled->n_of_instructions > 0 && "No instructions in disassembled method");
     assert(disassembled->method_string != nullptr && "No method string available");

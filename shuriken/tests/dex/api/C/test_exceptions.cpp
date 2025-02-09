@@ -12,7 +12,7 @@ int main() {
     assert(context != nullptr && "Failed to parse DEX file");
 
     // Get the test class
-    hdvmclass_t* test_class = get_class_by_name(context, "ExceptionTest");
+    [[maybe_unused]] hdvmclass_t* test_class = get_class_by_name(context, "ExceptionTest");
     assert(test_class != nullptr && "Failed to get ExceptionTest class");
 
     // First disassemble the DEX
@@ -36,7 +36,7 @@ int main() {
         
         // Check handlers
         for (size_t j = 0; j < exception->n_of_handlers; j++) {
-            dvmhandler_data_t* handler = &exception->handler[j];
+            [[maybe_unused]] dvmhandler_data_t* handler = &exception->handler[j];
             assert(handler->handler_type != nullptr && "Handler type is null");
             assert(handler->handler_start_addr > 0 && "Invalid handler start address");
         }
@@ -53,8 +53,8 @@ int main() {
     assert(method_analysis->basic_blocks->n_of_blocks > 0 && "Empty basic blocks");
 
     // Check basic blocks structure
-    bool found_try_block = false;
-    bool found_catch_block = false;
+    [[maybe_unused]] bool found_try_block = false;
+    [[maybe_unused]] bool found_catch_block = false;
 
     for (size_t i = 0; i < method_analysis->basic_blocks->n_of_blocks; i++) {
         hdvmbasicblock_t* block = &method_analysis->basic_blocks->blocks[i];
