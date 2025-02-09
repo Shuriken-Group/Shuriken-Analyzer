@@ -39,7 +39,7 @@ int main() {
 
     // Test static fields
     assert(test_class->static_fields_size > 0 && "No static fields found");
-    bool found_static_field = false;
+    [[maybe_unused]] bool found_static_field = false;
 
     for (uint16_t i = 0; i < test_class->static_fields_size; i++) {
         hdvmfield_t* field = &test_class->static_fields[i];

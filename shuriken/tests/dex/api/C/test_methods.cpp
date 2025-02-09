@@ -39,7 +39,7 @@ int main() {
 
     // Test virtual methods (public instance methods)
     assert(test_class->virtual_methods_size > 0 && "No virtual methods found");
-    bool found_public_method = false;
+    [[maybe_unused]] bool found_public_method = false;
 
     for (uint16_t i = 0; i < test_class->virtual_methods_size; i++) {
         hdvmmethod_t* method = &test_class->virtual_methods[i];
