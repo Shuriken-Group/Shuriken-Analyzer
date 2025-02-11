@@ -296,6 +296,7 @@ namespace {
     // Code to get different information from the dex_opaque_struct_t using
     // objects from Shuriken C++ API.
     namespace getters {
+        dexheader_t *get_header(dex_opaque_struct_t *opaque_struct);
         hdvmfieldanalysis_t *get_field_analysis(dex_opaque_struct_t *opaque_struct,
                                                 FieldAnalysis *fieldAnalysis);
         hdvmmethodanalysis_t *get_method_analysis(dex_opaque_struct_t *opaque_struct,
