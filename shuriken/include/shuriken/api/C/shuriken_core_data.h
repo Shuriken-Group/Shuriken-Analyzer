@@ -93,7 +93,7 @@ typedef struct dexheader_t_ {
     //! magic bytes from dex, different values are possible
     uint8_t magic[8];
     //! checksum to see if file is correct
-    int32_t checksum;
+    uint32_t checksum;
     //! signature of dex
     uint8_t signature[20];
     //! current file size
