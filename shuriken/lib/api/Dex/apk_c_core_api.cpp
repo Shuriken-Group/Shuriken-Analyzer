@@ -24,6 +24,8 @@ namespace {
         std::unique_ptr<shuriken::parser::apk::Apk> apk;
         /// @brief vector of dex files
         std::vector<std::string_view> dex_files;
+        /// @brief headers for each DEX file
+        std::unordered_map<std::string_view, dexheader_t *> headers_by_dex;
         /// @brief classes for each dex file
         std::unordered_map<std::string_view, std::vector<hdvmclass_t *>> classes_by_dex;
         /// @brief all the methods from the DEX (to access all the methods)
@@ -292,6 +294,7 @@ namespace {
             auto &dex_files = working_apk->get_dex_files_names();
             for (auto dex_file: dex_files) {
                 opaque_struct->dex_files.emplace_back(dex_file);
+                opaque_struct->headers_by_dex.insert({dex_file.data(), nullptr});
                 auto parser = working_apk->get_parser_by_file(dex_file.data());
                 auto &classes = parser->get_classes();
                 // Add the classes from the parser
@@ -308,6 +311,8 @@ namespace {
 
     // definitions
     namespace getters {
+        dexheader_t *get_dex_header(apk_opaque_struct_t *opaque_struct,
+                                    const char *dex_file);
         hdvmstringanalysis_t *get_string_analysis(apk_opaque_struct_t *opaque_struct,
                                                   std::string str);
         hdvmfieldanalysis_t *get_field_analysis(apk_opaque_struct_t *opaque_struct,
@@ -316,6 +321,45 @@ namespace {
                                                   MethodAnalysis *methodAnalysis);
         hdvmclassanalysis_t *get_class_analysis(apk_opaque_struct_t *opaque_struct,
                                                 ClassAnalysis *classAnalysis);
+
+        dexheader_t *get_dex_header(apk_opaque_struct_t *opaque_struct, const char *dex_file) {
+            if (opaque_struct->headers_by_dex.contains(dex_file) &&
+                    opaque_struct->headers_by_dex.at(dex_file) != nullptr) {
+                return opaque_struct->headers_by_dex.at(dex_file);
+            }
+
+            auto working_header = new dexheader_t{};
+            auto parser = opaque_struct->apk->get_parser_by_file(dex_file);
+            auto encoded_header = parser->get_header().get_dex_header();
+
+            memcpy(working_header->magic, encoded_header.magic, 8);
+            working_header->checksum = encoded_header.checksum;
+            memcpy(working_header->signature, encoded_header.signature, 20);
+            working_header->file_size = encoded_header.file_size;
+            working_header->header_size = encoded_header.header_size;
+            working_header->endian_tag = encoded_header.endian_tag;
+            working_header->link_size = encoded_header.link_size;
+            working_header->link_off = encoded_header.link_off;
+            working_header->map_off = encoded_header.map_off;
+            working_header->string_ids_size = encoded_header.string_ids_size;
+            working_header->string_ids_off = encoded_header.string_ids_off;
+            working_header->type_ids_size = encoded_header.type_ids_size;
+            working_header->type_ids_off = encoded_header.type_ids_off;
+            working_header->proto_ids_size = encoded_header.proto_ids_size;
+            working_header->proto_ids_off = encoded_header.proto_ids_off;
+            working_header->field_ids_size = encoded_header.field_ids_size;
+            working_header->field_ids_off = encoded_header.field_ids_off;
+            working_header->method_ids_size = encoded_header.method_ids_size;
+            working_header->method_ids_off = encoded_header.method_ids_off;
+            working_header->class_defs_size = encoded_header.class_defs_size;
+            working_header->class_defs_off = encoded_header.class_defs_off;
+            working_header->data_size = encoded_header.data_size;
+            working_header->data_off = encoded_header.data_off;
+
+            opaque_struct->headers_by_dex.insert({dex_file, working_header});
+            return working_header;
+        }
+
 
         hdvmstringanalysis_t *get_string_analysis(apk_opaque_struct_t *opaque_struct,
                                                   std::string str) {
@@ -783,6 +827,13 @@ const char *get_dex_file_by_index(hApkContext context, unsigned int idx) {
     if (!opaque_struct || opaque_struct->tag != APK_TAG) return nullptr;
     if (idx >= opaque_struct->dex_files.size()) return nullptr;
     return opaque_struct->dex_files[idx].data();
+}
+
+dexheader_t *get_header_for_dex_file(hApkContext context, const char *dex_file) {
+    auto *opaque_struct = reinterpret_cast<apk_opaque_struct_t *>(context);
+    if (!opaque_struct || opaque_struct->tag != APK_TAG) return nullptr;
+    if (!opaque_struct->headers_by_dex.contains(dex_file)) return nullptr;
+    return ::getters::get_dex_header(opaque_struct, dex_file);
 }
 
 int get_number_of_classes_for_dex_file(hApkContext context, const char *dex_file) {
