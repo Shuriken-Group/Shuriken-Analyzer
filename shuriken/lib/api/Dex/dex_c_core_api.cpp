@@ -32,6 +32,8 @@ namespace {
         /// @brief DEX analysis from shuriken
         shuriken::analysis::dex::Analysis *analysis;
 
+        /// @brief DEX header
+        dexheader_t *header;
         /// @brief number of classes
         std::uint16_t number_of_classes;
         /// @brief classes created from DEX information
@@ -182,6 +184,7 @@ namespace {
                 return;
             opaque_struct->tag = DEX_TAG;
             opaque_struct->parser = parser;
+            opaque_struct->header = nullptr;
             opaque_struct->number_of_classes = static_cast<uint16_t>(parser->get_header().get_dex_header_const().class_defs_size);
             opaque_struct->classes = new hdvmclass_t[opaque_struct->number_of_classes];
             size_t i = 0;
@@ -302,34 +305,36 @@ namespace {
 
         /// @brief get a deaheader_t structure for the given DEX file
         dexheader_t *get_header(dex_opaque_struct_t *opaque_struct) {
-            dexheader_t *dex_header = new dexheader_t{};
+            if (opaque_struct->header != nullptr) return opaque_struct->header;
+
+            opaque_struct->header = new dexheader_t{};
             auto encoded_header = opaque_struct->parser->get_header().get_dex_header();
 
-            memcpy(dex_header->magic, encoded_header.magic, 8);
-            dex_header->checksum = encoded_header.checksum;
-            memcpy(dex_header->signature, encoded_header.signature, 20);
-            dex_header->file_size = encoded_header.file_size;
-            dex_header->header_size = encoded_header.header_size;
-            dex_header->endian_tag = encoded_header.endian_tag;
-            dex_header->link_size = encoded_header.link_size;
-            dex_header->link_off = encoded_header.link_off;
-            dex_header->map_off = encoded_header.map_off;
-            dex_header->string_ids_size = encoded_header.string_ids_size;
-            dex_header->string_ids_off = encoded_header.string_ids_off;
-            dex_header->type_ids_size = encoded_header.type_ids_size;
-            dex_header->type_ids_off = encoded_header.type_ids_off;
-            dex_header->proto_ids_size = encoded_header.proto_ids_size;
-            dex_header->proto_ids_off = encoded_header.proto_ids_off;
-            dex_header->field_ids_size = encoded_header.field_ids_size;
-            dex_header->field_ids_off = encoded_header.field_ids_off;
-            dex_header->method_ids_size = encoded_header.method_ids_size;
-            dex_header->method_ids_off = encoded_header.method_ids_off;
-            dex_header->class_defs_size = encoded_header.class_defs_size;
-            dex_header->class_defs_off = encoded_header.class_defs_off;
-            dex_header->data_size = encoded_header.data_size;
-            dex_header->data_off = encoded_header.data_off;
+            memcpy(opaque_struct->header->magic, encoded_header.magic, 8);
+            opaque_struct->header->checksum = encoded_header.checksum;
+            memcpy(opaque_struct->header->signature, encoded_header.signature, 20);
+            opaque_struct->header->file_size = encoded_header.file_size;
+            opaque_struct->header->header_size = encoded_header.header_size;
+            opaque_struct->header->endian_tag = encoded_header.endian_tag;
+            opaque_struct->header->link_size = encoded_header.link_size;
+            opaque_struct->header->link_off = encoded_header.link_off;
+            opaque_struct->header->map_off = encoded_header.map_off;
+            opaque_struct->header->string_ids_size = encoded_header.string_ids_size;
+            opaque_struct->header->string_ids_off = encoded_header.string_ids_off;
+            opaque_struct->header->type_ids_size = encoded_header.type_ids_size;
+            opaque_struct->header->type_ids_off = encoded_header.type_ids_off;
+            opaque_struct->header->proto_ids_size = encoded_header.proto_ids_size;
+            opaque_struct->header->proto_ids_off = encoded_header.proto_ids_off;
+            opaque_struct->header->field_ids_size = encoded_header.field_ids_size;
+            opaque_struct->header->field_ids_off = encoded_header.field_ids_off;
+            opaque_struct->header->method_ids_size = encoded_header.method_ids_size;
+            opaque_struct->header->method_ids_off = encoded_header.method_ids_off;
+            opaque_struct->header->class_defs_size = encoded_header.class_defs_size;
+            opaque_struct->header->class_defs_off = encoded_header.class_defs_off;
+            opaque_struct->header->data_size = encoded_header.data_size;
+            opaque_struct->header->data_off = encoded_header.data_off;
 
-            return dex_header;
+            return opaque_struct->header;
         }
 
         /// @brief get or create a hdvmfieldanalysis_t structure given a FieldAnalysis object
@@ -686,6 +691,11 @@ namespace {
         /// @brief Destroy the whole opaque struct
         /// @param dex_opaque_struct opaque structure from dex to destroy
         void destroy_opaque_struct(dex_opaque_struct_t *dex_opaque_struct) {
+            if (dex_opaque_struct->header) {
+                delete dex_opaque_struct->header;
+                dex_opaque_struct->header = nullptr;
+            }
+
             if (dex_opaque_struct->classes) {
                 destroy_class_data(dex_opaque_struct->classes);
                 delete [] dex_opaque_struct->classes;
