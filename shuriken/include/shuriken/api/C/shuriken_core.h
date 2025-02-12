@@ -48,6 +48,10 @@ SHURIKENCOREAPI hDexContext parse_dex(const char *filePath);
 /// @param context object to destroys
 SHURIKENCOREAPI void destroy_dex(hDexContext context);
 
+/// @brief get the parsed header of the DEX file
+/// @param context from the DEX file
+SHURIKENCOREAPI dexheader_t *get_header(hDexContext context);
+
 /// @brief Get the number of strings from the DEX file
 /// @param context from the DEX file
 /// @return number of strings

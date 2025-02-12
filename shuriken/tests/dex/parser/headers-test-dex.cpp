@@ -30,7 +30,7 @@ struct method_data {
 
 // header data
 std::uint8_t magic[] = {'d', 'e', 'x', '\n', '0', '3', '5', '\0'};
-std::int32_t checksum = 0xe4eefae3;
+std::uint32_t checksum = 0xe4eefae3;
 std::uint32_t file_size = 1624;
 std::uint32_t header_size = 112;
 

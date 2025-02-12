@@ -21,7 +21,7 @@ namespace shuriken::parser::dex {
         /// headers from DEX
         struct dexheader_t {
             std::uint8_t magic[8];        //! magic bytes from dex, different values are possible
-            std::int32_t checksum;        //! checksum to see if file is correct
+            std::uint32_t checksum;        //! checksum to see if file is correct
             std::uint8_t signature[20];   //! signature of dex
             std::uint32_t file_size;      //! current file size
             std::uint32_t header_size;    //! size of this header

@@ -32,6 +32,8 @@ namespace {
         /// @brief DEX analysis from shuriken
         shuriken::analysis::dex::Analysis *analysis;
 
+        /// @brief DEX header
+        dexheader_t *header;
         /// @brief number of classes
         std::uint16_t number_of_classes;
         /// @brief classes created from DEX information
@@ -182,6 +184,7 @@ namespace {
                 return;
             opaque_struct->tag = DEX_TAG;
             opaque_struct->parser = parser;
+            opaque_struct->header = nullptr;
             opaque_struct->number_of_classes = static_cast<uint16_t>(parser->get_header().get_dex_header_const().class_defs_size);
             opaque_struct->classes = new hdvmclass_t[opaque_struct->number_of_classes];
             size_t i = 0;
@@ -293,12 +296,47 @@ namespace {
     // Code to get different information from the dex_opaque_struct_t using
     // objects from Shuriken C++ API.
     namespace getters {
+        dexheader_t *get_header(dex_opaque_struct_t *opaque_struct);
         hdvmfieldanalysis_t *get_field_analysis(dex_opaque_struct_t *opaque_struct,
                                                 FieldAnalysis *fieldAnalysis);
         hdvmmethodanalysis_t *get_method_analysis(dex_opaque_struct_t *opaque_struct,
                                                 MethodAnalysis *methodAnalysis);
         hdvmclassanalysis_t *get_class_analysis(dex_opaque_struct_t *opaque_struct,
                                                 ClassAnalysis *classAnalysis);
+
+        /// @brief get a deaheader_t structure for the given DEX file
+        dexheader_t *get_header(dex_opaque_struct_t *opaque_struct) {
+            if (opaque_struct->header != nullptr) return opaque_struct->header;
+
+            opaque_struct->header = new dexheader_t{};
+            auto encoded_header = opaque_struct->parser->get_header().get_dex_header();
+
+            memcpy(opaque_struct->header->magic, encoded_header.magic, 8);
+            opaque_struct->header->checksum = encoded_header.checksum;
+            memcpy(opaque_struct->header->signature, encoded_header.signature, 20);
+            opaque_struct->header->file_size = encoded_header.file_size;
+            opaque_struct->header->header_size = encoded_header.header_size;
+            opaque_struct->header->endian_tag = encoded_header.endian_tag;
+            opaque_struct->header->link_size = encoded_header.link_size;
+            opaque_struct->header->link_off = encoded_header.link_off;
+            opaque_struct->header->map_off = encoded_header.map_off;
+            opaque_struct->header->string_ids_size = encoded_header.string_ids_size;
+            opaque_struct->header->string_ids_off = encoded_header.string_ids_off;
+            opaque_struct->header->type_ids_size = encoded_header.type_ids_size;
+            opaque_struct->header->type_ids_off = encoded_header.type_ids_off;
+            opaque_struct->header->proto_ids_size = encoded_header.proto_ids_size;
+            opaque_struct->header->proto_ids_off = encoded_header.proto_ids_off;
+            opaque_struct->header->field_ids_size = encoded_header.field_ids_size;
+            opaque_struct->header->field_ids_off = encoded_header.field_ids_off;
+            opaque_struct->header->method_ids_size = encoded_header.method_ids_size;
+            opaque_struct->header->method_ids_off = encoded_header.method_ids_off;
+            opaque_struct->header->class_defs_size = encoded_header.class_defs_size;
+            opaque_struct->header->class_defs_off = encoded_header.class_defs_off;
+            opaque_struct->header->data_size = encoded_header.data_size;
+            opaque_struct->header->data_off = encoded_header.data_off;
+
+            return opaque_struct->header;
+        }
 
         /// @brief get or create a hdvmfieldanalysis_t structure given a FieldAnalysis object
         hdvmfieldanalysis_t *get_field_analysis(dex_opaque_struct_t *opaque_struct,
@@ -654,6 +692,11 @@ namespace {
         /// @brief Destroy the whole opaque struct
         /// @param dex_opaque_struct opaque structure from dex to destroy
         void destroy_opaque_struct(dex_opaque_struct_t *dex_opaque_struct) {
+            if (dex_opaque_struct->header) {
+                delete dex_opaque_struct->header;
+                dex_opaque_struct->header = nullptr;
+            }
+
             if (dex_opaque_struct->classes) {
                 destroy_class_data(dex_opaque_struct->classes);
                 delete [] dex_opaque_struct->classes;
@@ -715,6 +758,12 @@ void destroy_dex(hDexContext context) {
     auto *opaque_struct = reinterpret_cast<dex_opaque_struct_t *>(context);
     if (!opaque_struct || opaque_struct->tag != DEX_TAG) return;
     ::destroyers::destroy_opaque_struct(opaque_struct);
+}
+
+dexheader_t *get_header(hDexContext context) {
+    auto *opaque_struct = reinterpret_cast<dex_opaque_struct_t *>(context);
+    if (!opaque_struct || opaque_struct->tag != DEX_TAG) return nullptr;
+    return ::getters::get_header(opaque_struct);
 }
 
 size_t get_number_of_strings(hDexContext context) {
