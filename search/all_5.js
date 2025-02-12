@@ -21,7 +21,7 @@ var searchData=
   ['encodedtypepair_18',['EncodedTypePair',['../structshuriken_1_1parser_1_1dex_1_1EncodedTypePair.html',1,'shuriken::parser::dex']]],
   ['encodedvalue_19',['EncodedValue',['../classshuriken_1_1parser_1_1dex_1_1EncodedValue.html',1,'shuriken::parser::dex::EncodedValue'],['../classshuriken_1_1parser_1_1dex_1_1EncodedValue.html#abc451e98091a0e5b458df66b052d42ef',1,'shuriken::parser::dex::EncodedValue::EncodedValue()']]],
   ['end_20',['end',['../structshuriken_1_1deref__iterator__range.html#a1f881ae51a407f6739d4291e72c61446',1,'shuriken::deref_iterator_range::end()'],['../classshuriken_1_1iterator__range.html#ac2260ed0fdc50cafc025888368a472b6',1,'shuriken::iterator_range::end()']]],
-  ['endian_5ftag_21',['endian_tag',['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a9e6af3496e6987cf1e5d2798cc74ef7b',1,'shuriken::parser::dex::DexHeader::dexheader_t']]],
+  ['endian_5ftag_21',['endian_tag',['../structdexheader__t__.html#ac4767b69ad7a032cf749cd926ce6ab17',1,'dexheader_t_::endian_tag'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a9e6af3496e6987cf1e5d2798cc74ef7b',1,'shuriken::parser::dex::DexHeader::dexheader_t::endian_tag']]],
   ['err_22',['ERR',['../namespaceshuriken.html#ad6077f094241bc295b3b90992a34159eacd22bad976363fdd1bfbf6759fede482',1,'shuriken']]],
   ['exception_5fdata_5ft_23',['exception_data_t',['../namespaceshuriken_1_1disassembler_1_1dex.html#a19246bfcdd152d263131976941c664c5',1,'shuriken::disassembler::dex']]],
   ['exception_5finformation_24',['exception_information',['../structdvmdisassembled__method__t__.html#a9fb791d86272f5d43a44ba8262d5adef',1,'dvmdisassembled_method_t_']]],

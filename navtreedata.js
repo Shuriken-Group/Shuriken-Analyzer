@@ -43,7 +43,7 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
+        [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
         [ "Enumerator", "functions_eval.html", null ]
@@ -74,9 +74,9 @@ var NAVTREEINDEX =
 "classshuriken_1_1parser_1_1dex_1_1DVMArray.html",
 "classshuriken_1_1parser_1_1dex_1_1DexStrings.html#acd06edc4ef141b8f4e0fe165bc1a98c5",
 "classshuriken_1_1parser_1_1dex_1_1Parser.html#afd17091e6a71f4f697fa64f8320a27e6",
-"namespaceshuriken_1_1dex_1_1TYPES.html#ae3b5dca787a2792d0be4a274d049bd5ca744ce88584d8105109069a1b4472eb5a",
-"structhdvm__class__idx__t__.html",
-"structshuriken_1_1parser_1_1dex_1_1DexMapList_1_1map__item.html#a03d6e2dd1e4006ab047c8e7c37fc890b"
+"namespaceshuriken_1_1dex_1_1TYPES.html#ab782217a115198b0c10620c020ad9922a9f8c136edcd217fc6e6a050ceee830d9",
+"structbasic__blocks__t__.html#a0e0b7ed2d66d350b58278e40c1087b1b",
+"structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a0c0964d3313a30694ff4c7150718856b"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

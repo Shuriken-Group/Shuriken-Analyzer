@@ -20,6 +20,7 @@ var hierarchy =
     [ "shuriken::parser::dex::DexFields", "classshuriken_1_1parser_1_1dex_1_1DexFields.html", null ],
     [ "shuriken::parser::dex::DexHeader", "classshuriken_1_1parser_1_1dex_1_1DexHeader.html", null ],
     [ "shuriken::parser::dex::DexHeader::dexheader_t", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html", null ],
+    [ "dexheader_t_", "structdexheader__t__.html", null ],
     [ "shuriken::parser::dex::DexMapList", "classshuriken_1_1parser_1_1dex_1_1DexMapList.html", null ],
     [ "shuriken::parser::dex::DexMethods", "classshuriken_1_1parser_1_1dex_1_1DexMethods.html", null ],
     [ "shuriken::disassembler::dex::DexOpcodes", "classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html", null ],

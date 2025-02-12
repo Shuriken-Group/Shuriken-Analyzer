@@ -1,5 +1,6 @@
 var shuriken__core__data_8h =
 [
+    [ "dexheader_t_", "structdexheader__t__.html", "structdexheader__t__" ],
     [ "hdvmfield_t_", "structhdvmfield__t__.html", "structhdvmfield__t__" ],
     [ "hdvmmethod_t_", "structhdvmmethod__t__.html", "structhdvmmethod__t__" ],
     [ "hdvmclass_t", "structhdvmclass__t.html", "structhdvmclass__t" ],
@@ -21,6 +22,7 @@ var shuriken__core__data_8h =
     [ "hdvmclassanalysis_t_", "structhdvmclassanalysis__t__.html", "structhdvmclassanalysis__t__" ],
     [ "SHURIKENCOREAPI", "shuriken__core__data_8h.html#a8e8f1dee9bcbbe6e249e1c5de9a78b9d", null ],
     [ "basic_blocks_t", "shuriken__core__data_8h.html#a6a150f515571008d8fb7d8c1b9d082aa", null ],
+    [ "dexheader_t", "shuriken__core__data_8h.html#a61867bf22efcc72796288e55e885ec8d", null ],
     [ "dvmdisassembled_method_t", "shuriken__core__data_8h.html#aecb7736c1d69317e06841ae183e4814f", null ],
     [ "dvmexceptions_data_t", "shuriken__core__data_8h.html#a2798a862b13c21181a8804a3c3f811e2", null ],
     [ "dvmhandler_data_t", "shuriken__core__data_8h.html#abb9c61d535618f4957aa29f0551bf120", null ],

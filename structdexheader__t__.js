@@ -1,0 +1,26 @@
+var structdexheader__t__ =
+[
+    [ "checksum", "structdexheader__t__.html#a71a81337b9ed449a7d0b5462dbe651dd", null ],
+    [ "class_defs_off", "structdexheader__t__.html#a1d2f7473ce3ffa9705860967cb48dca2", null ],
+    [ "class_defs_size", "structdexheader__t__.html#a43285762c1752931fc0dbd1ab0585903", null ],
+    [ "data_off", "structdexheader__t__.html#a4b99ecde83bd1736aece370c7ed237d1", null ],
+    [ "data_size", "structdexheader__t__.html#af410f6ad1d4dd8a12576c923cdaca6e5", null ],
+    [ "endian_tag", "structdexheader__t__.html#ac4767b69ad7a032cf749cd926ce6ab17", null ],
+    [ "field_ids_off", "structdexheader__t__.html#a6dbb6c9c48c043938319c4ca17ba0987", null ],
+    [ "field_ids_size", "structdexheader__t__.html#a5ff9fb471cfe359865b4a371814773f0", null ],
+    [ "file_size", "structdexheader__t__.html#af8954d9da00da8c48d090788e51e39f8", null ],
+    [ "header_size", "structdexheader__t__.html#a73b508930bdaf8ca2b3659b9d4340fc8", null ],
+    [ "link_off", "structdexheader__t__.html#afb7dd99983113192866003b25c635897", null ],
+    [ "link_size", "structdexheader__t__.html#a6ada8f4e9e5f269c4e5f3984413fd637", null ],
+    [ "magic", "structdexheader__t__.html#a29218bbfc65685d8b01ba20ffc3e527e", null ],
+    [ "map_off", "structdexheader__t__.html#a147f46ff6f1e8d4fd55de8524d500b57", null ],
+    [ "method_ids_off", "structdexheader__t__.html#a02099b92d49f1d6093d381152e7b2011", null ],
+    [ "method_ids_size", "structdexheader__t__.html#ae4a1917dce9eedf852f9bdb837623ae9", null ],
+    [ "proto_ids_off", "structdexheader__t__.html#a18d3b2635da0ffc3a11be86da5868489", null ],
+    [ "proto_ids_size", "structdexheader__t__.html#a2105c10b4ab8c0a12ed2e94aac0032a9", null ],
+    [ "signature", "structdexheader__t__.html#a1eaf5e609497059d5df4d342f7217fb3", null ],
+    [ "string_ids_off", "structdexheader__t__.html#a0066e66272b2cad80c9bd16b1c7a0121", null ],
+    [ "string_ids_size", "structdexheader__t__.html#adcfe9f8f40d0d877b4aa419c8d28bcee", null ],
+    [ "type_ids_off", "structdexheader__t__.html#aecf97fda0a08a07e3d78d491269979ed", null ],
+    [ "type_ids_size", "structdexheader__t__.html#a77d89051d7dfed20645b515a76c22e35", null ]
+];

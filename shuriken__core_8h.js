@@ -22,6 +22,7 @@ var shuriken__core_8h =
     [ "get_disassembled_method", "shuriken__core_8h.html#ad489bbdd56d08fe6e597716fa002173f", null ],
     [ "get_disassembled_method_from_apk", "shuriken__core_8h.html#a0e8379f8b7020f8e874283616b0140c3", null ],
     [ "get_hdvmclass_from_dex_by_index", "shuriken__core_8h.html#aae33c4181a6eaef64ded4d5bc0675a75", null ],
+    [ "get_header", "shuriken__core_8h.html#a5c4d2cfad58070c55756024e54809809", null ],
     [ "get_method_by_name", "shuriken__core_8h.html#a8d89f506df4bb4def48aa86994581193", null ],
     [ "get_number_of_classes", "shuriken__core_8h.html#a3e80241080a825089764c63eb67216f8", null ],
     [ "get_number_of_classes_for_dex_file", "shuriken__core_8h.html#afdeffbeac89373573c06533f111c2d43", null ],

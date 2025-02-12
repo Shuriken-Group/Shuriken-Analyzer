@@ -1,6 +1,6 @@
 var structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t =
 [
-    [ "checksum", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a27e098764f8679528bd39dd3361df1ca", null ],
+    [ "checksum", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#af681c8b41cd3346d40753e4f265b53cd", null ],
     [ "class_defs_off", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#afe2690341a55420b4c30bdf7cd7ab2ba", null ],
     [ "class_defs_size", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#ae5ac4260f4ffd011e20a403ad3d152af", null ],
     [ "data_off", "structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a1e01eabd584e81b691fbe2621bed2eae", null ],

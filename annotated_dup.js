@@ -119,6 +119,7 @@ var annotated_dup =
       [ "Scoped", "classshuriken_1_1Scoped.html", "classshuriken_1_1Scoped" ]
     ] ],
     [ "basic_blocks_t_", "structbasic__blocks__t__.html", "structbasic__blocks__t__" ],
+    [ "dexheader_t_", "structdexheader__t__.html", "structdexheader__t__" ],
     [ "dvmdisassembled_method_t_", "structdvmdisassembled__method__t__.html", "structdvmdisassembled__method__t__" ],
     [ "dvmexceptions_data_t_", "structdvmexceptions__data__t__.html", "structdvmexceptions__data__t__" ],
     [ "dvmhandler_data_t_", "structdvmhandler__data__t__.html", "structdvmhandler__data__t__" ],

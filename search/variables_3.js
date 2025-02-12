@@ -1,8 +1,8 @@
 var searchData=
 [
   ['dalvik_5fname_0',['dalvik_name',['../structhdvmmethod__t__.html#aa34e56a6076aabe669071d318fc17656',1,'hdvmmethod_t_']]],
-  ['data_5foff_1',['data_off',['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a1e01eabd584e81b691fbe2621bed2eae',1,'shuriken::parser::dex::DexHeader::dexheader_t']]],
-  ['data_5fsize_2',['data_size',['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a7ca5171f813775dbe1b7ba97835e180e',1,'shuriken::parser::dex::DexHeader::dexheader_t']]],
+  ['data_5foff_1',['data_off',['../structdexheader__t__.html#a4b99ecde83bd1736aece370c7ed237d1',1,'dexheader_t_::data_off'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a1e01eabd584e81b691fbe2621bed2eae',1,'shuriken::parser::dex::DexHeader::dexheader_t::data_off']]],
+  ['data_5fsize_2',['data_size',['../structdexheader__t__.html#af410f6ad1d4dd8a12576c923cdaca6e5',1,'dexheader_t_::data_size'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a7ca5171f813775dbe1b7ba97835e180e',1,'shuriken::parser::dex::DexHeader::dexheader_t::data_size']]],
   ['debug_5finfo_5foff_3',['debug_info_off',['../structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a2a25d2a5f8f1c2842e20323c233dabc1',1,'shuriken::parser::dex::CodeItemStruct::code_item_struct_t']]],
   ['demangled_5fname_4',['demangled_name',['../structhdvmmethod__t__.html#a0b29817ba2329ddd48ba894484eebbe5',1,'hdvmmethod_t_']]],
   ['descriptor_5',['descriptor',['../structhdvmmethodanalysis__t__.html#a5fcf4294bb6737ceeb4eb056e57e6a23',1,'hdvmmethodanalysis_t_']]],

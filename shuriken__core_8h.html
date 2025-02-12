@@ -148,6 +148,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a475aba3a7efe80d9eae9083346cc8965" id="r_a475aba3a7efe80d9eae9083346cc8965"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a475aba3a7efe80d9eae9083346cc8965">destroy_dex</a> (<a class="el" href="shuriken__core__data_8h.html#a2e7b337a62e39243e884328a0588bc4b">hDexContext</a> context)</td></tr>
 <tr class="memdesc:a475aba3a7efe80d9eae9083346cc8965"><td class="mdescLeft">&#160;</td><td class="mdescRight">Since the context object use dynamic memory this method will properly destroy the object.  <br /></td></tr>
 <tr class="separator:a475aba3a7efe80d9eae9083346cc8965"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c4d2cfad58070c55756024e54809809" id="r_a5c4d2cfad58070c55756024e54809809"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shuriken__core__data_8h.html#a61867bf22efcc72796288e55e885ec8d">dexheader_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c4d2cfad58070c55756024e54809809">get_header</a> (<a class="el" href="shuriken__core__data_8h.html#a2e7b337a62e39243e884328a0588bc4b">hDexContext</a> context)</td></tr>
+<tr class="memdesc:a5c4d2cfad58070c55756024e54809809"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the parsed header of the DEX file  <br /></td></tr>
+<tr class="separator:a5c4d2cfad58070c55756024e54809809"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68362aab482c9b72707a5e62ebc53d8d" id="r_a68362aab482c9b72707a5e62ebc53d8d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68362aab482c9b72707a5e62ebc53d8d">get_number_of_strings</a> (<a class="el" href="shuriken__core__data_8h.html#a2e7b337a62e39243e884328a0588bc4b">hDexContext</a> context)</td></tr>
 <tr class="memdesc:a68362aab482c9b72707a5e62ebc53d8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of strings from the DEX file.  <br /></td></tr>
 <tr class="separator:a68362aab482c9b72707a5e62ebc53d8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -880,6 +883,31 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="structhdvmclass__t.html" title="Structure representing the classes in the DEX file.">hdvmclass_t</a> in the given position </dd></dl>
+
+</div>
+</div>
+<a id="a5c4d2cfad58070c55756024e54809809" name="a5c4d2cfad58070c55756024e54809809"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c4d2cfad58070c55756024e54809809">&#9670;&#160;</a></span>get_header()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shuriken__core__data_8h.html#a61867bf22efcc72796288e55e885ec8d">dexheader_t</a> * get_header </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="shuriken__core__data_8h.html#a2e7b337a62e39243e884328a0588bc4b">hDexContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the parsed header of the DEX file </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">context</td><td>from the DEX file </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
