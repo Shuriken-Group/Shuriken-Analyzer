@@ -53,9 +53,10 @@ namespace shurikenapi {
 
         class ShurikenClassMethod : public IClassMethod {
         public:
-            explicit ShurikenClassMethod(const std::string &name, const std::string &dalvikName, const std::string &demangledName,
+            explicit ShurikenClassMethod(std::uint32_t id, const std::string &name, const std::string &dalvikName, const std::string &demangledName,
                                          std::unique_ptr<IPrototype> prototype, shurikenapi::AccessFlags flags,
                                          std::span<uint8_t> byteCode, std::uint64_t codeLocation);
+            std::uint32_t getId() const override;
             const std::string &getName() const override;
             const std::string &getDalvikName() const override;
             const std::string &getDemangledName() const override;
@@ -65,6 +66,7 @@ namespace shurikenapi {
             std::uint64_t getCodeLocation() const override;
 
         private:
+            std::uint32_t m_id;
             std::string m_name;
             std::string m_dalvikName;
             std::string m_demangledName;
@@ -89,8 +91,9 @@ namespace shurikenapi {
         };
         class ShurikenDexClass : public IDexClass {
         public:
-            explicit ShurikenDexClass(const std::string &className, const std::string &superName, const std::string &sourceName,
+            explicit ShurikenDexClass(std::uint32_t id, const std::string &className, const std::string &superName, const std::string &sourceName,
                                       shurikenapi::AccessFlags accessFlags);
+            uint32_t getClassId() const override { return m_classId; };
             const std::string &getName() const override;
             const std::string &getSuperClassName() const override;
             const std::string &getSourceFileName() const override;
@@ -107,6 +110,7 @@ namespace shurikenapi {
             void addVirtualMethod(std::unique_ptr<IClassMethod> entry);
 
         private:
+            std::uint32_t m_classId;
             std::string m_name;
             std::string m_superClassName;
             std::string m_sourceFileName;

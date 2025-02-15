@@ -21,7 +21,7 @@ namespace shurikenapi {
                 std::string superName{c.get_superclass() ? c.get_superclass()->get_class_name().data() : std::string{}};
                 std::string sourceName{!c.get_source_file().empty() ? std::string(c.get_source_file()) : std::string{}};
                 shurikenapi::AccessFlags accessFlags{static_cast<shurikenapi::AccessFlags>(c.get_access_flags())};
-                auto classEntry = std::make_unique<details::ShurikenDexClass>(std::move(className), std::move(superName),
+                auto classEntry = std::make_unique<details::ShurikenDexClass>(c.get_raw_class_idx(), std::move(className), std::move(superName),
                                                                               std::move(sourceName), accessFlags);
 
                 // --Process Fields
@@ -69,6 +69,7 @@ namespace shurikenapi {
         std::unique_ptr<IClassMethod> ShurikenDex::processMethods(shuriken::parser::dex::EncodedMethod *data) {
 
             // --Set Method Name
+            std::uint32_t methodId = data->getMethodID()->get_raw_method_id();
             std::string name{data->getMethodID()->get_method_name()};
             std::string dalvikName{data->getMethodID()->dalvik_name_format()};
             std::string demangledName{data->getMethodID()->demangle()};
@@ -89,7 +90,7 @@ namespace shurikenapi {
             std::span<uint8_t> byteCode{data->get_code_item()->get_bytecode()};
             std::uint64_t codeLocation = data->get_bytecode_offset();
 
-            return std::make_unique<details::ShurikenClassMethod>(std::move(name), std::move(dalvikName), std::move(demangledName), std::move(prototypeEntry),
+            return std::make_unique<details::ShurikenClassMethod>(methodId, std::move(name), std::move(dalvikName), std::move(demangledName), std::move(prototypeEntry),
                                                                   flags, byteCode, codeLocation);
         }
 
