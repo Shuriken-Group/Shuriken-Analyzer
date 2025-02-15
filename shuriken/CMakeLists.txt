@@ -71,6 +71,7 @@ if((CMAKE_BUILD_TYPE STREQUAL "Debug") AND SANITIZE)
 endif()
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib/api/Dex")
 
 # Shuriken will contain only the basic classes, nothing more
 # the analyses for the different files are included optionally
