@@ -8,7 +8,7 @@ namespace shurikenapi {
 
             // on ShurikenDex destruction the disassembler will destruct first and discard the parser pointer,
             // afterwards ShurikenDex will destruct and free ownership of the parser pointer
-            m_disassembler = std::make_unique<shuriken::disassembler::dex::DexDisassembler>(m_parser.get());
+            m_disassembler = std::make_unique<shuriken::disassembler::dex::Disassembler>(m_parser.get());
 
             // --Add Header
             memcpy(&m_header, &m_parser->get_header().get_dex_header(), sizeof(DexHeader));
@@ -126,6 +126,10 @@ namespace shurikenapi {
         const IClassManager &ShurikenDex::getClassManager() const {
             return m_classManager;
         };
+
+        const IDisassembler &ShurikenDex::getDisassembler() const {
+            return static_cast<const IDisassembler &>(*this);
+        }
 
     }// namespace details
 

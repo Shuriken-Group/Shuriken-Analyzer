@@ -25,6 +25,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 elseif(MSVC)
         add_compile_options(/W4 /WX /wd4200 /wd4458 /wd4456 /wd4297)
         add_compile_definitions(_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING)
+        add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
 # Compiler for the project
