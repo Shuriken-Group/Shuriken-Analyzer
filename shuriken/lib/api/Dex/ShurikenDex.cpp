@@ -1,4 +1,5 @@
 #include "dex_cpp_core_api_internal.h"
+#include <set>
 
 namespace shurikenapi {
 
@@ -12,6 +13,8 @@ namespace shurikenapi {
 
             // --Add Header
             memcpy(&m_header, &m_parser->get_header().get_dex_header(), sizeof(DexHeader));
+
+            inferExternalClasses();
 
             // --Add Classes to ClassManager
             for (auto &c: m_parser->get_classes().get_classdefs()) {
@@ -40,6 +43,55 @@ namespace shurikenapi {
 
                 // --Add the Class into the ClassManager
                 m_classManager.addClass(std::move(classEntry));
+            }
+        }
+
+        void ShurikenDex::inferExternalClasses() {
+
+            std::vector<uint32_t> classInDex;
+            for (auto &c: m_parser->get_classes().get_classdefs()) {
+                classInDex.push_back(c.get_raw_class_idx());
+            }
+
+            std::vector<details::ShurikenDexClass *> externalClasses;
+
+            for (shuriken::parser::dex::MethodID &m: m_parser->get_methods().get_methods()) {
+
+                // Is the class external?
+                if (std::find(classInDex.begin(), classInDex.end(), m.get_raw_class_id()) != classInDex.end())
+                    continue;// no
+
+                // do we know this class ?
+                details::ShurikenDexClass *externalClass = nullptr;
+                auto classEntry = std::find_if(externalClasses.begin(), externalClasses.end(),
+                                               [&](details::ShurikenDexClass *c) { return c->getClassId() == m.get_raw_class_id(); });
+
+                if (classEntry == externalClasses.end()) {
+                    auto newClass = new details::ShurikenDexClass(m.get_raw_class_id(), std::string(m.get_class()->get_raw_type()),
+                                                                  "", "", shurikenapi::AccessFlags::NONE);
+
+                    externalClasses.push_back(newClass);
+                    externalClass = newClass;
+                } else {
+                    externalClass = *classEntry;
+                }
+
+                std::string namePlain{m.get_method_name()};
+                std::string nameDalvik{m.get_class()->get_raw_type()};
+                nameDalvik += "->";
+                nameDalvik += m.get_method_name();
+                nameDalvik += m.get_prototype()->get_dalvik_prototype();
+
+                printf("1: Add Method: %d --> %s - %s - %s\n", m.get_raw_method_id(), namePlain.c_str(), nameDalvik.c_str(), nameDalvik.c_str());
+                auto methodEntry =
+                        std::make_unique<details::ShurikenClassMethod>(m.get_raw_method_id(), namePlain, nameDalvik, "", nullptr,
+                                                                       shurikenapi::AccessFlags::NONE, std::span<uint8_t>{}, -1);
+
+                externalClass->addExternalMethod(std::move(methodEntry));
+                externalClass->setExternal();
+            }
+            for (auto &c: externalClasses) {
+                m_classManager.addClass(std::unique_ptr<details::ShurikenDexClass>(c));
             }
         }
 

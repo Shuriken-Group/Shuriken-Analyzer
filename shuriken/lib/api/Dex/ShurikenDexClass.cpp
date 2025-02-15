@@ -56,6 +56,14 @@ namespace shurikenapi {
             return methodRefs;
         }
 
+        std::vector<std::reference_wrapper<const IClassMethod>> ShurikenDexClass::getExternalMethods() const {
+            std::vector<std::reference_wrapper<const IClassMethod>> methodRefs;
+            for (const auto &entry: m_externalMethods) {
+                methodRefs.push_back(std::cref(*entry));
+            }
+            return methodRefs;
+        }
+
         void ShurikenDexClass::addStaticField(std::unique_ptr<IClassField> entry) {
             m_staticFields.push_back(std::move(entry));
         };
@@ -70,6 +78,10 @@ namespace shurikenapi {
 
         void ShurikenDexClass::addVirtualMethod(std::unique_ptr<IClassMethod> entry) {
             m_virtualMethods.push_back(std::move(entry));
+        };
+
+        void ShurikenDexClass::addExternalMethod(std::unique_ptr<IClassMethod> entry) {
+            m_externalMethods.push_back(std::move(entry));
         };
 
     }// namespace details
