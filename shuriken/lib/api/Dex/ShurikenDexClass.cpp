@@ -4,9 +4,9 @@ namespace shurikenapi {
 
     namespace details {
 
-        ShurikenDexClass::ShurikenDexClass(const std::string &className, const std::string &superName, const std::string &sourceName,
+        ShurikenDexClass::ShurikenDexClass(uint32_t id, const std::string &className, const std::string &superName, const std::string &sourceName,
                                            shurikenapi::AccessFlags accessFlags)
-            : m_name{className}, m_superClassName{superName}, m_sourceFileName{sourceName}, m_accessFlags{accessFlags} {}
+            : m_classId{id}, m_name{className}, m_superClassName{superName}, m_sourceFileName{sourceName}, m_accessFlags{accessFlags} {}
 
         const std::string &ShurikenDexClass::getName() const {
             return m_name;

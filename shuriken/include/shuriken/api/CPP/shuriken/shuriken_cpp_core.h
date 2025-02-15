@@ -55,6 +55,7 @@ namespace shurikenapi {
     public:
         virtual ~IClassMethod() = default;
         IClassMethod &operator=(IClassMethod &&) = delete;
+        virtual std::uint32_t getId() const = 0;
         virtual const std::string &getName() const = 0;
         virtual const std::string &getDalvikName() const = 0;
         virtual const std::string &getDemangledName() const = 0;
@@ -79,6 +80,7 @@ namespace shurikenapi {
     public:
         virtual ~IDexClass() = default;
         IDexClass &operator=(IDexClass &&) = delete;
+        virtual uint32_t getClassId() const = 0;
         virtual const std::string &getName() const = 0;
         virtual const std::string &getSuperClassName() const = 0;
         virtual const std::string &getSourceFileName() const = 0;
