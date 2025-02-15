@@ -2,6 +2,7 @@
 #ifndef SHURIKEN_CPP_CORE_H
 #define SHURIKEN_CPP_CORE_H
 
+#include "shuriken_cpp_disassembly.h"
 #include "shuriken_structs.h"
 
 #if defined(_WIN32) || defined(__WIN32__)
@@ -29,6 +30,7 @@ namespace shurikenapi {
     public:
         virtual ~IDisassembler() = default;
         IDisassembler &operator=(IDisassembler &&) = delete;
+        virtual std::unique_ptr<shurikenapi::disassembly::IInstruction> decodeInstruction(std::span<std::uint8_t> byteCode) const = 0;
     };
 
     /// @brief This class holds the information about a type in the dex file.

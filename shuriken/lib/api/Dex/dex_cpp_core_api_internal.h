@@ -6,7 +6,10 @@
 #include "dex_cpp_core_api_internal.h"
 #include "shuriken/parser/shuriken_parsers.h"
 #include <memory>
+#include <span>
 #include <string>
+
+using shurikenapi::disassembly::IOperand;
 
 /*
 Implementation classes of the C++ public API.
@@ -137,23 +140,36 @@ namespace shurikenapi {
             ShurikenDex(const std::string &filePath);
             const DexHeader &getHeader() const override;
             const IClassManager &getClassManager() const override;
+            const IDisassembler &getDisassembler() const override;
 
             void processFields(shuriken::parser::dex::ClassDataItem &classDataItem, details::ShurikenDexClass &classEntry);
             std::unique_ptr<IClassMethod> processMethods(shuriken::parser::dex::EncodedMethod *data);
-
-            const IDisassembler &getDisassembler() const override {
-                return static_cast<const IDisassembler &>(*this);
-            }
 
         private:
             std::unique_ptr<details::ShurikenClassField> createFieldEntry(shuriken::parser::dex::EncodedField *data);
             std::unique_ptr<IDexTypeInfo> createTypeInfo(shuriken::parser::dex::DVMType *rawType);
 
             // The order of these 2 is important.
-            std::unique_ptr<shuriken::disassembler::dex::DexDisassembler> m_disassembler;
+            std::unique_ptr<shuriken::disassembler::dex::Disassembler> m_disassembler;
             std::unique_ptr<shuriken::parser::dex::Parser> m_parser;
             ShurikenClassManager m_classManager;
             DexHeader m_header;
+
+            // Disassembler Methods
+            std::unique_ptr<shurikenapi::disassembly::IInstruction> decodeInstruction(std::span<std::uint8_t> byteCode) const override;
+            std::unique_ptr<IOperand> createRegisterOperand(std::uint8_t reg) const;
+            std::unique_ptr<IOperand> createRegisterOperand(std::uint16_t reg) const;
+            std::unique_ptr<IOperand> createOperandFromSourceId(shuriken::disassembler::dex::kind_type_t source_id,
+                                                                std::uint16_t iBBBB) const;
+            std::unique_ptr<IOperand> createRegisterList(std::span<std::uint8_t> regs) const;
+            std::unique_ptr<IOperand> createRegisterList(std::span<std::uint16_t> regs) const;
+            std::unique_ptr<IOperand> createImm8(std::int8_t value) const;
+            std::unique_ptr<IOperand> createImm16(std::int16_t value) const;
+            std::unique_ptr<IOperand> createImm32(std::int32_t value) const;
+            std::unique_ptr<IOperand> createImm64(std::int64_t value) const;
+            std::unique_ptr<IOperand> creatUnconditionalBranch(std::int32_t value, std::int8_t offsetSize) const;
+            std::unique_ptr<IOperand> createConditionalBranch(std::int32_t value, std::int8_t offsetSize) const;
+            std::unique_ptr<IOperand> createSwitch(std::uint32_t tableOffset) const;
         };
 
     }// namespace details
