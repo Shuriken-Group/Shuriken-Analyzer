@@ -70,6 +70,7 @@ namespace shurikenapi {
 
             // --Set Method Name
             std::string name{data->getMethodID()->get_method_name()};
+            std::string dalvikName{data->getMethodID()->dalvik_name_format()};
             std::string demangledName{data->getMethodID()->demangle()};
 
             // --Create Method Prototype
@@ -86,9 +87,10 @@ namespace shurikenapi {
             // --Set Flags and ByteCode
             shurikenapi::AccessFlags flags{static_cast<shurikenapi::AccessFlags>(data->get_flags())};
             std::span<uint8_t> byteCode{data->get_code_item()->get_bytecode()};
+            std::uint64_t codeLocation = data->get_bytecode_offset();
 
-            return std::make_unique<details::ShurikenClassMethod>(std::move(name), std::move(demangledName), std::move(prototypeEntry),
-                                                                  flags, byteCode);
+            return std::make_unique<details::ShurikenClassMethod>(std::move(name), std::move(dalvikName), std::move(demangledName), std::move(prototypeEntry),
+                                                                  flags, byteCode, codeLocation);
         }
 
         std::unique_ptr<IDexTypeInfo> ShurikenDex::createTypeInfo(shuriken::parser::dex::DVMType *rawType) {

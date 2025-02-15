@@ -505,6 +505,7 @@ void EncodedMethod::parse_encoded_method(common::ShurikenStream &stream,
         stream.seekg(code_off, std::ios_base::beg);
         // parse the code item
         code_item = std::make_unique<CodeItemStruct>();
+        bytecode_offset = static_cast<std::uint64_t>(stream.tellg()) + sizeof(CodeItemStruct::code_item_struct_t);
         code_item->parse_code_item_struct(stream, types);
     }
 
@@ -530,4 +531,8 @@ const CodeItemStruct *EncodedMethod::get_code_item() const {
 
 CodeItemStruct *EncodedMethod::get_code_item() {
     return code_item.get();
+}
+
+std::uint64_t EncodedMethod::get_bytecode_offset() const {
+    return bytecode_offset;
 }

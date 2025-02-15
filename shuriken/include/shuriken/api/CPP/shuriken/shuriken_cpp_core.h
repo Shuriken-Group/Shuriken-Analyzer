@@ -56,10 +56,12 @@ namespace shurikenapi {
         virtual ~IClassMethod() = default;
         IClassMethod &operator=(IClassMethod &&) = delete;
         virtual const std::string &getName() const = 0;
+        virtual const std::string &getDalvikName() const = 0;
         virtual const std::string &getDemangledName() const = 0;
         virtual const IPrototype &getPrototype() const = 0;
         virtual AccessFlags getFlags() const = 0;
         virtual std::span<uint8_t> getByteCode() const = 0;
+        virtual std::uint64_t getCodeLocation() const = 0;
     };
 
     /// @brief This class holds the information about a field in a class.
