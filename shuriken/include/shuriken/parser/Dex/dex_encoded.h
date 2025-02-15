@@ -415,6 +415,8 @@ namespace shuriken::parser::dex {
         shuriken::dex::TYPES::access_flags access_flags;
         /// @brief Code Item of the method
         std::unique_ptr<CodeItemStruct> code_item;
+        /// @brief offset of bytecode
+        std::uint64_t bytecode_offset;
 
     public:
         /// @brief Constructor of Encoded method
@@ -450,6 +452,8 @@ namespace shuriken::parser::dex {
         /// @brief Get the code item from the encoded method
         /// @return reference to code item
         CodeItemStruct *get_code_item();
+
+        std::uint64_t get_bytecode_offset() const;
     };
 }// namespace shuriken::parser::dex
 

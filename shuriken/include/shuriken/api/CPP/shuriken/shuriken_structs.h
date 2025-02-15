@@ -13,7 +13,7 @@ namespace shurikenapi {
                                   kInt,
                                   kLong,
                                   kShort,
-                                  kvoid,
+                                  kVoid,
                                   kNone = 99 };
     enum class DexType { kFundamental,
                          kClass,

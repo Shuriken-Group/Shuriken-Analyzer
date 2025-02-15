@@ -53,21 +53,25 @@ namespace shurikenapi {
 
         class ShurikenClassMethod : public IClassMethod {
         public:
-            explicit ShurikenClassMethod(const std::string &name, const std::string &demangledName,
+            explicit ShurikenClassMethod(const std::string &name, const std::string &dalvikName, const std::string &demangledName,
                                          std::unique_ptr<IPrototype> prototype, shurikenapi::AccessFlags flags,
-                                         std::span<uint8_t> byteCode);
+                                         std::span<uint8_t> byteCode, std::uint64_t codeLocation);
             const std::string &getName() const override;
+            const std::string &getDalvikName() const override;
             const std::string &getDemangledName() const override;
             const IPrototype &getPrototype() const override;
             AccessFlags getFlags() const override;
             std::span<uint8_t> getByteCode() const override;
+            std::uint64_t getCodeLocation() const override;
 
         private:
             std::string m_name;
+            std::string m_dalvikName;
             std::string m_demangledName;
             std::unique_ptr<IPrototype> m_prototype;
             AccessFlags m_flags;
             std::span<uint8_t> m_byteCode;
+            std::uint64_t m_codeLocation;
         };
 
         class ShurikenClassField : public IClassField {
