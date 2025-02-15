@@ -105,14 +105,19 @@ namespace shurikenapi {
             std::vector<std::reference_wrapper<const IClassField>> getInstanceFields() const override;
             std::vector<std::reference_wrapper<const IClassMethod>> getDirectMethods() const override;
             std::vector<std::reference_wrapper<const IClassMethod>> getVirtualMethods() const override;
+            std::vector<std::reference_wrapper<const IClassMethod>> getExternalMethods() const override;
+            bool isExternal() const override { return m_isExternal; };
 
             // --Internal
             void addStaticField(std::unique_ptr<IClassField> entry);
             void addInstanceField(std::unique_ptr<IClassField> entry);
             void addDirectMethod(std::unique_ptr<IClassMethod> entry);
             void addVirtualMethod(std::unique_ptr<IClassMethod> entry);
+            void addExternalMethod(std::unique_ptr<IClassMethod> entry);
+            void setExternal() { m_isExternal = true; };
 
         private:
+            bool m_isExternal = false;
             std::uint32_t m_classId;
             std::string m_name;
             std::string m_superClassName;
@@ -122,6 +127,7 @@ namespace shurikenapi {
             std::vector<std::unique_ptr<IClassField>> m_instanceFields;
             std::vector<std::unique_ptr<IClassMethod>> m_directMethods;
             std::vector<std::unique_ptr<IClassMethod>> m_virtualMethods;
+            std::vector<std::unique_ptr<IClassMethod>> m_externalMethods;
         };
 
         class ShurikenClassManager : public IClassManager {
@@ -148,6 +154,7 @@ namespace shurikenapi {
         private:
             std::unique_ptr<details::ShurikenClassField> createFieldEntry(shuriken::parser::dex::EncodedField *data);
             std::unique_ptr<IDexTypeInfo> createTypeInfo(shuriken::parser::dex::DVMType *rawType);
+            void inferExternalClasses();
 
             // The order of these 2 is important.
             std::unique_ptr<shuriken::disassembler::dex::Disassembler> m_disassembler;

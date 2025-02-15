@@ -91,6 +91,8 @@ namespace shurikenapi {
         virtual std::vector<std::reference_wrapper<const IClassField>> getInstanceFields() const = 0;
         virtual std::vector<std::reference_wrapper<const IClassMethod>> getDirectMethods() const = 0;
         virtual std::vector<std::reference_wrapper<const IClassMethod>> getVirtualMethods() const = 0;
+        virtual std::vector<std::reference_wrapper<const IClassMethod>> getExternalMethods() const = 0;
+        virtual bool isExternal() const = 0;
     };
 
     /// @brief The class manager is responsible for holding all the classes in the dex file.
