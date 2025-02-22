@@ -1,4 +1,6 @@
 #include "plugin.h"
+#undef SHURIKENSERVICE_EXPORTS
+#include "shurikenservice.h"
 
 namespace BinaryNinja {
 
@@ -27,6 +29,11 @@ namespace BinaryNinja {
 
         // TODO: proper segment and sections creation
         AddAutoSegment(m_imageBase, GetParentView()->GetLength(), rawFileOffset, GetParentView()->GetLength(), SegmentReadable | SegmentExecutable | SegmentContainsCode);
+        AddAutoSection("raw", m_imageBase, GetParentView()->GetLength(), ReadOnlyCodeSectionSemantics);
+
+        IShurikenService &shurikenService = GetShurikenService();
+        if (!shurikenService.registerView(this))
+            return false;
 
         return true;
     }
