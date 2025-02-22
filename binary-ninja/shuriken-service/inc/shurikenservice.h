@@ -19,7 +19,7 @@ public:
     virtual ~IShurikenView() = default;
 
     virtual const shurikenapi::IDex &getParser() const = 0;
-    virtual uint32_t getStringOffset(uint32_t id) const = 0;
+    virtual uint32_t getStringOffset(int64_t id) const = 0;
 };
 
 class IShurikenService {

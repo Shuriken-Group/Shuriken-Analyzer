@@ -2,6 +2,21 @@
 #undef SHURIKENSERVICE_EXPORTS
 #include "shurikenservice.h"
 
+// Ugly hack for proof of concept ----------------------------------------------
+typedef void (*SetBinaryView)(BinaryNinja::BinaryView *bv);
+
+void ArchBVHack(BinaryNinja::BinaryView *bv) {
+    // windows
+    HMODULE hModule = LoadLibraryA("arch-dalvik.dll");
+    SetBinaryView setBV = (SetBinaryView) GetProcAddress(hModule, "SetBinaryView");
+    setBV(bv);
+
+    // Linux
+
+    // Mac
+}
+// ------------------------------------------------------------------------------
+
 namespace BinaryNinja {
 
     DEXView::DEXView(BinaryView *data, bool parseOnly) : BinaryView("DEX", data->GetFile(), data), m_parseOnly(parseOnly) {
@@ -21,7 +36,7 @@ namespace BinaryNinja {
         const uint64_t fieldDataSegmentAddress = m_imageBase + dexCodeSegmentSize;
         const uint64_t fieldDataSegmentSize = 0x1000;
 
-        m_arch = Architecture::GetByName("x86_64");
+        m_arch = Architecture::GetByName("Dalvik");
         SetDefaultArchitecture(m_arch);
 
         m_platform = m_arch->GetStandalonePlatform();
@@ -34,6 +49,8 @@ namespace BinaryNinja {
         IShurikenService &shurikenService = GetShurikenService();
         if (!shurikenService.registerView(this))
             return false;
+        // arch plugin is global, so we need to set the current view
+        ArchBVHack(this);
 
         return true;
     }

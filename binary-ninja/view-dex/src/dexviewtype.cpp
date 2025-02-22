@@ -49,8 +49,6 @@ namespace BinaryNinja {
 
         Ref<Settings> settings = GetDefaultLoadSettingsForData(viewRef);
 
-        settings->UpdateProperty("analysis.linearSweep", "enabled", false);
-
         // specify default load settings that can be overridden
         std::vector<std::string> overrides = {"loader.architecture", "loader.imageBase", "loader.platform"};
         if (!viewRef->IsRelocatable())
@@ -60,6 +58,9 @@ namespace BinaryNinja {
             if (settings->Contains(override))
                 settings->UpdateProperty(override, "readOnly", false);
         }
+
+        settings->Set("analysis.linearSweep.autorun", false, data);
+        settings->Set("analysis.signatureMatcher.autorun", false, data);
 
         return settings;
     }

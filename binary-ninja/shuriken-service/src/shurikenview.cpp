@@ -223,7 +223,7 @@ Ref<Function> ShurikenView::buildMethod(const shurikenapi::IClassMethod &method)
 }
 
 
-uint32_t ShurikenView::getStringOffset(uint32_t id) const {
+uint32_t ShurikenView::getStringOffset(int64_t id) const {
 
     auto it = m_stringMap.find(id);
     if (it == m_stringMap.end()) {
