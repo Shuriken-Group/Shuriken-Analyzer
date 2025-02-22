@@ -88,21 +88,22 @@ FetchContent_Declare(
         GIT_TAG 10.1.1
 )
 
-FetchContent_GetProperties(fmt)
+if(NOT TARGET fmt::fmt)
+    FetchContent_GetProperties(fmt)
 
-if(NOT fmt_POPULATED)
-    message(STATUS "Cloning fmt")
-    FetchContent_Populate(fmt)
-    add_subdirectory(
-            ${fmt_SOURCE_DIR}
-            ${fmt_BINARY_DIR}
-    )
+    if(NOT fmt_POPULATED)
+        message(STATUS "Cloning fmt")
+        FetchContent_Populate(fmt)
+        add_subdirectory(
+                ${fmt_SOURCE_DIR}
+                ${fmt_BINARY_DIR}
+        )
+        
+    endif()
 
+    # Make the project available
+    FetchContent_MakeAvailable(fmt)
 endif()
-
-# Make the project available
-FetchContent_MakeAvailable(fmt)
-
 
 # ------------------------------------
 # Download the zlib library
