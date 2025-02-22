@@ -10,6 +10,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <limits>
 #include <sstream>
 
 using namespace shuriken::disassembler::dex;
@@ -1815,14 +1816,26 @@ PackedSwitch::PackedSwitch(std::span<uint8_t> bytecode, std::size_t index, [[may
     : Instruction(bytecode, index, DexOpcodes::dexinsttype::DEX_PACKEDSWITCH, 8) {
     std::int32_t aux;
 
+    if (bytecode.size() < index + 8) {
+        throw std::runtime_error("PackedSwitch: Bytecode too short for PackedSwitch header.");
+    }
+
     op = *(reinterpret_cast<std::uint16_t *>(&op_codes[0]));
     size = *(reinterpret_cast<std::uint16_t *>(&op_codes[2]));
     first_key = *(reinterpret_cast<std::int32_t *>(&op_codes[4]));
+
+    if (size > (std::numeric_limits<std::size_t>::max() - length) / 4) {
+        throw std::runtime_error("PackedSwitch size field too large, causing overflow.");
+    }
 
     // because the instruction is larger, we have to
     // re-accomodate the op_codes span and the length
     // we have to increment it
     length += (size * 4);
+
+    if (bytecode.size() < index + length) {
+        throw std::runtime_error("PackedSwitch: Bytecode too short for full PackedSwitch instruction.");
+    }
 
     op_codes = {bytecode.begin() + index, bytecode.begin() + index + length};
 
@@ -1941,9 +1954,17 @@ FillArrayData::FillArrayData(std::span<uint8_t> bytecode, std::size_t index, [[m
     : Instruction(bytecode, index, DexOpcodes::dexinsttype::DEX_FILLARRAYDATA, 8) {
     /*std::uint8_t aux;*/
 
+    if (bytecode.size() < index + 8) {
+        throw std::runtime_error("FillArrayData: Bytecode too short for FillArrayData header.");
+    }
+
     op = *(reinterpret_cast<std::uint16_t *>(&op_codes[0]));
     element_width = *(reinterpret_cast<std::uint16_t *>(&op_codes[2]));
     size = *(reinterpret_cast<std::uint32_t *>(&op_codes[4]));
+
+    if (element_width != 1 && element_width != 2 && element_width != 4 && element_width != 8) {
+        throw std::runtime_error("FillArrayData: Invalid element width detected in FillArrayData: " + std::to_string(element_width));
+    }
 
     // again we have to fix the length of the instruction
     // and also the opcodes
