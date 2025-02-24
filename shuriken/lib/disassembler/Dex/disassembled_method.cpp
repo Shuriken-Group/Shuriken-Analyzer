@@ -140,3 +140,62 @@ std::string_view DisassembledMethod::print_method(bool print_address) {
     }
     return method_string;
 }
+
+std::wstring_view DisassembledMethod::print_method_unicode(bool print_address) {
+    if (method_wstring.empty()) {
+        std::wstringstream output;
+        std::string access_flags_str = shuriken::dex::Utils::get_types_as_string(access_flags);
+        std::transform(access_flags_str.begin(),
+                       access_flags_str.end(),
+                       access_flags_str.begin(),
+                       [](unsigned char c) {
+                           if (c == '|')
+                               return ' ';
+                           else
+                               return static_cast<char>(tolower(c));
+                       });
+        output << L".method " << std::wstring(access_flags_str.begin(), access_flags_str.end()) << L" ";
+        output << std::wstring(method_id->dalvik_name_format().begin(), method_id->dalvik_name_format().end()) << L"\n";
+        output << L".registers " << std::to_wstring(n_of_registers) << '\n';
+        std::uint64_t id = 0;
+
+        for (auto instr: instructions_raw) {
+            /// check the information for showing exception
+            for (const auto &exception: exception_information) {
+                /// avoid printing future try-catch handlers
+                if (id < exception.try_value_start_addr)
+                    continue;
+
+                if (id == exception.try_value_start_addr)
+                    output << ".try_start_" << (exception.try_value_start_addr / 2) << "\n";
+                if (id == exception.try_value_end_addr) {
+                    output << ".try_end_" << (exception.try_value_end_addr / 2) << "\n";
+                    for (const auto &catch_data: exception.handler) {
+                        output << ".catch ";
+                        output << std::wstring(catch_data.handler_type->get_raw_type().begin(), catch_data.handler_type->get_raw_type().end());
+                        output << " {.try_start_" << (exception.try_value_start_addr / 2) << " .. ";
+                        output << ".try_end_" << (exception.try_value_end_addr / 2) << "}";
+                        output << " :catch_" << (catch_data.handler_start_addr / 2) << "\n";
+                    }
+                }
+
+                for (const auto &catch_data: exception.handler) {
+                    if (catch_data.handler_start_addr == id) {
+                        output << ":catch_" << (catch_data.handler_start_addr / 2) << '\n';
+                    }
+                }
+            }
+            if (print_address)
+                output << std::hex << std::setw(8) << std::setfill(L'0') << id;
+            output << ' ';
+            /// now print the instruction
+            output << instr->print_winstruction();
+            id += instr->get_instruction_length();
+            output << '\n';
+        }
+
+        output << ".end method";
+        method_wstring = output.str();
+    }
+    return method_wstring;
+}

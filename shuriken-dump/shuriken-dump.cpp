@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <fmt/core.h>
+#include <fmt/xchar.h>
 #include <functional>
 #include <iostream>
 // Dex & APK stuff
@@ -23,6 +24,7 @@ void show_help(std::string &prog_name) {
     fmt::println(" -m: show methods from classes (it needs -c)");
     fmt::println(" -b: show bytecode from methods (it needs -m)");
     fmt::println(" -D: show the disassembled code from methods (it needs -m)");
+    fmt::println(" -u: show the instructions code using unicode (it needs -D)");
     fmt::println(" -B: show the methods as basic blocks (it needs -m)");
     fmt::println(" -x: show the xrefs from classes (it needs -c), from methods (it requires -m) or from fields (it needs -f)");
     fmt::println(" -T: measure and print after the execution the time taken for the analysis");
@@ -38,6 +40,7 @@ void print_field(shuriken::parser::dex::EncodedField *, size_t);
 void print_code(std::span<std::uint8_t>);
 
 bool headers = false;
+bool unicode = false;
 bool show_classes = false;
 bool methods = false;
 bool fields = false;
@@ -72,6 +75,7 @@ int main(int argc, char **argv) {
             {"-f", [&]() { fields = true; }},
             {"-b", [&]() { code = true; }},
             {"-D", [&]() { disassembly = true; }},
+            {"-u", [&]() { unicode  = true; }},
             {"-B", [&]() { blocks = true; }},
             {"-x", [&]() { xrefs = true; }},
             {"-T", [&]() { running_time = true; }},
@@ -117,7 +121,7 @@ int main(int argc, char **argv) {
 }
 
 void parse_dex(std::string &dex_file) {
-    parsed_dex = shuriken::parser::parse_dex(dex_file);
+    parsed_dex = shuriken::parser::parse_dex(dex_file, unicode);
 
     if (disassembly) {
         disassembler_own = std::make_unique<shuriken::disassembler::dex::DexDisassembler>(parsed_dex.get());
@@ -340,7 +344,11 @@ void print_method(shuriken::parser::dex::EncodedMethod *method, size_t j) {
         auto disassembled_method = disassembler->get_disassembled_method(method_id->dalvik_name_format());
         if (disassembled_method == nullptr)
             throw std::runtime_error("The method " + std::string(method_id->demangle()) + " was not correctly disassembled");
-        fmt::print("{}\n", disassembled_method->print_method());
+        if (unicode) {
+            std::wcout << disassembled_method->print_method_unicode() << L'\n';
+        }
+        else
+            fmt::print("{}\n", disassembled_method->print_method());
     }
     if (blocks) {
         auto method_analysis = analysis->get_method(method);
