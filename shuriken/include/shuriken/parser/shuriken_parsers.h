@@ -16,9 +16,13 @@
 #include <memory>
 
 namespace shuriken::parser {
-    std::unique_ptr<dex::Parser> parse_dex(common::ShurikenStream &file);
-    std::unique_ptr<dex::Parser> parse_dex(const std::string &file_path);
-    dex::Parser *parse_dex(const char *file_path);
+    std::unique_ptr<dex::Parser> parse_dex(common::ShurikenStream &file,
+                                           bool read_unicode = false);
+    std::unique_ptr<dex::Parser> parse_dex(const std::string &file_path,
+                                           bool read_unicode = false);
+    dex::Parser *parse_dex(const char *file_path,
+                           bool read_unicode = false);
+
 
     std::unique_ptr<apk::Apk> parse_apk(const std::string &file_path, bool created_xrefs);
     std::unique_ptr<apk::Apk> parse_apk(const char *file_path, bool created_xrefs);

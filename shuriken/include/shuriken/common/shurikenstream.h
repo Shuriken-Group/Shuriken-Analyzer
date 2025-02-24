@@ -78,6 +78,11 @@ namespace shuriken::common {
         /// @return string read
         std::string read_ansii_string(std::int64_t offset);
 
+        /// @brief Read a wstring as an array of wchar.
+        /// @param offset the offset in the file where to read the string
+        /// @return wstring read
+        std::wstring read_unicode_string(std::int64_t offset);
+
         /// @brief Read a dex string, these DexStrings start always with their size
         /// in uleb128 format.
         /// @param offset the offset in the file where to read the string

@@ -23,7 +23,8 @@ namespace {
 
 void DexStrings::parse_strings(common::ShurikenStream &shuriken_stream,
                                std::uint32_t strings_offset,
-                               std::uint32_t n_of_strings) {
+                               std::uint32_t n_of_strings,
+                               bool read_unicode) {
     log(LEVEL::INFO, "Start parsing strings");
 
     auto current_offset = shuriken_stream.tellg();
@@ -40,6 +41,8 @@ void DexStrings::parse_strings(common::ShurikenStream &shuriken_stream,
             throw std::runtime_error("Error string offset out of bound");
 
         dex_strings.emplace_back(shuriken_stream.read_dex_string(str_offset));
+        if (read_unicode)
+            dex_wstrings.emplace_back(shuriken_stream.read_unicode_string(str_offset));
     }
 
     shuriken_stream.seekg(current_offset, std::ios_base::beg);
@@ -71,9 +74,17 @@ void DexStrings::dump_binary(std::ofstream &fos, std::int64_t offset) {
 }
 
 std::string_view DexStrings::get_string_by_id(std::uint32_t str_id) const {
-    if (str_id >= dex_strings.size())
+    if (str_id >= dex_strings.size()) 
         throw std::runtime_error("Error id of string out of bound");
     return dex_strings.at(str_id);
+}
+
+std::wstring_view DexStrings::get_unicode_string_by_id(std::uint32_t str_id) const {
+    if (dex_wstrings.empty())
+        throw std::runtime_error("Error, you must parse dex with read_unicode");
+    if (str_id >= dex_wstrings.size()) 
+        throw std::runtime_error("Error id of string out of bound");
+    return dex_wstrings.at(str_id);
 }
 
 size_t DexStrings::get_number_of_strings() const {

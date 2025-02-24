@@ -29,8 +29,8 @@ void show_help(std::string &prog_name) {
     fmt::println(" -N: analyze but do not print any information");
 }
 
-void parse_dex(std::string& dex_file);
-void parse_apk(std::string& apk_file);
+void parse_dex(std::string &dex_file);
+void parse_apk(std::string &apk_file);
 void print_header(shuriken::parser::dex::DexHeader &);
 void print_classes(shuriken::parser::dex::DexClasses &);
 void print_method(shuriken::parser::dex::EncodedMethod *, size_t);
@@ -51,9 +51,9 @@ bool no_print = false;
 std::unique_ptr<shuriken::parser::apk::Apk> parsed_apk = nullptr;
 std::unique_ptr<shuriken::parser::dex::Parser> parsed_dex = nullptr;
 std::unique_ptr<shuriken::disassembler::dex::DexDisassembler> disassembler_own = nullptr;
-shuriken::disassembler::dex::DexDisassembler * disassembler = nullptr;
+shuriken::disassembler::dex::DexDisassembler *disassembler = nullptr;
 std::unique_ptr<shuriken::analysis::dex::Analysis> dex_analysis_own = nullptr;
-shuriken::analysis::dex::Analysis * analysis = nullptr;
+shuriken::analysis::dex::Analysis *analysis = nullptr;
 
 int main(int argc, char **argv) {
     std::vector<std::string> args{argv, argv + argc};
@@ -75,8 +75,7 @@ int main(int argc, char **argv) {
             {"-B", [&]() { blocks = true; }},
             {"-x", [&]() { xrefs = true; }},
             {"-T", [&]() { running_time = true; }},
-            {"-N", [&]() { no_print = true; }}
-    };
+            {"-N", [&]() { no_print = true; }}};
 
     for (const auto &s: args) {
         if (auto it = options.find(s); it != options.end()) {
@@ -85,7 +84,7 @@ int main(int argc, char **argv) {
     }
 
     try {
-        if (args[1].ends_with(".dex")) { // manage dex file :)
+        if (args[1].ends_with(".dex")) {// manage dex file :)
             parse_dex(args[1]);
         } else if (args[1].ends_with(".apk")) {
             parse_apk(args[1]);
@@ -117,7 +116,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-void parse_dex(std::string& dex_file) {
+void parse_dex(std::string &dex_file) {
     parsed_dex = shuriken::parser::parse_dex(dex_file);
 
     if (disassembly) {
@@ -148,27 +147,26 @@ void parse_dex(std::string& dex_file) {
     }
 }
 
-void parse_apk(std::string& apk_file) {
+void parse_apk(std::string &apk_file) {
     parsed_apk = shuriken::parser::parse_apk(apk_file, xrefs ? true : false);
 
     disassembler = parsed_apk->get_global_disassembler();
     analysis = parsed_apk->get_global_analysis();
 
-    for (auto & file_name : parsed_apk->get_dex_files_names()) {
+    for (auto &file_name: parsed_apk->get_dex_files_names()) {
         fmt::println("DEX File: {}", file_name);
     }
 
     if (!no_print) {
-        for (auto & file_parser : parsed_apk->get_dex_parsers()) {
-            auto & parsed_dex = file_parser.second.get();
-            auto & header = parsed_dex.get_header();
+        for (auto &file_parser: parsed_apk->get_dex_parsers()) {
+            auto &parsed_dex = file_parser.second.get();
+            auto &header = parsed_dex.get_header();
 
             fmt::println("Analysis of file: {}", file_parser.first);
             if (headers) print_header(header);
             if (show_classes) print_classes(parsed_dex.get_classes());
         }
     }
-
 }
 
 void print_header(shuriken::parser::dex::DexHeader &header) {
@@ -274,16 +272,15 @@ void print_classes(shuriken::parser::dex::DexClasses &classes) {
 
             auto xrefconstclass = class_analysis->get_xrefconstclass();
             fmt::print("  XREF Const Class:\n");
-            for (auto & xref : xrefconstclass) {
+            for (auto &xref: xrefconstclass) {
                 fmt::print("   - {}:{}\n", xref.first->get_full_name(), xref.second);
             }
             auto xrefnewinstance = class_analysis->get_xrefnewinstance();
             fmt::print("  XREF New Instance:\n");
-            for (auto & xref : xrefnewinstance) {
+            for (auto &xref: xrefnewinstance) {
                 fmt::print("   - {}:{}\n", xref.first->get_full_name(), xref.second);
             }
         }
-
     }
 }
 
@@ -299,16 +296,16 @@ void print_field(shuriken::parser::dex::EncodedField *field, size_t j) {
         if (field_analysis == nullptr) return;
         auto xref_read = field_analysis->get_xrefread();
         fmt::print("    Xrefs Read:\n");
-        for (auto & xref : xref_read) {
+        for (auto &xref: xref_read) {
             fmt::print("      {}:{}\n",
-                       std::get<shuriken::analysis::dex::MethodAnalysis*>(xref)->get_full_name(),
+                       std::get<shuriken::analysis::dex::MethodAnalysis *>(xref)->get_full_name(),
                        std::get<std::uint64_t>(xref));
         }
         auto xref_write = field_analysis->get_xrefwrite();
         fmt::print("    Xrefs Write:\n");
-        for (auto & xref : xref_write) {
+        for (auto &xref: xref_write) {
             fmt::print("      {}:{}\n",
-                       std::get<shuriken::analysis::dex::MethodAnalysis*>(xref)->get_full_name(),
+                       std::get<shuriken::analysis::dex::MethodAnalysis *>(xref)->get_full_name(),
                        std::get<std::uint64_t>(xref));
         }
     }
@@ -361,19 +358,17 @@ void print_method(shuriken::parser::dex::EncodedMethod *method, size_t j) {
 
         auto xrefto = method_analysis->get_xrefto();
         fmt::print("     XREF To:\n");
-        for (auto & xref : xrefto) {
-                fmt::print("      - {}:{}\n",
-                           std::get<shuriken::analysis::dex::MethodAnalysis*>(xref)->get_full_name(),
-                           std::get<std::uint64_t>(xref));
-
+        for (auto &xref: xrefto) {
+            fmt::print("      - {}:{}\n",
+                       std::get<shuriken::analysis::dex::MethodAnalysis *>(xref)->get_full_name(),
+                       std::get<std::uint64_t>(xref));
         }
         auto xreffrom = method_analysis->get_xreffrom();
         fmt::print("     XREF From:\n");
-        for (auto & xref : xreffrom) {
+        for (auto &xref: xreffrom) {
             fmt::print("      - {}:{}\n",
-                       std::get<shuriken::analysis::dex::MethodAnalysis*>(xref)->get_full_name(),
+                       std::get<shuriken::analysis::dex::MethodAnalysis *>(xref)->get_full_name(),
                        std::get<std::uint64_t>(xref));
-
         }
     }
 }

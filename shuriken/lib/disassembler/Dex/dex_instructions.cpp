@@ -284,6 +284,14 @@ bool Instruction::may_throw() const {
     return false;
 }
 
+std::wstring_view Instruction::print_winstruction() {
+    if (instruction_wstr.empty()) {
+        auto str_view = print_instruction();
+        instruction_wstr = std::wstring(str_view.begin(), str_view.end());
+    }
+    return instruction_wstr;
+}
+
 Instruction00x::Instruction00x(std::span<uint8_t> bytecode, std::size_t index)
     : Instruction00x(bytecode, index, nullptr) {
 }
@@ -749,6 +757,7 @@ Instruction21c::Instruction21c(std::span<uint8_t> bytecode, std::size_t index, s
     switch (get_kind()) {
         case shuriken::dex::TYPES::STRING:
             source_id = parser->get_strings().get_string_by_id(iBBBB);
+            wstr = parser->get_strings().get_unicode_string_by_id(iBBBB);
             break;
         case shuriken::dex::TYPES::TYPE:
             source_id = parser->get_types().get_type_by_id(iBBBB);
@@ -804,6 +813,26 @@ std::string_view Instruction21c::print_instruction() {
 
 void Instruction21c::print_instruction(std::ostream &os) {
     os << print_instruction();
+}
+
+std::wstring_view Instruction21c::print_winstruction() {
+    if (instruction_wstr.empty()) {
+        auto op_name = opcode_names.at(static_cast<DexOpcodes::opcodes>(op));
+        instruction_wstr = std::wstring(op_name.begin(), op_name.end());
+        instruction_wstr += L" ";
+        instruction_wstr += L"v" + std::to_wstring(vAA);
+        instruction_wstr += L", ";
+        if (get_kind() == shuriken::dex::TYPES::STRING) {
+            instruction_wstr += L"\"";
+            instruction_wstr += wstr;
+            instruction_wstr += L"\"";
+            instruction_wstr += L" // string@" + std::to_wstring(iBBBB);
+        } else {
+            auto type_as_str = get_kind_type_as_string(source_id, iBBBB);
+            instruction_wstr += std::wstring(type_as_str.begin(), type_as_str.end());
+        }
+    }
+    return instruction_wstr;
 }
 
 Instruction23x::Instruction23x(std::span<uint8_t> bytecode, std::size_t index)

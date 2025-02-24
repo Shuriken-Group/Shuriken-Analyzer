@@ -22,12 +22,20 @@ namespace shuriken::parser::dex {
 
     using dex_strings_view_t = std::vector<std::string_view>;
 
+    using dex_wstrings_t = std::vector<std::wstring>;
+
+    using dex_wstrings_view_t = std::vector<std::wstring_view>;
+
     class DexStrings {
     private:
         /// @brief Vector with all the DexStrings from the dex file
         dex_strings_t dex_strings;
         /// @brief View of the previous DexStrings for quickly accessing them
         mutable dex_strings_view_t dex_strings_view;
+        /// @brief Vector with the unicode strings
+        dex_wstrings_t dex_wstrings;
+        /// @brief View of the previous unicode DexStrings
+        mutable dex_wstrings_view_t dex_wstrings_view;
 
     public:
         /// @brief Constructor of the class, default one
@@ -39,14 +47,21 @@ namespace shuriken::parser::dex {
         /// @param shuriken_stream stream with the dex file
         /// @param strings_offset offset in the file where DexStrings are
         /// @param n_of_strings number of DexStrings to read
+        /// @param read_unicode read strings also as unicode
         void parse_strings(common::ShurikenStream &shuriken_stream,
                            std::uint32_t strings_offset,
-                           std::uint32_t n_of_strings);
+                           std::uint32_t n_of_strings,
+                           bool read_unicode);
 
         /// @brief get an string_view by the id of the string (position in the list)
         /// @param str_id id of the string to retrieve
         /// @return a read-only version of the string
         std::string_view get_string_by_id(std::uint32_t str_id) const;
+
+        /// @brief get an wstring_view by the id of the string (position in the list)
+        /// @param str_id id of the wstring to retrieve
+        /// @return a read-only version of the wstring
+        std::wstring_view get_unicode_string_by_id(std::uint32_t str_id) const;
 
         /// @brief get the number of DexStrings from the dex file
         /// @return number of DexStrings

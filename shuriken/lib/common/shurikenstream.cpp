@@ -102,6 +102,30 @@ std::string ShurikenStream::read_ansii_string(std::int64_t offset) {
     return new_str;
 }
 
+std::wstring ShurikenStream::read_unicode_string(std::int64_t offset) {
+    std::wstring new_str = L"";
+    std::uint16_t character = 0;
+    std::uint64_t utf16_size;
+
+    auto uint16_s = sizeof(std::uint16_t);
+    // save current offset
+    auto curr_offset = input_file.tellg();
+
+    // set the offset to the given offset
+    input_file.seekg(static_cast<std::streampos>(offset));
+
+    utf16_size = read_uleb128();
+
+    while (utf16_size-- > 0) {
+        input_file.read(reinterpret_cast<char*>(&character), uint16_s);
+        new_str += static_cast<wchar_t>(character);
+    }
+
+    // return again
+    input_file.seekg(curr_offset);
+    return new_str;
+}
+
 std::string ShurikenStream::read_dex_string(std::int64_t offset) {
     std::string new_str = "";
     std::int8_t character = -1;

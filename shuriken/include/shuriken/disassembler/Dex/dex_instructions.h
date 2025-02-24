@@ -28,7 +28,8 @@ namespace shuriken::disassembler::dex {
             shuriken::parser::dex::FieldID *,
             shuriken::parser::dex::MethodID *,
             shuriken::parser::dex::ProtoID *,
-            std::string_view>;
+            std::string_view,
+            std::wstring_view>;
 
 
     /// Forward declaration of different type of switch
@@ -86,6 +87,8 @@ namespace shuriken::disassembler::dex {
         std::uint64_t address;
         /// @brief string representation of the instruction
         std::string instruction_str;
+        /// @brief wstring representation of the instruction
+        std::wstring instruction_wstr;
 
     public:
         /// @brief Constructor of the Instruction, here is applied
@@ -131,12 +134,16 @@ namespace shuriken::disassembler::dex {
         virtual std::uint64_t get_address() const;
 
         /// @brief Return a string with the representation of the instruction
-        /// @return string with instruction
+        /// @return wstring with instruction
         virtual std::string_view print_instruction() = 0;
 
         /// @brief Print the instruction on a given stream
         /// @param os stream where to print the instruction
         virtual void print_instruction(std::ostream &os) = 0;
+
+        /// @brief Return a wstring with the representation of the instruction
+        /// @return wstring_view with instruction
+        virtual std::wstring_view print_winstruction();
 
         /// @brief Return the op codes in raw from the instruction
         /// @return copy of the span with the raw bytecode
@@ -572,6 +579,8 @@ namespace shuriken::disassembler::dex {
         std::uint16_t iBBBB;
         /// @brief Kind depending on the value
         kind_type_t source_id;
+        /// @brief In case of string, keep a pointer to the unicode version
+        std::wstring_view wstr;
 
     public:
         Instruction21c(std::span<uint8_t> bytecode, std::size_t index);
@@ -612,6 +621,10 @@ namespace shuriken::disassembler::dex {
         /// @brief Print the instruction on a given stream
         /// @param os stream where to print the instruction
         void print_instruction(std::ostream &os) override;
+
+        /// @brief Return a wstring with the representation of the instruction
+        /// @return wstring with instruction
+        std::wstring_view print_winstruction() override;
     };
 
     /// @brief Perform indicated floating point or long comparison
