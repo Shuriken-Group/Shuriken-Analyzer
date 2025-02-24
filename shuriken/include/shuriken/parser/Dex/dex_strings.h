@@ -36,6 +36,8 @@ namespace shuriken::parser::dex {
         dex_wstrings_t dex_wstrings;
         /// @brief View of the previous unicode DexStrings
         mutable dex_wstrings_view_t dex_wstrings_view;
+        /// @brief option to check if unicode is available
+        bool unicode_available;
 
     public:
         /// @brief Constructor of the class, default one
@@ -62,6 +64,10 @@ namespace shuriken::parser::dex {
         /// @param str_id id of the wstring to retrieve
         /// @return a read-only version of the wstring
         std::wstring_view get_unicode_string_by_id(std::uint32_t str_id) const;
+        
+        /// @brief Return if unicode strings are available
+        /// @return unicode strings are available
+        bool is_unicode_available() const;
 
         /// @brief get the number of DexStrings from the dex file
         /// @return number of DexStrings

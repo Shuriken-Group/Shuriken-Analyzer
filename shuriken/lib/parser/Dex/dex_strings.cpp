@@ -29,6 +29,7 @@ void DexStrings::parse_strings(common::ShurikenStream &shuriken_stream,
 
     auto current_offset = shuriken_stream.tellg();
     std::uint32_t str_offset;// we will read offsets
+    this->unicode_available = read_unicode;
 
     // move pointer to the given offset
     shuriken_stream.seekg_safe(strings_offset, std::ios_base::beg);
@@ -85,6 +86,10 @@ std::wstring_view DexStrings::get_unicode_string_by_id(std::uint32_t str_id) con
     if (str_id >= dex_wstrings.size()) 
         throw std::runtime_error("Error id of string out of bound");
     return dex_wstrings.at(str_id);
+}
+
+bool DexStrings::is_unicode_available() const {
+    return unicode_available;
 }
 
 size_t DexStrings::get_number_of_strings() const {

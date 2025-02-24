@@ -757,7 +757,8 @@ Instruction21c::Instruction21c(std::span<uint8_t> bytecode, std::size_t index, s
     switch (get_kind()) {
         case shuriken::dex::TYPES::STRING:
             source_id = parser->get_strings().get_string_by_id(iBBBB);
-            wstr = parser->get_strings().get_unicode_string_by_id(iBBBB);
+            if (parser->get_strings().is_unicode_available())
+                wstr = parser->get_strings().get_unicode_string_by_id(iBBBB);
             break;
         case shuriken::dex::TYPES::TYPE:
             source_id = parser->get_types().get_type_by_id(iBBBB);
