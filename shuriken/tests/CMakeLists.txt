@@ -11,4 +11,6 @@ add_subdirectory(dex/api/C)
 # APK analysis tests
 # include the paths for the different tests
 add_subdirectory(apk)
+
+# Mach-O analysis tests
 add_subdirectory(macho/parser)
