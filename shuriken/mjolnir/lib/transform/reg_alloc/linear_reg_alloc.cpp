@@ -48,10 +48,22 @@ namespace shuriken::MjolnIR {
 
         term->setSuccessor(between, succIndex);
         mlir::OpBuilder builder = mlir::OpBuilder(between, between->end());
-        /*auto jmp_ins =*/
 
         // we can call begin() like this because the newly created block can only have 1
         builder.create<mlir::cf::BranchOp>(builder.getUnknownLoc(), between, *between->getArguments().begin());
+    }
+    void add_move_and_rename_bb_args(Block *from, Block *to) {
+        assert(from && to && "two blocks must be non null");
+        auto *terminator = from->getTerminator();
+        auto jump_args = terminator->getOperands();
+
+        SmallVector<Value, 4> newArgs;
+        mlir::OpBuilder builder = mlir::OpBuilder(from, std::prev(from->end()));
+        for (auto arg: jump_args) {
+            auto moved = builder.create<MjolnIR::MoveOp>(arg.getLoc(), arg.getType(), arg);
+            newArgs.push_back(moved.getResult());
+        }
+        terminator->setOperands(newArgs);
     }
 
     // INFO: From 4.1 of the MP02 paper
@@ -71,13 +83,10 @@ namespace shuriken::MjolnIR {
                     // rename so that p's terminator arg that previously pointing to b is now pointing to n
                     //
                     glue_from_between_to(p, n, &b);
-                } else {
+                } else
                     n = p;
-                }
 
-                /*for (auto &arg: b.getArguments()) {*/
-                /*    // rename your block arguments, but this is weird since the paper is awkwardly phis*/
-                /*}*/
+                add_move_and_rename_bb_args(n, &b);
             }
         }
     }
@@ -116,9 +125,12 @@ namespace shuriken::MjolnIR {
     }
 
 
-    mlir::DenseMap<mlir::Operation *, mlir::DenseMap<mlir::Value, uint32_t>> linear_register_alloc(mlir::ModuleOp &cfg) {
-        decltype(linear_register_alloc(cfg)) reg_mapping;
-
+    mlir::DenseMap<mlir::Operation *, mlir::DenseMap<mlir::Value, uint32_t>> linear_register_alloc(mlir::ModuleOp &&cfg) {
+        mlir::DenseMap<mlir::Operation *, mlir::DenseMap<mlir::Value, uint32_t>> reg_mapping;
+        cfg.walk([](MethodOp op) {
+            gen_moves(op);
+        });
+        // TODO: Do something here to get the mapping
         return reg_mapping;
     };
 }// namespace shuriken::MjolnIR
