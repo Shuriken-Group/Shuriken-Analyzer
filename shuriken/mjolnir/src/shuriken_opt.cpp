@@ -3,6 +3,7 @@
 #include "passes/mjolnirtoopgraph.h"
 #include "passes/opt.h"
 #include "transform/lifter.h"
+#include "transform/reg_alloc.h"
 #include <algorithm>
 #include <cstdio>
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
     bool lift = std::find_if(args.begin(), args.end(), [](auto &arg) { return arg == "--lift"; }) != args.end();
     bool lower = std::find_if(args.begin(), args.end(), [](auto &arg) { return arg == "--lower"; }) != args.end();
     bool opt = std::find_if(args.begin(), args.end(), [](auto &arg) { return arg == "--opt"; }) != args.end();
+    bool linear_reg_alloc = std::find_if(args.begin(), args.end(), [](auto &arg) { return arg == "--linear-reg-alloc"; }) != args.end();
 
     if (LOGGING)
         shuriken_opt_log(fmt::format("\nLOGGING IS ENABLED\n"));
@@ -89,6 +91,9 @@ int main(int argc, char **argv) {
                 }
             }
 
+            if (linear_reg_alloc) {
+                for (auto &module: lifter.mlir_gen_result) shuriken::MjolnIR::linear_register_alloc(module.get());
+            }
             if (lower) {
                 std::cerr << "Begin lowering\n";
                 auto smali_lines = shuriken::MjolnIR::to_smali(lifter.mlir_gen_result);
@@ -98,7 +103,7 @@ int main(int argc, char **argv) {
                 }
             }
         } else {
-            std::cerr << "USer picked the -f | --file option but did not specify at least lift | lower | opt\n";
+            std::cerr << "User picked the -f | --file option but did not specify at least lift | lower | opt\n";
         }
 
         return 0;
@@ -110,14 +115,15 @@ int main(int argc, char **argv) {
 }
 
 void show_help(std::string &prog_name) {
-    fmt::print(fg(fmt::color::green), "USAGE: {} [-h | --help] [-d | --diagnostics] [-f|--file file_name --lift --lower --opt] \n", prog_name);
-    fmt::print(fg(fmt::color::green), "    -h | --help: Shows the help menu, like what you're seeing right now\n");
-    fmt::print(fg(fmt::color::green), "    -d | --diagnostics: Enables diagnostics for shuriken-opt\n");
-    fmt::print(fg(fmt::color::green), "    -f | --file: Analyzes a file with file name, needs additional information\n");
-    fmt::print(fg(fmt::color::green), "    -lift : Lift the dex format up to MjolnIR\n");
-    fmt::print(fg(fmt::color::green), "    -lower: Lower the lifted MjolnIR down to smali (Enables lift when this is opted)\n");
-    fmt::print(fg(fmt::color::green), "    -opt: Run some default optimization (Nop removal for now)\n");
-    fmt::print(fg(fmt::color::green), "    -g | --graph: Dump the graph in dot format (needs a file)\n");
+    fmt::print(fg(fmt::terminal_color::green), "USAGE: {} [-h | --help] [-d | --diagnostics] [-f|--file file_name --lift --lower --opt] \n", prog_name);
+    fmt::print(fg(fmt::terminal_color::green), "    -h | --help: Shows the help menu, like what you're seeing right now\n");
+    fmt::print(fg(fmt::terminal_color::green), "    -d | --diagnostics: Enables diagnostics for shuriken-opt\n");
+    fmt::print(fg(fmt::terminal_color::green), "    -f | --file: Analyzes a file with file name, needs additional information\n");
+    fmt::print(fg(fmt::terminal_color::green), "    -lift : Lift the dex format up to MjolnIR\n");
+    fmt::print(fg(fmt::terminal_color::green), "    -lower: Lower the lifted MjolnIR down to smali (Enables lift when this is opted)\n");
+    fmt::print(fg(fmt::terminal_color::green), "    --linear-reg-alloc: Perform linear register allocation before out-of-ssa lowering \n");
+    fmt::print(fg(fmt::terminal_color::green), "    -opt: Run some default optimization (Nop removal for now)\n");
+    fmt::print(fg(fmt::terminal_color::green), "    -g | --graph: Dump the graph in dot format (needs a file)\n");
 }
 /// Simple log for shuriken opt, msgs need to provide newline.
 void shuriken_opt_log(const std::string &msg) {
