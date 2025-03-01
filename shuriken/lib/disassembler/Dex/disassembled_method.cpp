@@ -188,7 +188,7 @@ std::wstring_view DisassembledMethod::print_method_unicode(bool print_address) {
             if (print_address)
                 output << std::hex << std::setw(8) << std::setfill(L'0') << id;
             output << ' ';
-            /// now print the instruction
+            /// now print the instruction in unicode
             output << instr->print_winstruction();
             id += instr->get_instruction_length();
             output << '\n';

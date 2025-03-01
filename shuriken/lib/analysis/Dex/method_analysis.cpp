@@ -89,6 +89,16 @@ std::string_view MethodAnalysis::toString() {
     return method_string;
 }
 
+std::wstring_view MethodAnalysis::toWString() {
+    if (method_wstring.empty()) {
+        std::wstringstream ss;
+        ss << get_full_name().data() << '\n';
+        ss << basic_blocks->toWString();
+        method_wstring = ss.str();
+    }
+    return method_wstring;
+}
+
 shuriken::disassembler::dex::Instruction *MethodAnalysis::get_instruction_by_addr(std::uint64_t addr) {
     for (auto instr: disassembled->get_instructions()) {
         if (instr->get_address() == addr) return instr;

@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
             {"-f", [&]() { fields = true; }},
             {"-b", [&]() { code = true; }},
             {"-D", [&]() { disassembly = true; }},
-            {"-u", [&]() { unicode  = true; }},
+            {"-u", [&]() { unicode = true; }},
             {"-B", [&]() { blocks = true; }},
             {"-x", [&]() { xrefs = true; }},
             {"-T", [&]() { running_time = true; }},
@@ -346,16 +346,20 @@ void print_method(shuriken::parser::dex::EncodedMethod *method, size_t j) {
             throw std::runtime_error("The method " + std::string(method_id->demangle()) + " was not correctly disassembled");
         if (unicode) {
             std::wcout << disassembled_method->print_method_unicode() << L'\n';
-        }
-        else
+        } else {
             fmt::print("{}\n", disassembled_method->print_method());
+        }
     }
     if (blocks) {
         auto method_analysis = analysis->get_method(method);
         if (method_analysis == nullptr) return;
 
         if (method_analysis) {
-            fmt::print("\n{}\n", method_analysis->toString());
+            if (unicode) {
+                std::wcout << method_analysis->toWString() << L'\n';
+            } else {
+                fmt::print("\n{}\n", method_analysis->toString());
+            }
         }
     }
     if (xrefs) {

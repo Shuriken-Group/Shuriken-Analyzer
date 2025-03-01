@@ -104,8 +104,9 @@ std::string_view DVMBasicBlock::toString() {
             }
 
             ss << '\n';
-        } else if (is_catch_block())
+        } else if (is_catch_block()) {
             ss << ".catch_block" << '\n';
+        }
         for (disassembler::dex::Instruction *insn: instructions_) {
             ss << std::hex << std::setw(8)
                << std::setfill('0')
@@ -115,6 +116,34 @@ std::string_view DVMBasicBlock::toString() {
         block_string = ss.str();
     }
     return block_string;
+}
+
+std::wstring_view DVMBasicBlock::toWString() {
+    if (block_wstring.empty()) {
+        std::wstringstream ss;
+        ss << get_name().data() << '\n';
+        if (is_try_block()) {
+            ss << ".try_block ";
+
+            for (DVMBasicBlock *basicBlock: catch_blocks) {
+                ss << " catch-block "
+                   << basicBlock->get_name().data();
+                if (basicBlock->get_handler_type())
+                    ss << " (" << basicBlock->get_handler_type()->print_type().data() << ")";
+            }
+
+            ss << '\n';
+        } else if (is_catch_block()) {
+            ss << ".catch_block" << '\n';
+        }
+        for (disassembler::dex::Instruction *insn: instructions_) {
+            ss << std::hex << std::setw(8) << std::setfill(L'0');
+            ss << insn->get_address();
+            ss << ' ' << insn->print_winstruction() << '\n';
+        }
+        block_wstring = ss.str();
+    }
+    return block_wstring;
 }
 
 // ---------------------- BasicBlocks ----------------------
@@ -313,7 +342,7 @@ DVMBasicBlock *BasicBlocks::get_basic_block_by_idx(std::uint64_t idx) {
     return *it;
 }
 
-std::string BasicBlocks::toString() {
+std::string_view BasicBlocks::toString() {
     if (basic_blocks_string.empty()) {
         std::stringstream ss;
         for (DVMBasicBlock *dvmBasicBlock: nodes_) {
@@ -331,4 +360,24 @@ std::string BasicBlocks::toString() {
         basic_blocks_string = ss.str();
     }
     return basic_blocks_string;
+}
+
+std::wstring_view BasicBlocks::toWString() {
+    if (basic_blocks_wstring.empty()) {
+        std::wstringstream ss;
+        for (DVMBasicBlock *dvmBasicBlock: nodes_) {
+            ss << dvmBasicBlock->toWString();
+            ss << "Predecessors: ";
+            for (DVMBasicBlock *pred: predecessors_[dvmBasicBlock]) {
+                ss << pred->get_name().data() << " ";
+            }
+            ss << "\nSuccessors: ";
+            for (DVMBasicBlock *succ: successors_[dvmBasicBlock]) {
+                ss << succ->get_name().data() << " ";
+            }
+            ss << "\n\n";
+        }
+        basic_blocks_wstring = ss.str();
+    }
+    return basic_blocks_wstring;
 }
