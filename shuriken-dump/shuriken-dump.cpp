@@ -11,6 +11,10 @@
 #include <shuriken/common/Dex/dvm_types.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
+#ifdef MACHO
+    // Macho stuff
+    #include <shuriken/parser/Macho/macho_header.h>
+#endif
 
 
 #include <vector>
@@ -27,6 +31,9 @@ void show_help(std::string &prog_name) {
     fmt::println(" -x: show the xrefs from classes (it needs -c), from methods (it requires -m) or from fields (it needs -f)");
     fmt::println(" -T: measure and print after the execution the time taken for the analysis");
     fmt::println(" -N: analyze but do not print any information");
+    #ifdef MACHO
+        fmt::println(" -mh: show Mach-O file header");
+    #endif
 }
 
 void parse_dex(std::string& dex_file);
@@ -36,6 +43,10 @@ void print_classes(shuriken::parser::dex::DexClasses &);
 void print_method(shuriken::parser::dex::EncodedMethod *, size_t);
 void print_field(shuriken::parser::dex::EncodedField *, size_t);
 void print_code(std::span<std::uint8_t>);
+#ifdef MACHO
+    void parse_macho(std::string& macho_file);
+    void print_macho_header(shuriken::parser::macho::MachoHeader::machoheader_t macho_header);
+#endif 
 
 bool headers = false;
 bool show_classes = false;
@@ -47,6 +58,9 @@ bool blocks = false;
 bool running_time = false;
 bool xrefs = false;
 bool no_print = false;
+#ifdef MACHO
+    bool macho_headers = false;
+#endif
 
 std::unique_ptr<shuriken::parser::apk::Apk> parsed_apk = nullptr;
 std::unique_ptr<shuriken::parser::dex::Parser> parsed_dex = nullptr;
@@ -75,7 +89,10 @@ int main(int argc, char **argv) {
             {"-B", [&]() { blocks = true; }},
             {"-x", [&]() { xrefs = true; }},
             {"-T", [&]() { running_time = true; }},
-            {"-N", [&]() { no_print = true; }}
+            {"-N", [&]() { no_print = true; }},
+            #ifdef MACHO
+                {"-mh", [&]() { macho_headers = true; }}
+            #endif
     };
 
     for (const auto &s: args) {
@@ -90,6 +107,11 @@ int main(int argc, char **argv) {
         } else if (args[1].ends_with(".apk")) {
             parse_apk(args[1]);
         }
+        #ifdef MACHO
+            else {
+                parse_macho(args[1]);
+            }
+        #endif
     } catch (std::runtime_error &re) {
         fmt::println("Exception: {}", re.what());
     }
@@ -390,3 +412,31 @@ void print_code(std::span<std::uint8_t> bytecode) {
     }
     fmt::print("\n");
 }
+
+#ifdef MACHO
+    void parse_macho(std::string& macho_file) {
+        std::ifstream file(macho_file);
+        shuriken::common::ShurikenStream stream(file);
+
+        shuriken::parser::macho::MachoHeader parsed_macho;
+        parsed_macho.parse_header(stream);
+
+        if (!no_print) {
+            auto &header = parsed_macho.get_macho_header_const();
+
+            if (macho_headers) print_macho_header(header);
+        }
+    }
+
+    void print_macho_header(shuriken::parser::macho::MachoHeader::machoheader_t macho_header) {
+        fmt::println("Mach-O Header:\n");
+        fmt::print(" Magic:                 0x{:x}\n", macho_header.magic);
+        fmt::print(" CPU type:              0x{:X}\n", macho_header.cputype);
+        fmt::print(" CPU subtype:           0x{:X}\n", macho_header.cpusubtype);
+        fmt::print(" Filetype:              0x{:X}\n", macho_header.filetype);
+        fmt::print(" Number of commands:    {}\n", macho_header.ncmds);
+        fmt::print(" Size of commands:      {} bytes\n", macho_header.sizeofcmds);
+        fmt::print(" Flags:                 0x{:X}\n", macho_header.flags);
+        fmt::print(" Reserved:              0x{:X}\n", macho_header.reserved);
+    }
+#endif
