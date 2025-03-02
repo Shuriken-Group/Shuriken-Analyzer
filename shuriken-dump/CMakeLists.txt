@@ -39,3 +39,10 @@ if (NOT WIN32)
                 FILES_MATCHING PATTERN "*.h*"
         )
 endif()
+
+# Define the MACHO option
+option(MACHO "Enable MACHO support" OFF)
+
+if (MACHO)
+        target_compile_definitions(shuriken-dump PRIVATE MACHO)
+endif()
