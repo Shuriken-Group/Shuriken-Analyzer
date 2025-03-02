@@ -103,23 +103,22 @@ std::string ShurikenStream::read_ansii_string(std::int64_t offset) {
 }
 
 std::string ShurikenStream::read_dex_string(std::int64_t offset) {
-    std::string new_str = "";
-    std::int8_t character = -1;
-    std::uint64_t utf16_size;
-    auto int8_s = sizeof(std::int8_t);
     // save current offset
     auto current_offset = input_file.tellg();
-
+    
     // set the offset to the given offset
     input_file.seekg(static_cast<std::streampos>(offset));
-
-    utf16_size = read_uleb128();
-
-    while (utf16_size--) {
-        input_file.read(reinterpret_cast<char *>(&character), int8_s);
-        new_str += static_cast<char>(character);
+    
+    // Read ULEB128 size (this is the length in UTF-16 code units)
+    [[maybe_unused]] std::uint64_t utf16_size = read_uleb128();
+    
+    // Read all bytes until null terminator
+    std::string new_str;
+    char character;
+    while (input_file.read(&character, 1) && character != 0) {
+        new_str.push_back(character);
     }
-
+    
     // return to offset
     input_file.seekg(current_offset, std::ios_base::beg);
     // return the new string
