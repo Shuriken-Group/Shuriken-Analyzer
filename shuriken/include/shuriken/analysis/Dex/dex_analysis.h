@@ -72,6 +72,9 @@ namespace shuriken::analysis::dex {
         /// @brief String that stores a whole block representation
         std::string block_string;
 
+        /// @brief WString that stores a whole block representation
+        std::wstring block_wstring;
+
     public:
         using read_instructions_t = std::span<disassembler::dex::Instruction *>;
         using read_instructions_iterator_t = read_instructions_t::iterator;
@@ -149,8 +152,14 @@ namespace shuriken::analysis::dex {
         /// @brief Set a handler type
         /// @param handler handler type
         void set_handler_type(parser::dex::DVMType *handler);
-
+        
+        /// @brief Retrieve the representation of the block as string
+        /// @return string representation of the block
         std::string_view toString();
+
+        /// @brief Retrieve the representation of the block as wstring
+        /// @return wstring representation of the block
+        std::wstring_view toWString();
     };
 
     /// @brief Class to keep all the Dalvik Basic Blocks from a method
@@ -203,6 +212,8 @@ namespace shuriken::analysis::dex {
         /// @brief All the basic blocks from the method
         std::string basic_blocks_string;
 
+        /// @brief All the basic blocks from the method as wstring
+        std::wstring basic_blocks_wstring;
     public:
         /// @return iterator to all the nodes
         iterator_range<nodesiterator_t> nodes();
@@ -281,7 +292,9 @@ namespace shuriken::analysis::dex {
         /// @return block that contains an instruction in that address
         DVMBasicBlock *get_basic_block_by_idx(std::uint64_t idx);
 
-        std::string toString();
+        std::string_view toString();
+
+        std::wstring_view toWString();
     };
 
     /// @brief specification of a field analysis
@@ -417,6 +430,9 @@ namespace shuriken::analysis::dex {
         /// @brief cache of method string
         std::string method_string;
 
+        /// @brief cache of method wstring
+        std::wstring method_wstring;
+
         /**** Private Methods ****/
         /// @brief Pretty print an instruction and its opcodes in a dot format to an output dot file
         /// @param dot_file file where to dump the instruction
@@ -482,6 +498,8 @@ namespace shuriken::analysis::dex {
         std::string_view get_full_name() const;
 
         std::string_view toString();
+
+        std::wstring_view toWString();
 
         /// @brief Retrieve a pointer to an instruction by a given address
         /// @param addr address of the instruction to retrieve

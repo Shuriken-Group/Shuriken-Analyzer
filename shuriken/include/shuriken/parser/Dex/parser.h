@@ -27,6 +27,11 @@ namespace shuriken::parser::dex {
 
     class Parser {
     private:
+        // Options for the parser, we can set them before
+        // calling parse_dex and they will be applied
+
+        /// @brief read the unicode strings
+        bool read_unicode;
         /// @brief DexHeader of the DEX file
         DexHeader header_;
         /// @brief Structure with information of the DEX file
@@ -49,6 +54,10 @@ namespace shuriken::parser::dex {
         Parser() = default;
         /// @brief Default destructor of the java
         ~Parser() = default;
+
+        
+
+        void set_read_unicode(bool);
 
         /// @brief parse the dex file from the stream
         /// @param stream stream from where to retrieve the dex data

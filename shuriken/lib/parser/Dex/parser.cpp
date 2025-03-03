@@ -11,6 +11,10 @@
 
 using namespace shuriken::parser::dex;
 
+void Parser::set_read_unicode(bool read_unicode) {
+    this->read_unicode = read_unicode;
+}
+
 void Parser::parse_dex(common::ShurikenStream &stream) {
     std::uint8_t magic[4];
     log(LEVEL::INFO, "Start parsing dex file");
@@ -36,7 +40,8 @@ void Parser::parse_dex(common::ShurikenStream &stream) {
                             dex_header.map_off);
     strings_.parse_strings(stream,
                            dex_header.string_ids_off,
-                           dex_header.string_ids_size);
+                           dex_header.string_ids_size,
+                           read_unicode);
     types_.parse_types(stream,
                        strings_,
                        dex_header.type_ids_off,
@@ -134,26 +139,29 @@ const DexClasses &Parser::get_classes() const {
 
 namespace shuriken {
     namespace parser {
-        std::unique_ptr<dex::Parser> parse_dex(common::ShurikenStream &file) {
+        std::unique_ptr<dex::Parser> parse_dex(common::ShurikenStream &file, bool read_unicode) {
             auto p = std::make_unique<dex::Parser>();
+            p->set_read_unicode(read_unicode);
             p->parse_dex(file);
             return p;
         }
 
-        std::unique_ptr<dex::Parser> parse_dex(const std::string &file_path) {
+        std::unique_ptr<dex::Parser> parse_dex(const std::string &file_path, bool read_unicode) {
             std::ifstream ifs(file_path, std::ios::binary);
             common::ShurikenStream file(ifs);
 
             auto p = std::make_unique<dex::Parser>();
+            p->set_read_unicode(read_unicode);
             p->parse_dex(file);
             return p;
         }
 
-        dex::Parser *parse_dex(const char *file_path) {
+        dex::Parser *parse_dex(const char *file_path, bool read_unicode) {
             std::ifstream ifs(file_path, std::ios::binary);
             common::ShurikenStream file(ifs);
 
             auto *p = new Parser();
+            p->set_read_unicode(read_unicode);
             p->parse_dex(file);
             return p;
         }

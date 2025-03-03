@@ -58,6 +58,8 @@ namespace shuriken::disassembler::dex {
         instructions_raw_t instructions_raw;
         /// @brief representation of the method in string format
         std::string method_string;
+        /// @brief representation of the method in wstring format
+        std::wstring method_wstring;
         /// @brief Access flags from the instruction for the representation
         shuriken::dex::TYPES::access_flags access_flags;
 
@@ -109,6 +111,11 @@ namespace shuriken::disassembler::dex {
         /// @param print_address print the address from each instruction
         /// @return disassembled method string
         std::string_view print_method(bool print_address = true);
+        
+        /// @brief Get a disassembled representation of the method in wstring format
+        /// @param print_address print the address from each instruction
+        /// @return disassembled method wstring
+        std::wstring_view print_method_unicode(bool print_address = true);
     };
 }// namespace shuriken::disassembler::dex
 
