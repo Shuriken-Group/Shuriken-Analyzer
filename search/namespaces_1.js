@@ -11,5 +11,6 @@ var searchData=
   ['shuriken_3a_3aparser_8',['parser',['../namespaceshuriken_1_1parser.html',1,'shuriken']]],
   ['shuriken_3a_3aparser_3a_3aapk_9',['apk',['../namespaceshuriken_1_1parser_1_1apk.html',1,'shuriken::parser']]],
   ['shuriken_3a_3aparser_3a_3adex_10',['dex',['../namespaceshuriken_1_1parser_1_1dex.html',1,'shuriken::parser']]],
-  ['spdlog_11',['spdlog',['../namespacespdlog.html',1,'']]]
+  ['shuriken_3a_3aparser_3a_3amacho_11',['macho',['../namespaceshuriken_1_1parser_1_1macho.html',1,'shuriken::parser']]],
+  ['spdlog_12',['spdlog',['../namespacespdlog.html',1,'']]]
 ];

@@ -108,6 +108,9 @@ var annotated_dup =
           [ "ProtoID", "classshuriken_1_1parser_1_1dex_1_1ProtoID.html", "classshuriken_1_1parser_1_1dex_1_1ProtoID" ],
           [ "TryItem", "structshuriken_1_1parser_1_1dex_1_1TryItem.html", "structshuriken_1_1parser_1_1dex_1_1TryItem" ],
           [ "Unknown", "classshuriken_1_1parser_1_1dex_1_1Unknown.html", "classshuriken_1_1parser_1_1dex_1_1Unknown" ]
+        ] ],
+        [ "macho", "namespaceshuriken_1_1parser_1_1macho.html", [
+          [ "MachoHeader", "classshuriken_1_1parser_1_1macho_1_1MachoHeader.html", "classshuriken_1_1parser_1_1macho_1_1MachoHeader" ]
         ] ]
       ] ],
       [ "deref_iterator_range", "structshuriken_1_1deref__iterator__range.html", "structshuriken_1_1deref__iterator__range" ],

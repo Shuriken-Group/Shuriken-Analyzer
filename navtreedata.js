@@ -74,9 +74,9 @@ var NAVTREEINDEX =
 "classshuriken_1_1parser_1_1dex_1_1DVMArray.html",
 "classshuriken_1_1parser_1_1dex_1_1DexStrings.html#acd06edc4ef141b8f4e0fe165bc1a98c5",
 "classshuriken_1_1parser_1_1dex_1_1Parser.html#afd17091e6a71f4f697fa64f8320a27e6",
-"namespaceshuriken_1_1dex_1_1TYPES.html#ab782217a115198b0c10620c020ad9922a9f8c136edcd217fc6e6a050ceee830d9",
-"structbasic__blocks__t__.html#a0e0b7ed2d66d350b58278e40c1087b1b",
-"structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a0c0964d3313a30694ff4c7150718856b"
+"namespaceshuriken_1_1dex_1_1TYPES.html#ab782217a115198b0c10620c020ad9922",
+"shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65aa7f492d725033c06576ac4ba21007297",
+"structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a8185fbca7f4813e8221668d6d30677d9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

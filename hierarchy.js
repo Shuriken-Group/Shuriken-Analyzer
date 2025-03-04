@@ -118,6 +118,8 @@ var hierarchy =
     [ "shuriken::deref_iterator_range< T >::iterator", "structshuriken_1_1deref__iterator__range_1_1iterator.html", null ],
     [ "shuriken::iterator_range< IteratorT >", "classshuriken_1_1iterator__range.html", null ],
     [ "shuriken::disassembler::dex::LinearSweepDisassembler", "classshuriken_1_1disassembler_1_1dex_1_1LinearSweepDisassembler.html", null ],
+    [ "shuriken::parser::macho::MachoHeader", "classshuriken_1_1parser_1_1macho_1_1MachoHeader.html", null ],
+    [ "shuriken::parser::macho::MachoHeader::machoheader_t", "structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html", null ],
     [ "shuriken::parser::dex::DexMapList::map_item", "structshuriken_1_1parser_1_1dex_1_1DexMapList_1_1map__item.html", null ],
     [ "shuriken::analysis::dex::MethodAnalysis", "classshuriken_1_1analysis_1_1dex_1_1MethodAnalysis.html", null ],
     [ "shuriken::parser::dex::MethodAnnotation", "structshuriken_1_1parser_1_1dex_1_1MethodAnnotation.html", null ],

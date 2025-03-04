@@ -1,0 +1,11 @@
+<map id="shuriken/include/shuriken/parser/Macho/macho_header.h" name="shuriken/include/shuriken/parser/Macho/macho_header.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="22,5,226,46"/>
+<area shape="rect" id="Node000002" href="$shurikenstream_8h.html" title=" " alt="" coords="10,94,238,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,46,127,78,122,78,122,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,168,70,193"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,122,65,160,62,156,108,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,168,154,193"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,120,127,152,122,152,122,120"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="178,168,244,193"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="141,118,186,156,183,160,137,122"/>
+</map>

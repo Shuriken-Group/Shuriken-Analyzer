@@ -6,7 +6,9 @@ var searchData=
   ['field_5fidx_3',['field_idx',['../structshuriken_1_1parser_1_1dex_1_1FieldAnnotation.html#a2178cabece798f1e2ba57d3cd553b838',1,'shuriken::parser::dex::FieldAnnotation']]],
   ['fields_4',['fields',['../structhdvmclassanalysis__t__.html#a2e2a43645883489148c1ad4a35746b5e',1,'hdvmclassanalysis_t_']]],
   ['file_5fsize_5',['file_size',['../structdexheader__t__.html#af8954d9da00da8c48d090788e51e39f8',1,'dexheader_t_::file_size'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#a458901711c8ded7929758990d9b9e25a',1,'shuriken::parser::dex::DexHeader::dexheader_t::file_size']]],
-  ['full_5fname_6',['full_name',['../structhdvmmethodanalysis__t__.html#a388314142feefe9e1ebfa5999b5ef127',1,'hdvmmethodanalysis_t_']]],
-  ['fundamental_5fs_7',['fundamental_s',['../namespaceshuriken_1_1parser_1_1dex.html#a966415518e9d6e6d18d746a7aac73b02',1,'shuriken::parser::dex']]],
-  ['fundamental_5fvalue_8',['fundamental_value',['../structhdvmfield__t__.html#a53b60cbc37c8c642f906516a60c0c1f8',1,'hdvmfield_t_']]]
+  ['filetype_6',['filetype',['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a3a2aea033685ef9f380df7a63ba3c8fc',1,'shuriken::parser::macho::MachoHeader::machoheader_t']]],
+  ['flags_7',['flags',['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a74415199e8a770104b7d5288e7fc0a88',1,'shuriken::parser::macho::MachoHeader::machoheader_t']]],
+  ['full_5fname_8',['full_name',['../structhdvmmethodanalysis__t__.html#a388314142feefe9e1ebfa5999b5ef127',1,'hdvmmethodanalysis_t_']]],
+  ['fundamental_5fs_9',['fundamental_s',['../namespaceshuriken_1_1parser_1_1dex.html#a966415518e9d6e6d18d746a7aac73b02',1,'shuriken::parser::dex']]],
+  ['fundamental_5fvalue_10',['fundamental_value',['../structhdvmfield__t__.html#a53b60cbc37c8c642f906516a60c0c1f8',1,'hdvmfield_t_']]]
 ];

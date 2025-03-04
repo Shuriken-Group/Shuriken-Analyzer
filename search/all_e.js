@@ -16,12 +16,13 @@ var searchData=
   ['n_5fof_5fxrefwrite_13',['n_of_xrefwrite',['../structhdvmfieldanalysis__t__.html#a2a1b39a5fd5c14a8fa2bf0cb67fc7456',1,'hdvmfieldanalysis_t_::n_of_xrefwrite'],['../structhdvmmethodanalysis__t__.html#a36a4bceb1fbad5aab41685386aceced1',1,'hdvmmethodanalysis_t_::n_of_xrefwrite']]],
   ['name_14',['name',['../structhdvmfield__t__.html#addb955be7f7b519ba4140570921e283c',1,'hdvmfield_t_::name'],['../structhdvmbasicblock__t__.html#a0898afe720bc94eb9eb04a60c3aa353a',1,'hdvmbasicblock_t_::name'],['../structhdvmfieldanalysis__t__.html#a335614f405a19848cc94faddf6044417',1,'hdvmfieldanalysis_t_::name'],['../structhdvmmethodanalysis__t__.html#ab77d6b2cb9d9fd4e8582daebc44b2667',1,'hdvmmethodanalysis_t_::name'],['../classshuriken_1_1analysis_1_1dex_1_1ClassAnalysis.html#ac5bc2a1fb49d0771d0637e4aba354798',1,'shuriken::analysis::dex::ClassAnalysis::name()']]],
   ['name_5f_15',['name_',['../structhdvmclassanalysis__t__.html#a0c21c24dd5a3e18ce90b6c77cf416cb2',1,'hdvmclassanalysis_t_']]],
-  ['node_5ftype_5ft_16',['node_type_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#ad36c34725ac6ade0cfd6e7b1d86f81fe',1,'shuriken::analysis::dex::BasicBlocks']]],
-  ['nodes_17',['nodes',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a0e407f062321a5fe7774f0445b038a09',1,'shuriken::analysis::dex::BasicBlocks']]],
-  ['nodesetiterator_5ft_18',['nodesetiterator_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#adff98d64673c60fb8045f18ab2580cfb',1,'shuriken::analysis::dex::BasicBlocks']]],
-  ['nodesiterator_5ft_19',['nodesiterator_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a1c96688f73bca10bfe26e4ca13975fa7',1,'shuriken::analysis::dex::BasicBlocks']]],
-  ['none_20',['NONE',['../namespaceshuriken_1_1dex_1_1TYPES.html#ae3b5dca787a2792d0be4a274d049bd5ca2a833f612a8152bb6eb52cfabc9eda03',1,'shuriken::dex::TYPES']]],
-  ['none_5fkind_21',['NONE_KIND',['../namespaceshuriken_1_1dex_1_1TYPES.html#ae4390cfbf486be995d7606f5b0727c38a0b184d440994dd9a53b722701e2d7a90',1,'shuriken::dex::TYPES']]],
-  ['none_5fopcode_22',['NONE_OPCODE',['../classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#afcf4e337a076b98fc3fbe7fe0642a030a012a4dcf19cb93f4d9681ec275a05d99',1,'shuriken::disassembler::dex::DexOpcodes']]],
-  ['none_5fswitch_23',['NONE_SWITCH',['../namespaceshuriken_1_1disassembler_1_1dex.html#a2df0c8546972a4f644d33cce47604360a6328ae61085194b139f2f04e6d0a69c7',1,'shuriken::disassembler::dex']]]
+  ['ncmds_16',['ncmds',['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a931d2f8d4155ab958008a2b2120fa1a7',1,'shuriken::parser::macho::MachoHeader::machoheader_t']]],
+  ['node_5ftype_5ft_17',['node_type_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#ad36c34725ac6ade0cfd6e7b1d86f81fe',1,'shuriken::analysis::dex::BasicBlocks']]],
+  ['nodes_18',['nodes',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a0e407f062321a5fe7774f0445b038a09',1,'shuriken::analysis::dex::BasicBlocks']]],
+  ['nodesetiterator_5ft_19',['nodesetiterator_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#adff98d64673c60fb8045f18ab2580cfb',1,'shuriken::analysis::dex::BasicBlocks']]],
+  ['nodesiterator_5ft_20',['nodesiterator_t',['../classshuriken_1_1analysis_1_1dex_1_1BasicBlocks.html#a1c96688f73bca10bfe26e4ca13975fa7',1,'shuriken::analysis::dex::BasicBlocks']]],
+  ['none_21',['NONE',['../namespaceshuriken_1_1dex_1_1TYPES.html#ae3b5dca787a2792d0be4a274d049bd5ca2a833f612a8152bb6eb52cfabc9eda03',1,'shuriken::dex::TYPES']]],
+  ['none_5fkind_22',['NONE_KIND',['../namespaceshuriken_1_1dex_1_1TYPES.html#ae4390cfbf486be995d7606f5b0727c38a0b184d440994dd9a53b722701e2d7a90',1,'shuriken::dex::TYPES']]],
+  ['none_5fopcode_23',['NONE_OPCODE',['../classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#afcf4e337a076b98fc3fbe7fe0642a030a012a4dcf19cb93f4d9681ec275a05d99',1,'shuriken::disassembler::dex::DexOpcodes']]],
+  ['none_5fswitch_24',['NONE_SWITCH',['../namespaceshuriken_1_1disassembler_1_1dex.html#a2df0c8546972a4f644d33cce47604360a6328ae61085194b139f2f04e6d0a69c7',1,'shuriken::disassembler::dex']]]
 ];

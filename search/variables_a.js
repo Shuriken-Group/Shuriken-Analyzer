@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['magic_0',['magic',['../structdexheader__t__.html#a29218bbfc65685d8b01ba20ffc3e527e',1,'dexheader_t_::magic'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#aaa1a17cff5eed3acd3547700ca8f4dc2',1,'shuriken::parser::dex::DexHeader::dexheader_t::magic']]],
+  ['magic_0',['magic',['../structdexheader__t__.html#a29218bbfc65685d8b01ba20ffc3e527e',1,'dexheader_t_::magic'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#aaa1a17cff5eed3acd3547700ca8f4dc2',1,'shuriken::parser::dex::DexHeader::dexheader_t::magic'],['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a5c70aa5cdbd677836ac67cc5148535d2',1,'shuriken::parser::macho::MachoHeader::machoheader_t::magic']]],
   ['map_5foff_1',['map_off',['../structdexheader__t__.html#a147f46ff6f1e8d4fd55de8524d500b57',1,'dexheader_t_::map_off'],['../structshuriken_1_1parser_1_1dex_1_1DexHeader_1_1dexheader__t.html#aea76f69a2c7d9d320e9fee509eeb60f6',1,'shuriken::parser::dex::DexHeader::dexheader_t::map_off']]],
   ['max_5fansii_5fstr_5fsize_2',['MAX_ANSII_STR_SIZE',['../classshuriken_1_1common_1_1ShurikenStream.html#a26f1c533c547bbe2d9db1981a3c05ab2',1,'shuriken::common::ShurikenStream']]],
   ['method_3',['method',['../structhdvm__class__method__idx__t__.html#af8a835134996ac23e9f2b43ddd63674f',1,'hdvm_class_method_idx_t_::method'],['../structhdvm__method__idx__t__.html#a1bd36d8b6c40894415207095b5a8cbdd',1,'hdvm_method_idx_t_::method']]],

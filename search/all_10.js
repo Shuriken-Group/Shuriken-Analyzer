@@ -18,7 +18,7 @@ var searchData=
   ['parse_5fencoded_5fmethod_15',['parse_encoded_method',['../classshuriken_1_1parser_1_1dex_1_1EncodedMethod.html#a8101e9bb0b4f2127d25e9ffef7a44eb6',1,'shuriken::parser::dex::EncodedMethod']]],
   ['parse_5fencoded_5fvalue_16',['parse_encoded_value',['../classshuriken_1_1parser_1_1dex_1_1EncodedValue.html#a658893c2a9df8845b1019397dccb01c4',1,'shuriken::parser::dex::EncodedValue']]],
   ['parse_5ffields_17',['parse_fields',['../classshuriken_1_1parser_1_1dex_1_1DexFields.html#acfdded218e3a4c4a242473707d6e47cd',1,'shuriken::parser::dex::DexFields']]],
-  ['parse_5fheader_18',['parse_header',['../classshuriken_1_1parser_1_1dex_1_1DexHeader.html#a1580b3547cbc92a758e12374fac8c808',1,'shuriken::parser::dex::DexHeader']]],
+  ['parse_5fheader_18',['parse_header',['../classshuriken_1_1parser_1_1dex_1_1DexHeader.html#a1580b3547cbc92a758e12374fac8c808',1,'shuriken::parser::dex::DexHeader::parse_header()'],['../classshuriken_1_1parser_1_1macho_1_1MachoHeader.html#a597d8f026ddcb84053c702d6744fffe0',1,'shuriken::parser::macho::MachoHeader::parse_header()']]],
   ['parse_5fmap_5flist_19',['parse_map_list',['../classshuriken_1_1parser_1_1dex_1_1DexMapList.html#a9e74d3f3221575c119b2a3e816210325',1,'shuriken::parser::dex::DexMapList']]],
   ['parse_5fmethods_20',['parse_methods',['../classshuriken_1_1parser_1_1dex_1_1DexMethods.html#a38dbbef1fc523ff73809f484faf9e41d',1,'shuriken::parser::dex::DexMethods']]],
   ['parse_5fprotos_21',['parse_protos',['../classshuriken_1_1parser_1_1dex_1_1DexProtos.html#acec7428dd150f1728951773d6e3de38f',1,'shuriken::parser::dex::DexProtos']]],

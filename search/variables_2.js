@@ -10,5 +10,7 @@ var searchData=
   ['classanalysis_7',['classAnalysis',['../structhdvm__classxref__t__.html#a5f0a633cace477176ef50fb3e2826315',1,'hdvm_classxref_t_']]],
   ['cls_8',['cls',['../structhdvm__class__method__idx__t__.html#a68ebd08289277cfddebce5e548496812',1,'hdvm_class_method_idx_t_::cls'],['../structhdvm__class__field__idx__t__.html#aafeb230db3bac0cdfc19137815cb2971',1,'hdvm_class_field_idx_t_::cls'],['../structhdvm__class__idx__t__.html#a80f9023148c37f073ef63470798b46fc',1,'hdvm_class_idx_t_::cls']]],
   ['code_9',['code',['../structhdvmmethod__t__.html#abb5094d4ea0314f6caa51ec6f3e3c782',1,'hdvmmethod_t_']]],
-  ['code_5fsize_10',['code_size',['../structhdvmmethod__t__.html#a184370348f6eda1f0676293af6cf545d',1,'hdvmmethod_t_']]]
+  ['code_5fsize_10',['code_size',['../structhdvmmethod__t__.html#a184370348f6eda1f0676293af6cf545d',1,'hdvmmethod_t_']]],
+  ['cpusubtype_11',['cpusubtype',['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a8f948e14c63fc823638f6263a8cd000f',1,'shuriken::parser::macho::MachoHeader::machoheader_t']]],
+  ['cputype_12',['cputype',['../structshuriken_1_1parser_1_1macho_1_1MachoHeader_1_1machoheader__t.html#a6b8c4af8e60144c6021f7e1fa45f8b9c',1,'shuriken::parser::macho::MachoHeader::machoheader_t']]]
 ];
