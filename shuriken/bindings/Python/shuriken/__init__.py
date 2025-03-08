@@ -16,6 +16,8 @@ elif sys.platform in ("win32", "cygwin"):
     common_paths = [
         "C:\\Program Files\\Shuriken",
         "C:\\Program Files (x86)\\Shuriken",
+        "C:\\Program Files\\Shuriken\\bin",
+        "C:\\Program Files (x86)\\Shuriken\\bin",
         os.getenv("PROGRAMFILES", "C:\\Program Files"),
         os.getenv("PROGRAMFILES(X86)", "C:\\Program Files (x86)"),
         str(Path.home() / "AppData" / "Local" / "lib"),  # User installation path
