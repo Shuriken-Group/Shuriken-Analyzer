@@ -9,19 +9,21 @@ from os.path import join, exists
 # Shuriken C interface
 
 if sys.platform == "darwin":
-    _lib = "libshuriken.dylib"
+    _lib = ["libshuriken.dylib"]
     common_paths = ["/opt/homebrew/lib/", "/usr/lib", "/usr/local/lib"]
 elif sys.platform in ("win32", "cygwin"):
-    _lib = "libshuriken.dll"
+    _lib = ["shuriken.dll", "libshuriken.dll"]
     common_paths = [
         "C:\\Program Files\\Shuriken",
         "C:\\Program Files (x86)\\Shuriken",
+        "C:\\Program Files\\Shuriken\\bin",
+        "C:\\Program Files (x86)\\Shuriken\\bin",
         os.getenv("PROGRAMFILES", "C:\\Program Files"),
         os.getenv("PROGRAMFILES(X86)", "C:\\Program Files (x86)"),
         str(Path.home() / "AppData" / "Local" / "lib"),  # User installation path
     ]
 else:  # Linux
-    _lib = "libshuriken.so"
+    _lib = ["libshuriken.so"]
     common_paths = [
         "/usr/local/lib",
         "/usr/lib",
@@ -33,8 +35,8 @@ else:  # Linux
     ]
 
 
-def _load_lib(path):
-    lib_file = join(path, _lib)
+def _load_lib(path, lib):
+    lib_file = join(path, lib)
     if exists(lib_file):
         return ctypes.cdll.LoadLibrary(lib_file)
     return None
@@ -51,9 +53,12 @@ for _path in _path_list:
     if _path is None:
         continue
     print(f"Trying to load library from: {_path}")
-    _shuriken = _load_lib(_path)
+    for lib in _lib:
+        _shuriken = _load_lib(_path, lib)
+        if _shuriken is not None:
+            print(f"Library loaded from: {_path}")
+            break
     if _shuriken is not None:
-        print(f"Library loaded from: {_path}")
         break
 else:
     raise ImportError("ERROR: fail to load the dynamic library")
