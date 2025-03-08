@@ -126,7 +126,7 @@ namespace shuriken::MjolnIR {
                     std::abort();
                 }
             }
-            smali_lines.push_back(fmt::format("{}.locals {}", std::string(TAB), std::to_string(vrc.get_size())));
+            smali_lines.push_back(fmt::format("{}.registers {}", std::string(TAB), std::to_string(vrc.get_size())));
             smali_lines.insert(smali_lines.end(), body_lines.begin(), body_lines.end());
             smali_lines.insert(smali_lines.end(), epilogue.begin(), epilogue.end());
 
