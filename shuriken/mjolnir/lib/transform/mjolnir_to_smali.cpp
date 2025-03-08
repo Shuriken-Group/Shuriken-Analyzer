@@ -20,14 +20,31 @@ namespace shuriken::MjolnIR {
 
 
     void MjolnIRToSmali::emitOnMethodOp(MethodOp method_op) {
+
+        // SUMMARY: We'll get the prologue and epilogue from mjolnir_method_op
+        // as well as the lines from the body
+        //
+        // From the body, we calculate the number of locals used
+        // Then we add to smali_lines in this order
+        // prologue
+        // number of locals used
+        // body lines
+        // epilogue
+
+
         // Handle the method operation itself
         auto [prologue, epilogue] = from_mjolnir_method_op(method_op);
         smali_lines.insert(smali_lines.end(), prologue.begin(), prologue.end());
 
         // Recurse into the method body
+        SmaliLines body_lines;
         for (Block &block: method_op.getBody()) {
             if (!block.isEntryBlock())
-                smali_lines.emplace_back(fmt::format(":block_{}", block_counter.get_counter(&block)));
+                body_lines.emplace_back(fmt::format(":block_{}", block_counter.get_counter(&block)));
+            if (block.isEntryBlock()) {
+              /// Pre counting the argument of function 
+              for (auto &arg : block.getArguments()) { func_arg_counter.get_counter(arg); }
+            }
             for (Operation &gen_op: block) {
                 bool matched_an_op = false;
                 // Process each nested operation
@@ -77,27 +94,28 @@ namespace shuriken::MjolnIR {
                 } else if (auto op = llvm::dyn_cast<LoadString>(gen_op)) {
                     smali_line = from_mjolnir_loadstring(op);
                     matched_an_op = true;
+                } else if (auto op = llvm::dyn_cast<Nop>(gen_op)) {
+                    matched_an_op = true;
                 }
                 if (matched_an_op) {
-                    smali_lines.emplace_back(std::string(TAB) + smali_line);
+                    body_lines.emplace_back(std::string(TAB) + smali_line);
                     continue;
                 }
-                // INFO: Control flow
-
-                SmaliLines temp_smali_lines;
+                // INFO: Control flow is different since it requires multiple lines
+                SmaliLines temp_body_lines;
                 if (auto op = llvm::dyn_cast<cf::CondBranchOp>(gen_op)) {
-                    temp_smali_lines = from_cf_condbr(op);
+                    temp_body_lines = from_cf_condbr(op);
                     matched_an_op = true;
                 }
 
                 else if (auto op = llvm::dyn_cast<cf::BranchOp>(gen_op)) {
-                    temp_smali_lines = from_cf_br(op);
+                    temp_body_lines = from_cf_br(op);
                     matched_an_op = true;
                 }
 
                 if (matched_an_op) {
-                    for (auto &temp_smali_line: temp_smali_lines)
-                        smali_lines.emplace_back(std::string(TAB) + temp_smali_line);
+                    for (auto &temp_smali_line: temp_body_lines)
+                        body_lines.emplace_back(std::string(TAB) + temp_smali_line);
                     continue;
                 }
 
@@ -107,8 +125,16 @@ namespace shuriken::MjolnIR {
                     llvm::errs() << "Operation name: " << gen_op.getName() << "\n";
                     std::abort();
                 }
-                smali_lines.insert(smali_lines.end(), epilogue.begin(), epilogue.end());
             }
+            smali_lines.push_back(fmt::format("{}.registers {}", std::string(TAB), std::to_string(vrc.get_size())));
+            smali_lines.insert(smali_lines.end(), body_lines.begin(), body_lines.end());
+            smali_lines.insert(smali_lines.end(), epilogue.begin(), epilogue.end());
+
+
+            // after every method, reset the counters
+            vrc.clean_counter();
+            func_arg_counter.clean_counter();
+            block_counter.clean_counter();
         }
     }
     std::string MjolnIRToSmali::get_smali_value(mlir::Value val) {
