@@ -160,6 +160,11 @@ SHURIKENCOREAPI int get_number_of_dex_files(hApkContext context);
 /// @return a string with the path of the dex file in the apk
 SHURIKENCOREAPI const char *get_dex_file_by_index(hApkContext context, unsigned int idx);
 
+/// @brief get the parsed header of one of the DEX file
+/// @param DEX file file to retrieve the number of classes
+/// @return parsed DEX header
+SHURIKENCOREAPI dexheader_t *get_header_for_dex_file(hApkContext context, const char* dex_file);
+
 /// @brief Every dex file contains a number of classes, retrieve it by
 /// the name of the dex file
 /// @param dex_file file to retrieve the number of classes
