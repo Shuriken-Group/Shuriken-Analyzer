@@ -61,13 +61,9 @@ namespace shuriken::parser::dex {
         /// @return constant reference to the list of strings
         const std::vector<std::string_view> get_strings() const;
 
-        std::uint32_t add_string(std::string str);
-
         /// @brief Dump the content of the DexStrings to an XML file
         /// @param fos XML file where to dump the content
         void to_xml(std::ofstream &fos);
-
-        void dump_binary(std::ofstream &fos, std::int64_t offset);
     };
 
 }// namespace shuriken::parser::dex

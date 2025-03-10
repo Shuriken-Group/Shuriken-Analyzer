@@ -10,7 +10,7 @@
 #ifndef SHURIKENLIB_DEX_ENCODED_H
 #define SHURIKENLIB_DEX_ENCODED_H
 
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 #include "shuriken/common/deref_iterator_range.h"
 #include "shuriken/common/iterator_range.h"
 #include "shuriken/common/shurikenstream.h"
@@ -59,12 +59,20 @@ namespace shuriken::parser::dex {
                                  DexTypes &types,
                                  DexStrings &strings);
 
+        /// @brief Get the size of the encoded array
+        /// @return Number of encoded values in the array
         size_t get_encodedarray_size() const;
 
+        /// @brief Get an iterator to the encoded values
+        /// @return Iterator to encoded values
         it_encoded_value get_encoded_values();
 
+        /// @brief Get a constant iterator to the encoded values
+        /// @return Constant iterator to encoded values
         it_const_encoded_value get_encoded_values_const();
 
+        /// @brief Get all encoded values as a vector of reference wrappers
+        /// @return Vector of reference wrappers to encoded values
         encoded_values_s_t &get_encoded_values_vector();
     };
 
@@ -86,8 +94,12 @@ namespace shuriken::parser::dex {
 
         ~AnnotationElement() = default;
 
+        /// @brief Get the name of the annotation element
+        /// @return Name as a string view
         std::string_view get_name() const;
 
+        /// @brief Get the value of the annotation element
+        /// @return Pointer to the encoded value
         EncodedValue *get_value();
     };
 
@@ -169,16 +181,28 @@ namespace shuriken::parser::dex {
         ~EncodedValue() =
                 default;
 
+        /// @brief Parse encoded value from the stream
+        /// @param stream Stream with DEX file data
+        /// @param types Types for parsing the value
+        /// @param strings Strings for parsing the value
         void parse_encoded_value(common::ShurikenStream &stream,
                                  DexTypes &types,
                                  DexStrings &strings);
 
+        /// @brief Get the format of the encoded value
+        /// @return Value format enum
         shuriken::dex::TYPES::value_format get_value_format() const;
 
+        /// @brief Get iterator to raw data buffer for primitive values
+        /// @return Iterator to data buffer
         it_data_buffer get_data_buffer();
 
+        /// @brief Get array data if this value is an array
+        /// @return Pointer to encoded array or nullptr if not an array
         EncodedArray *get_array_data();
 
+        /// @brief Get annotation data if this value is an annotation
+        /// @return Pointer to encoded annotation or nullptr if not an annotation
         EncodedAnnotation *get_annotation_data();
 
         std::int32_t convert_data_to_int();
@@ -322,7 +346,7 @@ namespace shuriken::parser::dex {
         struct code_item_struct_t {
             std::uint16_t registers_size;//! number of registers used in the code
             std::uint16_t ins_size;      //! number of words of incoming arguments to the method
-            std::uint16_t outs_size;     //! number of words of outgoung arguments space required
+            std::uint16_t outs_size;     //! number of words of outgoing arguments space required
             //! for method invocation.
             std::uint16_t tries_size;    //! number of TryItem, can be 0
             std::uint32_t debug_info_off;//! offset to debug_info_item
@@ -441,6 +465,8 @@ namespace shuriken::parser::dex {
         /// @return pointer to the MethodID
         MethodID *getMethodID();
 
+        /// @brief Get the access flags of this method
+        /// @return Access flags enum value
         shuriken::dex::TYPES::access_flags get_flags();
 
         /// @brief Get the code item from the encoded method

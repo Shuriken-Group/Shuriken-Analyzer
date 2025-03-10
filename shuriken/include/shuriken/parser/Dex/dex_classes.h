@@ -105,24 +105,32 @@ namespace shuriken::parser::dex {
         /// @return iterator to static fields
         it_encoded_fields get_static_fields();
 
+        /// @brief Get all static fields as a vector of reference wrappers
+        /// @return Vector of reference wrappers to static fields
         encoded_fields_s_t &get_static_fields_vector();
 
         /// @brief Get all the instance fields from the class
         /// @return iterator to instance fields
         it_encoded_fields get_instance_fields();
 
+        /// @brief Get all instance fields as a vector of reference wrappers
+        /// @return Vector of reference wrappers to instance fields
         encoded_fields_s_t &get_instance_fields_vector();
 
         /// @brief Get all the direct methods from the class
         /// @return iterator to direct methods
         it_encoded_method get_direct_methods();
 
+        /// @brief Get all direct methods as a vector of reference wrappers
+        /// @return Vector of reference wrappers to direct methods
         encoded_methods_s_t &get_direct_methods_vector();
 
         /// @return iterator to the virtual methods
         it_encoded_method get_virtual_methods();
 
-        encoded_methods_s_t &get_virtual_methods_s();
+        /// @brief Get all virtual methods as a vector of reference wrappers
+        /// @return Vector of reference wrappers to virtual methods
+        encoded_methods_s_t &get_virtual_methods_vector();
     };
 
     /// @brief Definition of class with all the ids and offsets
@@ -198,6 +206,8 @@ namespace shuriken::parser::dex {
         /// @return pointer to DVMClass of current class
         DVMClass *get_class_idx();
 
+        /// @brief Get the access flags for this class
+        /// @return Access flags enum value
         shuriken::dex::TYPES::access_flags get_access_flags() const;
 
         /// @brief Get a pointer to the DVMClass of
@@ -249,6 +259,7 @@ namespace shuriken::parser::dex {
         DexClasses() = default;
         /// @brief Destructor from DexClasses
         ~DexClasses() = default;
+
         /// @brief Parse all the classes from the DEX files
         /// @param stream stream with the DEX file
         /// @param number_of_classes number of classes from the DEX
@@ -269,6 +280,8 @@ namespace shuriken::parser::dex {
         /// @return class def objects from the DEX file
         it_class_defs get_classdefs();
 
+        /// @brief Get all class definitions as a vector of reference wrappers
+        /// @return Vector of reference wrappers to class definitions
         class_defs_s_t &get_classdefs_vector();
     };
 }// namespace shuriken::parser::dex

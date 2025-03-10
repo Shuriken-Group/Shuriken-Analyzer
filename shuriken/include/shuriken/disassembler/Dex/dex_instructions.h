@@ -8,7 +8,7 @@
 #ifndef SHURIKENLIB_DALVIK_INSTRUCTIONS_H
 #define SHURIKENLIB_DALVIK_INSTRUCTIONS_H
 
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/parser.h"
 

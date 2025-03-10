@@ -156,11 +156,11 @@ ClassDataItem::encoded_methods_s_t &ClassDataItem::get_direct_methods_vector() {
 }
 
 ClassDataItem::it_encoded_method ClassDataItem::get_virtual_methods() {
-    auto &aux = get_virtual_methods_s();
+    auto &aux = get_virtual_methods_vector();
     return deref_iterator_range(aux);
 }
 
-ClassDataItem::encoded_methods_s_t &ClassDataItem::get_virtual_methods_s() {
+ClassDataItem::encoded_methods_s_t &ClassDataItem::get_virtual_methods_vector() {
     if (virtual_methods_s.empty() || virtual_methods_s.size() != virtual_methods.size()) {
         virtual_methods_s.clear();
         for (const auto &entry: virtual_methods)

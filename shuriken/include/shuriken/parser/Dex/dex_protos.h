@@ -142,18 +142,34 @@ namespace shuriken::parser::dex {
                           DexStrings &strings,
                           DexTypes &types);
 
+        /// @brief Get all prototypes as reference wrappers
+        /// @return Vector of reference wrappers to all prototypes
         protos_id_s_t &get_all_protos();
 
+        /// @brief Get an iterable range of prototype references
+        /// @return Iterator range for all prototypes
         it_protos get_protos();
 
+        /// @brief Get a const iterable range of prototype references
+        /// @return Const iterator range for all prototypes
         it_const_protos get_protos_const();
 
+        /// @brief Get a prototype by its index
+        /// @param id The index of the prototype to retrieve
+        /// @return Pointer to the prototype or nullptr if not found
         ProtoID *get_proto_by_id(std::uint32_t id);
 
+        /// @brief Find the index of a given prototype
+        /// @param proto The prototype to find
+        /// @return The index of the prototype or -1 if not found
         std::int64_t get_id_by_proto(ProtoID *proto);
 
+        /// @brief Get the total number of prototypes
+        /// @return Number of prototypes
         size_t get_number_of_protos() const;
 
+        /// @brief Export all prototypes to XML format
+        /// @param xml_file Output file stream for XML data
         void to_xml(std::ofstream &xml_file);
     };
 }// namespace shuriken::parser::dex

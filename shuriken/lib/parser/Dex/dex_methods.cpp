@@ -9,6 +9,8 @@
 
 using namespace shuriken::parser::dex;
 
+MethodID::MethodID(DVMType *class_, ProtoID *protoId, std::string_view name) : class_(class_), protoId(protoId), name(name) {}
+
 const DVMType *MethodID::get_class() const {
     return class_;
 }
@@ -33,12 +35,12 @@ std::string_view MethodID::demangle() {
     if (!demangled_name.empty())
         return demangled_name;
 
-    demangled_name = protoId->get_return_type()->print_type();
-    demangled_name += " " + class_->print_type() + "->";
+    demangled_name = protoId->get_return_type()->print_type_string();
+    demangled_name += " " + class_->print_type_string() + "->";
     demangled_name += std::string(name) + "(";
 
     for (const auto &p: protoId->get_parameters_const()) {
-        demangled_name += p->print_type() + ",";
+        demangled_name += p->print_type_string() + ",";
     }
 
     if (demangled_name.ends_with(','))
@@ -101,7 +103,7 @@ void DexMethods::to_xml(std::ofstream &fos) {
         fos << "\t<method>\n";
         fos << "\t\t<type>" << m->get_prototype()->get_shorty_idx() << "</type>\n";
         fos << "\t\t<name>" << m->get_method_name() << "</name>\n";
-        fos << "\t\t<class>" << m->get_class()->print_type() << "</type>\n";
+        fos << "\t\t<class>" << m->get_class()->print_type_string() << "</type>\n";
         fos << "\t</method>\n";
     }
     fos << "</DexMethods>\n";

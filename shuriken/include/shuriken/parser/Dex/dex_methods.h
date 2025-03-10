@@ -19,6 +19,7 @@
 
 namespace shuriken::parser::dex {
     class MethodID {
+    private:
         /// @brief Class which method belongs to
         DVMType *class_;
         /// @brief Prototype of the current method
@@ -35,13 +36,17 @@ namespace shuriken::parser::dex {
         /// @param class_ class of the method
         /// @param return_type type returned by prototype of the method
         /// @param name_ name of the method
-        MethodID(DVMType *class_, ProtoID *protoId, std::string_view name) : class_(class_), protoId(protoId), name(name) {}
+        MethodID(DVMType *class_, ProtoID *protoId, std::string_view name);
 
         /// @brief Destructor of MethodID, default constructor
         ~MethodID() = default;
 
+        /// @brief Get the class that owns this method
+        /// @return Constant pointer to the class type
         const DVMType *get_class() const;
 
+        /// @brief Get the class that owns this method
+        /// @return Pointer to the class type
         DVMType *get_class();
 
         /// @return constant pointer to the prototype of the method
@@ -77,7 +82,7 @@ namespace shuriken::parser::dex {
         /// @brief Constructor of DexMethods, default Constructor
         DexMethods() = default;
 
-        /// @bief Destructor of DexMethods, default Destructor
+        /// @brief Destructor of DexMethods, default Destructor
         ~DexMethods() = default;
 
         /// @brief Parse all the method ids objects.
@@ -115,6 +120,7 @@ namespace shuriken::parser::dex {
         MethodID *get_method_by_id(std::uint32_t id);
 
         /// @brief Dump the content of the methods as XML
+        /// @param fos Output file stream to write XML data
         void to_xml(std::ofstream &fos);
     };
 }// namespace shuriken::parser::dex

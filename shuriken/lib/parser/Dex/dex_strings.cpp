@@ -9,18 +9,6 @@
 
 using namespace shuriken::parser::dex;
 
-namespace {
-    void write_uleb128(std::ofstream &fos, size_t x) {
-        uint8_t b = 0;
-        do {
-            b = x & 0x7fU;
-            if (x >>= 7)
-                b |= 0x80U;
-            fos.write(reinterpret_cast<const char *>(&b), sizeof(uint8_t));
-        } while (x);
-    }
-}// namespace
-
 void DexStrings::parse_strings(common::ShurikenStream &shuriken_stream,
                                std::uint32_t strings_offset,
                                std::uint32_t n_of_strings) {
@@ -57,19 +45,6 @@ void DexStrings::to_xml(std::ofstream &fos) {
     fos << "</DexStrings>\n";
 }
 
-void DexStrings::dump_binary(std::ofstream &fos, std::int64_t offset) {
-    auto current_offset = fos.tellp();
-
-    fos.seekp(offset);
-
-    for (const auto &s: dex_strings) {
-        ::write_uleb128(fos, s.size());
-        fos.write(s.c_str(), s.size());
-    }
-
-    fos.seekp(current_offset);
-}
-
 std::string_view DexStrings::get_string_by_id(std::uint32_t str_id) const {
     if (str_id >= dex_strings.size())
         throw std::runtime_error("Error id of string out of bound");
@@ -96,14 +71,4 @@ const std::vector<std::string_view> DexStrings::get_strings() const {
         }
     }
     return dex_strings_view;
-}
-
-std::uint32_t DexStrings::add_string(std::string str) {
-    // check if the string is already in the table
-    auto value = get_id_by_string(str);
-    if (value != -1)
-        return static_cast<std::uint32_t>(value);
-    // if it doesn´t exist, add it and return the id
-    dex_strings.push_back(str);
-    return static_cast<std::uint32_t>(dex_strings.size() - 1);
 }

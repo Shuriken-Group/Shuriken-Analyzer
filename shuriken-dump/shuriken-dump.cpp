@@ -8,7 +8,7 @@
 #include <iostream>
 // Dex & APK stuff
 #include <shuriken/analysis/Dex/analysis.h>
-#include <shuriken/common/Dex/dvm_types.h>
+#include <shuriken/common/Dex/dex_constants.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
 #ifdef MACHO
@@ -240,8 +240,8 @@ void print_classes(shuriken::parser::dex::DexClasses &classes) {
         std::string_view source_file = class_def.get_source_file();
         auto access_flags = class_def.get_access_flags();
 
-        fmt::print(" Class name:            {}\n", class_idx->get_class_name());
-        fmt::print(" Super class:           {}\n", super_class->get_class_name());
+        fmt::print(" Class name:            {}\n", class_idx->get_type_descriptor());
+        fmt::print(" Super class:           {}\n", super_class->get_type_descriptor());
         if (!source_file.empty())
             fmt::print(" Source file:           {}\n", source_file);
         fmt::print(" Access flags:          0x{:X} ({})\n", static_cast<std::uint32_t>(access_flags),
@@ -292,7 +292,7 @@ void print_classes(shuriken::parser::dex::DexClasses &classes) {
 
         if (xrefs) {
             fmt::print(" XREFs\n");
-            auto *class_analysis = analysis->get_class_analysis(class_idx->get_class_name().data());
+            auto *class_analysis = analysis->get_class_analysis(class_idx->get_type_descriptor().data());
 
             auto xrefconstclass = class_analysis->get_xrefconstclass();
             fmt::print("  XREF Const Class:\n");

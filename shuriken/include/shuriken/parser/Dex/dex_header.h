@@ -56,9 +56,6 @@ namespace shuriken::parser::dex {
         /// @brief Destructor for the header, default one
         ~DexHeader() = default;
 
-        /// @brief Copy constructor for DexHeader
-        DexHeader(DexHeader &header);
-
         /// @brief Parse the header from a ShurikenStream file
         /// @param stream ShurikenStream where to read the header.
         void parse_header(common::ShurikenStream &stream);
@@ -66,10 +63,6 @@ namespace shuriken::parser::dex {
         /// @brief Dump the content of the header to a file in XML format
         /// @param fos XML file where to write the content
         void to_xml(std::ofstream &fos);
-
-        /// @brief Dump a binary format of the header
-        /// @param fos file where to dump the binary header
-        void dump(std::ofstream &fos);
 
         /// @brief Obtain a constant reference of the dex header struct
         /// if no value will be modified, use this function.
@@ -83,7 +76,7 @@ namespace shuriken::parser::dex {
 
         /// @brief Obtain the size of the dex header structure
         /// @return
-        std::uint64_t get_dex_header_size() const;
+        size_t get_dex_header_size() const;
     };
 }// namespace shuriken::parser::dex
 

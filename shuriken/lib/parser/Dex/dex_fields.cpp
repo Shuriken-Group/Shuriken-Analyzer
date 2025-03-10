@@ -35,9 +35,9 @@ std::string_view FieldID::field_name() const {
 std::string_view FieldID::pretty_field() {
     if (!pretty_name.empty())
         return pretty_name;
-    pretty_name = class_->print_type() + "->" +
+    pretty_name = class_->print_type_string() + "->" +
                   std::string(name_) + " " +
-                  type_->print_type();
+                  type_->print_type_string();
     return pretty_name;
 }
 
@@ -120,9 +120,9 @@ void DexFields::to_xml(std::ofstream &fos) {
     fos << "<fields>\n";
     for (const auto &field: fields) {
         fos << "\t<field>\n";
-        fos << "\t\t<type>" << field->field_type()->print_type() << "</type>\n";
+        fos << "\t\t<type>" << field->field_type()->print_type_string() << "</type>\n";
         fos << "\t\t<name>" << field->field_name() << "</name>\n";
-        fos << "\t\t<class>" << field->field_class()->print_type() << "</class>\n";
+        fos << "\t\t<class>" << field->field_class()->print_type_string() << "</class>\n";
         fos << "\t</field>\n";
     }
     fos << "</fields>\n";

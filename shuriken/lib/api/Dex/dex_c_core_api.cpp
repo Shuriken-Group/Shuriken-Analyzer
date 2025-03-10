@@ -198,9 +198,9 @@ namespace {
                 auto &class_data_item = class_def.get_class_data_item();
                 auto *new_class = &opaque_struct->classes[i++];
 
-                new_class->class_name = class_idx->get_class_name().data();
+                new_class->class_name = class_idx->get_type_descriptor().data();
                 if (super_class)
-                    new_class->super_class = super_class->get_class_name().data();
+                    new_class->super_class = super_class->get_type_descriptor().data();
                 if (!class_def.get_source_file().empty())
                     new_class->source_file = class_def.get_source_file().data();
                 new_class->access_flags = static_cast<uint16_t>(class_def.get_access_flags());

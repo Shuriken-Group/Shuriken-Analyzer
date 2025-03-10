@@ -100,7 +100,7 @@ std::string_view DVMBasicBlock::toString() {
                 ss << " catch-block "
                    << basicBlock->get_name();
                 if (basicBlock->get_handler_type())
-                    ss << " (" << basicBlock->get_handler_type()->print_type() << ")";
+                    ss << " (" << basicBlock->get_handler_type()->print_type_string() << ")";
             }
 
             ss << '\n';

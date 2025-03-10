@@ -9,7 +9,7 @@
 #ifndef SHURIKENPROJECT_EXTERNAL_METHOD_H
 #define SHURIKENPROJECT_EXTERNAL_METHOD_H
 
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 
 
 namespace shuriken::analysis::dex {

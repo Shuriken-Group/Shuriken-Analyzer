@@ -33,7 +33,7 @@ namespace shuriken::parser::dex {
         std::string_view name_;
         /// @brief Pretty name
         std::string pretty_name;
-        /// @brief for analysis of instructions
+        /// @brief Reference to the encoded field data containing additional information
         EncodedField *encoded_field;
 
     public:
@@ -66,7 +66,8 @@ namespace shuriken::parser::dex {
         /// @brief To refer to an encoded field, setter of EncodedField pointer.
         void set_encoded_field(EncodedField *field);
 
-        /// @return pointer to EncodedField related to FieldID
+        /// @brief Get the encoded field associated with this field ID
+        /// @return Pointer to the associated EncodedField or nullptr if not set
         EncodedField *get_encoded_field();
     };
 

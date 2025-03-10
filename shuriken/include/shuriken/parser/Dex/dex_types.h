@@ -8,6 +8,7 @@
 #ifndef SHURIKENLIB_DEX_TYPES_H
 #define SHURIKENLIB_DEX_TYPES_H
 
+#include "shuriken/common/Dex/dex_constants.h"
 #include "shuriken/common/shurikenstream.h"
 #include "shuriken/parser/Dex/dex_strings.h"
 #include <algorithm>
@@ -18,42 +19,15 @@
 #include <vector>
 
 namespace shuriken::parser::dex {
-    /// @brief DexTypes of the DVM we have by default fundamental,
-    /// classes and array DexTypes
-    enum type_e {
-        FUNDAMENTAL,//! fundamental type (int, float...)
-        CLASS,      //! user defined class
-        ARRAY,      //! an array type
-        UNKNOWN     //! maybe wrong?
-    };
 
-    /// @brief enum with the fundamental DexTypes
-    enum fundamental_e {
-        BOOLEAN,
-        BYTE,
-        CHAR,
-        DOUBLE,
-        FLOAT,
-        INT,
-        LONG,
-        SHORT,
-        VOID
-    };
+    using namespace shuriken::dex;
 
-    const std::unordered_map<fundamental_e, std::string> fundamental_s =
-            {
-                    {BOOLEAN, "boolean"},
-                    {BYTE, "byte"},
-                    {CHAR, "char"},
-                    {DOUBLE, "double"},
-                    {FLOAT, "float"},
-                    {INT, "int"},
-                    {LONG, "long"},
-                    {SHORT, "short"},
-                    {VOID, "void"}};
-
+    /// @brief Base for the different types from Dalvik
+    /// it stores the type as a raw string given in the
+    /// string constant pool
     class DVMType {
     private:
+
         /// @brief what type is it?
         enum type_e type;
         /// @brief string with the type in raw
@@ -78,7 +52,7 @@ namespace shuriken::parser::dex {
 
         /// @brief Get a beautified representation of the type
         /// @return beautified representation of the type
-        virtual std::string print_type() = 0;
+        virtual std::string print_type_string() = 0;
     };
 
     /// @brief Operator == for comparison between two DVMTypes
@@ -92,6 +66,8 @@ namespace shuriken::parser::dex {
         return !(lhs == rhs);
     }
 
+    /// @brief Fundamental type, it represents any of the
+    /// fundamental types from java.
     class DVMFundamental : public DVMType {
     private:
         /// @brief what type of fundamental is?
@@ -107,10 +83,12 @@ namespace shuriken::parser::dex {
 
         ~DVMFundamental() = default;
 
-        std::string print_type() override;
+        /// @brief Get a beautified representation of the type
+        /// @return beautified representation of the type
+        std::string print_type_string() override;
 
         /// @brief Get the name of the fundamental type as a string
-        /// @return string_view with the name of the fundamental type
+        /// @return 'Z', 'B', 'C', 'I', 'J', 'F', 'D'
         std::string_view get_name() const;
 
         /// @brief Get the enum with the fundamental type.
@@ -118,6 +96,7 @@ namespace shuriken::parser::dex {
         fundamental_e get_fundamental_type() const;
     };
 
+    /// @brief Representation of a Dalvik class
     class DVMClass : public DVMType {
     private:
         /// @brief name of the class in dot format
@@ -133,12 +112,14 @@ namespace shuriken::parser::dex {
         ~DVMClass() = default;
 
         /// @return name of the class in Java format (e.g. java.lang.String)
-        std::string print_type() override;
+        std::string print_type_string() override;
 
         /// @return name of the class using bytecode format (e.g. Ljava/lang/String;)
-        std::string_view get_class_name() const;
+        std::string_view get_type_descriptor() const;
     };
 
+    /// @brief Array type, represents single or multi-dimensional arrays
+    /// of any other Dalvik type
     class DVMArray : public DVMType {
     private:
         std::string array_name;
@@ -162,7 +143,7 @@ namespace shuriken::parser::dex {
         ~DVMArray() = default;
 
         /// @return array in java format type (e.g. int[])
-        std::string print_type() override;
+        std::string print_type_string() override;
 
         /// @brief get a string_view representation of an array string
         /// @return string_view of array
@@ -178,6 +159,7 @@ namespace shuriken::parser::dex {
         const DVMType *get_array_base_type() const;
     };
 
+    /// @brief Represents unrecognized or unsupported type descriptors
     class Unknown : public DVMType {
     public:
         /// @brief Constructor of unknown type
@@ -189,7 +171,7 @@ namespace shuriken::parser::dex {
 
         /// @brief Get Unknown type as a string
         /// @return UNKNOWN value as string
-        std::string print_type() override;
+        std::string print_type_string() override;
     };
 
     class DexTypes {

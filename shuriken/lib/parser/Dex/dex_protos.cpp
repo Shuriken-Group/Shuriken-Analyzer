@@ -127,15 +127,15 @@ void DexProtos::to_xml(std::ofstream &xml_file) {
         xml_file << "\t\t<parameters>\n";
         for (auto *param: protoid->get_parameters()) {
             xml_file << "\t\t\t<parameter>\n";
-            xml_file << "\t\t\t\t<type>" << param->print_type() << "</type>\n";
-            xml_file << "\t\t\t\t<raw>" << param->print_type() << "</raw>\n";
+            xml_file << "\t\t\t\t<type>" << param->print_type_string() << "</type>\n";
+            xml_file << "\t\t\t\t<raw>" << param->print_type_string() << "</raw>\n";
             xml_file << "\t\t\t</parameter>\n";
         }
         xml_file << "\t\t</parameters>\n";
 
         xml_file << "\t\t<return>\n";
-        xml_file << "\t\t\t\t<type>" << protoid->get_return_type()->print_type() << "</type>\n";
-        xml_file << "\t\t\t\t<raw>" << protoid->get_return_type()->print_type() << "</raw>\n";
+        xml_file << "\t\t\t\t<type>" << protoid->get_return_type()->print_type_string() << "</type>\n";
+        xml_file << "\t\t\t\t<raw>" << protoid->get_return_type()->print_type_string() << "</raw>\n";
         xml_file << "\t\t</return>\n";
 
         xml_file << "\t</proto>\n";

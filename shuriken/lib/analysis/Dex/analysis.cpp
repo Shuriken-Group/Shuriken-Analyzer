@@ -88,7 +88,7 @@ void Analysis::_add_classdef(
         DexDisassembler::disassembled_methods_t
                 &all_methods_instructions) {
     // Create a class analysis, we will work with the created object
-    auto name = std::string(class_def_item.get_class_idx()->get_class_name());
+    auto name = std::string(class_def_item.get_class_idx()->get_type_descriptor());
     class_analyses.insert({name, std::make_unique<ClassAnalysis>(&class_def_item)});
     auto &new_class = class_analyses[name];
 
@@ -134,7 +134,7 @@ ExternalField *Analysis::get_external_field(shuriken::parser::dex::FieldID *fiel
                             std::make_unique<ExternalField>(
                                     field->field_class()->get_raw_type(),
                                     field->field_name(),
-                                    field->field_type()->print_type())});
+                                    field->field_type()->print_type_string())});
     auto &external_field = external_fields[full_name];
     return external_field.get();
 }
@@ -179,7 +179,7 @@ void Analysis::create_xrefs() {
 void Analysis::_create_xrefs(parser::dex::ClassDef &current_class) {
 
     /// take the name of the analyzed class
-    auto current_class_name = std::string(current_class.get_class_idx()->get_class_name());
+    auto current_class_name = std::string(current_class.get_class_idx()->get_type_descriptor());
     auto &class_data_item = current_class.get_class_data_item();
 
     /// get the virtual methods
@@ -230,7 +230,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
             auto *dvm_class = reinterpret_cast<parser::dex::DVMClass *>(
                     std::get<parser::dex::DVMType *>(
                             const_class_new_instance->get_source_as_kind()));
-            auto cls_name = std::string(dvm_class->get_class_name());
+            auto cls_name = std::string(dvm_class->get_type_descriptor());
 
             // avoid analyzing our own class name
             if (cls_name == current_class_name)
@@ -273,7 +273,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
 
             if (invoked_method->get_class()->get_type() != parser::dex::CLASS) {
                 log(LEVEL::WARN, "Found a call to a method from non class (type found {})",
-                    invoked_method->get_class()->print_type());
+                    invoked_method->get_class()->print_type_string());
                 continue;
             }
 
@@ -281,7 +281,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
             auto *oth_method = _resolve_method(std::string(invoked_method->dalvik_name_format()));
             auto cls_name =
                     std::string(reinterpret_cast<parser::dex::DVMClass *>(invoked_method->get_class())
-                                        ->get_class_name());
+                                        ->get_type_descriptor());
             auto *oth_cls = _get_class_or_create_external(cls_name);
 
             if (oth_cls == nullptr)
@@ -316,7 +316,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
             auto *oth_method = _resolve_method(std::string(method_id->dalvik_name_format()));
             auto cls_name =
                     reinterpret_cast<parser::dex::DVMClass *>(method_id->get_class())
-                            ->get_class_name();
+                            ->get_type_descriptor();
             auto *oth_cls = _get_class_or_create_external(std::string(cls_name));
 
             if (oth_cls == nullptr)
@@ -685,7 +685,7 @@ Analysis::find_methods(const std::string &class_name,
         auto access_flags =
                 shuriken::dex::Utils::get_types_as_string(method->get_access_flags());
 
-        if (std::regex_search(method->get_class_name().data(), class_name_regex) &&
+        if (std::regex_search(method->get_descriptor().data(), class_name_regex) &&
             std::regex_search(method->get_name().data(), method_name_regex) &&
             std::regex_search(access_flags, accessflags_regex))
             methods_vector.push_back(method.get());

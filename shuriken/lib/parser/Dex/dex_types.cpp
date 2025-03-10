@@ -9,6 +9,19 @@
 
 using namespace shuriken::parser::dex;
 
+const std::unordered_map<fundamental_e, std::string> fundamental_s =
+{
+        {BOOLEAN, "boolean"},
+        {BYTE, "byte"},
+        {CHAR, "char"},
+        {DOUBLE, "double"},
+        {FLOAT, "float"},
+        {INT, "int"},
+        {LONG, "long"},
+        {SHORT, "short"},
+        {VOID, "void"}
+};
+
 // --DexTypes
 
 std::unique_ptr<DVMType> DexTypes::parse_type(std::string_view name) {
@@ -81,7 +94,7 @@ void DexTypes::to_xml(std::ofstream &fos) {
     for (size_t I = 0; I < ordered_types.size(); ++I) {
         fos << "\t<type>\n";
         fos << "\t\t<id>" << I << "</id>\n";
-        fos << "\t\t<value>" << ordered_types[I]->print_type() << "</value>\n";
+        fos << "\t\t<value>" << ordered_types[I]->print_type_string() << "</value>\n";
         fos << "\t</type>\n";
     }
 
@@ -152,7 +165,7 @@ DVMFundamental::DVMFundamental(fundamental_e fundamental, std::string_view raw_n
     name = std::string_view(fundamental_s.at(fundamental));
 }
 
-std::string DVMFundamental::print_type() {
+std::string DVMFundamental::print_type_string() {
     return std::string(name);
 }
 
@@ -178,11 +191,11 @@ DVMClass::DVMClass(std::string_view raw_name) : DVMType(type_e::CLASS, raw_name)
     class_name_v = std::string_view(class_name);
 }
 
-std::string DVMClass::print_type() {
+std::string DVMClass::print_type_string() {
     return class_name;
 }
 
-std::string_view DVMClass::get_class_name() const {
+std::string_view DVMClass::get_type_descriptor() const {
     return class_name_v;
 }
 
@@ -192,12 +205,12 @@ DVMArray::DVMArray(size_t depth,
                    std::unique_ptr<DVMType> &array_type,
                    std::string_view raw_name) : DVMType(type_e::ARRAY, raw_name),
                                                 depth(depth), array_type(std::move(array_type)) {
-    array_name = this->array_type->print_type();
+    array_name = this->array_type->print_type_string();
     for (size_t I = 0; I < depth; ++I) array_name += "[]";
     array_name_v = std::string_view(array_name);
 }
 
-std::string DVMArray::print_type() {
+std::string DVMArray::print_type_string() {
     return array_name;
 }
 
@@ -218,6 +231,6 @@ const DVMType *DVMArray::get_array_base_type() const {
 Unknown::Unknown(std::string_view raw) : DVMType(type_e::UNKNOWN, raw) {
 }
 
-std::string Unknown::print_type() {
+std::string Unknown::print_type_string() {
     return "Unknown";
 }
