@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65a9cf4a0866224b0bb4a7a895da27c9c4c":[2,0,0,0,0,1,0,1,46,4],
 "shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65aa7f492d725033c06576ac4ba21007297":[2,0,0,0,0,1,0,1,46,1],
 "shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65aaee055c4a5aba7d55774e4f1c01dacea":[2,0,0,0,0,1,0,1,46,6],
 "shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65adb31f5ef7acca5e1131fcc0fbfa6911d":[2,0,0,0,0,1,0,1,46,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html":[0,0,1,4,1,4,0],
 "structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html":[1,0,1,4,1,4,0],
 "structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a2a25d2a5f8f1c2842e20323c233dabc1":[0,0,1,4,1,4,0,0],
-"structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a2a25d2a5f8f1c2842e20323c233dabc1":[1,0,1,4,1,4,0,0],
-"structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a8185fbca7f4813e8221668d6d30677d9":[0,0,1,4,1,4,0,1]
+"structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a2a25d2a5f8f1c2842e20323c233dabc1":[1,0,1,4,1,4,0,0]
 };

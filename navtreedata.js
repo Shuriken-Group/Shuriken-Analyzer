@@ -75,7 +75,7 @@ var NAVTREEINDEX =
 "classshuriken_1_1parser_1_1dex_1_1DexStrings.html#acd06edc4ef141b8f4e0fe165bc1a98c5",
 "classshuriken_1_1parser_1_1dex_1_1Parser.html#afd17091e6a71f4f697fa64f8320a27e6",
 "namespaceshuriken_1_1dex_1_1TYPES.html#ab782217a115198b0c10620c020ad9922",
-"shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65aa7f492d725033c06576ac4ba21007297",
+"shuriken__core__data_8h.html#acecc48e8b38e72643a63e4aab22b3e65a9cf4a0866224b0bb4a7a895da27c9c4c",
 "structshuriken_1_1parser_1_1dex_1_1CodeItemStruct_1_1code__item__struct__t.html#a8185fbca7f4813e8221668d6d30677d9"
 ];
 

@@ -205,6 +205,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a8de7aa29e035349e71b4461ab5bee6f0" id="r_a8de7aa29e035349e71b4461ab5bee6f0"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8de7aa29e035349e71b4461ab5bee6f0">get_dex_file_by_index</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, unsigned int idx)</td></tr>
 <tr class="memdesc:a8de7aa29e035349e71b4461ab5bee6f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Given an idx retrieve the name of one of the dex files.  <br /></td></tr>
 <tr class="separator:a8de7aa29e035349e71b4461ab5bee6f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a71ef407f3f28feaa67e1fd3393dcf5" id="r_a2a71ef407f3f28feaa67e1fd3393dcf5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="shuriken__core__data_8h.html#a61867bf22efcc72796288e55e885ec8d">dexheader_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a71ef407f3f28feaa67e1fd3393dcf5">get_header_for_dex_file</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, const char *dex_file)</td></tr>
+<tr class="memdesc:a2a71ef407f3f28feaa67e1fd3393dcf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the parsed header of one of the DEX file  <br /></td></tr>
+<tr class="separator:a2a71ef407f3f28feaa67e1fd3393dcf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdeffbeac89373573c06533f111c2d43" id="r_afdeffbeac89373573c06533f111c2d43"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afdeffbeac89373573c06533f111c2d43">get_number_of_classes_for_dex_file</a> (<a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a> context, const char *dex_file)</td></tr>
 <tr class="memdesc:afdeffbeac89373573c06533f111c2d43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Every dex file contains a number of classes, retrieve it by the name of the dex file.  <br /></td></tr>
 <tr class="separator:afdeffbeac89373573c06533f111c2d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -908,6 +911,37 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>parsed DEX header </dd></dl>
+
+</div>
+</div>
+<a id="a2a71ef407f3f28feaa67e1fd3393dcf5" name="a2a71ef407f3f28feaa67e1fd3393dcf5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a71ef407f3f28feaa67e1fd3393dcf5">&#9670;&#160;</a></span>get_header_for_dex_file()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="shuriken__core__data_8h.html#a61867bf22efcc72796288e55e885ec8d">dexheader_t</a> * get_header_for_dex_file </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="shuriken__core__data_8h.html#a80ff042885a9a9c097863506ad74f90e">hApkContext</a></td>          <td class="paramname"><span class="paramname"><em>context</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>dex_file</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>get the parsed header of one of the DEX file </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">DEX</td><td>file file to retrieve the number of classes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>parsed DEX header </dd></dl>
 
 </div>
 </div>
