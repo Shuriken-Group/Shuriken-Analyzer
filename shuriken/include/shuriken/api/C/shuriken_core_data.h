@@ -90,51 +90,51 @@ enum access_flags_e {
 
 /// @brief Structure that represents the header of a DEX file
 typedef struct dexheader_t_ {
-    //! magic bytes from dex, different values are possible
+    /// @brief magic bytes from dex, different values are possible
     uint8_t magic[8];
-    //! checksum to see if file is correct
+    /// @brief checksum to see if file is correct
     uint32_t checksum;
-    //! signature of dex
+    /// @brief signature of dex
     uint8_t signature[20];
-    //! current file size
+    /// @brief current file size
     uint32_t file_size;
-    //! size of this header
+    /// @brief size of this header
     uint32_t header_size;
-    //! type of endianess of the file
+    /// @brief type of endianess of the file
     uint32_t endian_tag;
-    //! size of the link section, or 0 if this file isn't statically linked
+    /// @brief size of the link section, or 0 if this file isn't statically linked
     uint32_t link_size;
-    //! offset from the start of the file to the link section
+    /// @brief offset from the start of the file to the link section
     uint32_t link_off;
-    //! offset from the start of the file to the map item
+    /// @brief offset from the start of the file to the map item
     uint32_t map_off;
-    //! number of DexStrings
+    /// @brief number of DexStrings
     uint32_t string_ids_size;
-    //! offset of the DexStrings
+    /// @brief offset of the DexStrings
     uint32_t string_ids_off;
-    //! number of DexTypes
+    /// @brief number of DexTypes
     uint32_t type_ids_size;
-    //! offset of the DexTypes
+    /// @brief offset of the DexTypes
     uint32_t type_ids_off;
-    //! number of prototypes
+    /// @brief number of prototypes
     uint32_t proto_ids_size;
-    //! offset of the prototypes
+    /// @brief offset of the prototypes
     uint32_t proto_ids_off;
-    //! number of fields
+    /// @brief number of fields
     uint32_t field_ids_size;
-    //! offset of the fields
+    /// @brief offset of the fields
     uint32_t field_ids_off;
-    //! number of methods
+    /// @brief number of methods
     uint32_t method_ids_size;
-    //! offset of the methods
+    /// @brief offset of the methods
     uint32_t method_ids_off;
-    //! number of class definitions
+    /// @brief number of class definitions
     uint32_t class_defs_size;
-    //! offset of the class definitions
+    /// @brief offset of the class definitions
     uint32_t class_defs_off;
-    //! data area, containing all the support data for the tables listed above
+    /// @brief data area, containing all the support data for the tables listed above
     uint32_t data_size;
-    //!
+    /// @brief offset of the data area
     uint32_t data_off;
 } dexheader_t;
 
