@@ -374,10 +374,10 @@ void MethodAnalysis::dump_method_dot(std::ofstream &dot_file) {
         auto *terminator_instr = edge.first->get_terminator();
 
         auto operation = shuriken::disassembler::dex::InstructionUtils::get_operation_type_from_opcode(
-                static_cast<shuriken::disassembler::dex::DexOpcodes::opcodes>(terminator_instr->get_instruction_opcode()));
+                static_cast<shuriken::disassembler::dex::dex_opcodes::opcodes>(terminator_instr->get_instruction_opcode()));
 
         if (terminator_instr &&
-            operation == shuriken::disassembler::dex::DexOpcodes::CONDITIONAL_BRANCH_DVM_OPCODE) {
+            operation == shuriken::disassembler::dex::dex_opcodes::CONDITIONAL_BRANCH_DVM_OPCODE) {
             auto second_block_addr = edge.second->get_first_address();
 
             if (second_block_addr ==
@@ -388,7 +388,7 @@ void MethodAnalysis::dump_method_dot(std::ofstream &dot_file) {
                 dot_file << "\"" << edge.first->get_name() << "\" -> "
                          << "\"" << edge.second->get_name() << "\" [style=\"solid,bold\",color=green,weight=10,constraint=true];\n";
         } else if (terminator_instr &&
-                   operation == shuriken::disassembler::dex::DexOpcodes::UNCONDITIONAL_BRANCH_DVM_OPCODE) {
+                   operation == shuriken::disassembler::dex::dex_opcodes::UNCONDITIONAL_BRANCH_DVM_OPCODE) {
             dot_file << "\"" << edge.first->get_name() << "\" -> "
                      << "\"" << edge.second->get_name() << "\" [style=\"solid,bold\",color=blue,weight=10,constraint=true];\n";
         } else

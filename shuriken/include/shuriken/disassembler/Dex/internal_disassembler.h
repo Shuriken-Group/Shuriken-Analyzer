@@ -11,6 +11,7 @@
 #define SHURIKENPROJECT_INTERNAL_DISASSEMBLER_H
 
 #include "shuriken/disassembler/Dex/dex_instructions.h"
+#include "shuriken/disassembler/Dex/dex_instruction_utils.h"
 #include "shuriken/disassembler/Dex/disassembled_method.h"
 #include "shuriken/parser/Dex/parser.h"
 

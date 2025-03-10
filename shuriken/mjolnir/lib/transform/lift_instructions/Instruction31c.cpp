@@ -5,14 +5,14 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction31c *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
     auto dest = instr->get_destination();
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_CONST_STRING_JUMBO: {
+        case dex_opcodes::opcodes::OP_CONST_STRING_JUMBO: {
             auto str_value = instr->get_string_value();
             auto str_ref = instr->get_string_idx();
 

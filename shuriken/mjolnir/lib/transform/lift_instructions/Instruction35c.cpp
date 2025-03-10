@@ -7,30 +7,30 @@ using namespace shuriken::MjolnIR;
 using namespace ::mlir::shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
     InvokeType type = InvokeType::NONE;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_INVOKE_VIRTUAL:
+        case dex_opcodes::opcodes::OP_INVOKE_VIRTUAL:
             if (type == InvokeType::NONE)
                 type = InvokeType::VIRTUAL;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INVOKE_SUPER:
+        case dex_opcodes::opcodes::OP_INVOKE_SUPER:
             if (type == InvokeType::NONE)
                 type = InvokeType::SUPER;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INVOKE_DIRECT:
+        case dex_opcodes::opcodes::OP_INVOKE_DIRECT:
             if (type == InvokeType::NONE)
                 type = InvokeType::DIRECT;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INVOKE_STATIC:
+        case dex_opcodes::opcodes::OP_INVOKE_STATIC:
             if (type == InvokeType::NONE)
                 type = InvokeType::STATIC;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INVOKE_INTERFACE: {
+        case dex_opcodes::opcodes::OP_INVOKE_INTERFACE: {
             if (type == InvokeType::NONE)
                 type = InvokeType::INTERFACE;
 
@@ -54,7 +54,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction35c *instr)
 
                 /// If the method is not static, the first
                 /// register is a pointer to the object
-                if (I == 0 && op_code != DexOpcodes::opcodes::OP_INVOKE_STATIC)
+                if (I == 0 && op_code != dex_opcodes::opcodes::OP_INVOKE_STATIC)
                     continue;
 
                 auto *fundamental = reinterpret_cast<DVMFundamental *>(*(parameters_protos.begin() + P));

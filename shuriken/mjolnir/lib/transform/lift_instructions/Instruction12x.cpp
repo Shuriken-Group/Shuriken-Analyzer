@@ -6,7 +6,7 @@
 
 using namespace shuriken::MjolnIR;
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -16,9 +16,9 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
     mlir::Type dest_type = nullptr;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_MOVE:
-        case DexOpcodes::opcodes::OP_MOVE_WIDE:
-        case DexOpcodes::opcodes::OP_MOVE_OBJECT: {
+        case dex_opcodes::opcodes::OP_MOVE:
+        case dex_opcodes::opcodes::OP_MOVE_WIDE:
+        case dex_opcodes::opcodes::OP_MOVE_OBJECT: {
             auto src_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src);
 
             auto gen_value = builder.create<::mlir::shuriken::MjolnIR::MoveOp>(
@@ -28,11 +28,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
 
             writeVariable(current_basic_block, dest, gen_value);
         } break;
-        case DexOpcodes::opcodes::OP_ADD_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_ADD_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_ADD_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_ADD_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -48,11 +48,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_ADD_FLOAT_2ADDR:
+        case dex_opcodes::opcodes::OP_ADD_FLOAT_2ADDR:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_ADD_DOUBLE_2ADDR:
+        case dex_opcodes::opcodes::OP_ADD_DOUBLE_2ADDR:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -69,11 +69,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_SUB_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_SUB_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_SUB_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_SUB_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -89,11 +89,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_SUB_FLOAT_2ADDR:
+        case dex_opcodes::opcodes::OP_SUB_FLOAT_2ADDR:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_SUB_DOUBLE_2ADDR:
+        case dex_opcodes::opcodes::OP_SUB_DOUBLE_2ADDR:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -110,11 +110,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_MUL_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_MUL_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_MUL_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_MUL_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -130,11 +130,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_MUL_FLOAT_2ADDR:
+        case dex_opcodes::opcodes::OP_MUL_FLOAT_2ADDR:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_MUL_DOUBLE_2ADDR:
+        case dex_opcodes::opcodes::OP_MUL_DOUBLE_2ADDR:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -151,11 +151,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_DIV_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_DIV_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_DIV_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_DIV_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -171,11 +171,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_DIV_FLOAT_2ADDR:
+        case dex_opcodes::opcodes::OP_DIV_FLOAT_2ADDR:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_DIV_DOUBLE_2ADDR:
+        case dex_opcodes::opcodes::OP_DIV_DOUBLE_2ADDR:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -192,11 +192,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_REM_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_REM_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_REM_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_REM_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -212,11 +212,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_REM_FLOAT_2ADDR:
+        case dex_opcodes::opcodes::OP_REM_FLOAT_2ADDR:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_REM_DOUBLE_2ADDR:
+        case dex_opcodes::opcodes::OP_REM_DOUBLE_2ADDR:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -233,11 +233,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_AND_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_AND_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_AND_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_AND_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -254,11 +254,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_OR_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_OR_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_OR_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_OR_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -275,11 +275,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_XOR_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_XOR_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_XOR_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_XOR_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -296,11 +296,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_SHL_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_SHL_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_SHL_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_SHL_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -317,11 +317,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_SHR_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_SHR_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_SHR_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_SHR_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -338,11 +338,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_USHR_INT_2ADDR:
+        case dex_opcodes::opcodes::OP_USHR_INT_2ADDR:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_USHR_LONG_2ADDR:
+        case dex_opcodes::opcodes::OP_USHR_LONG_2ADDR:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -359,11 +359,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
 
-        case DexOpcodes::opcodes::OP_NEG_INT:
+        case dex_opcodes::opcodes::OP_NEG_INT:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_NEG_LONG:
+        case dex_opcodes::opcodes::OP_NEG_LONG:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -377,11 +377,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_NEG_FLOAT:
+        case dex_opcodes::opcodes::OP_NEG_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_NEG_DOUBLE:
+        case dex_opcodes::opcodes::OP_NEG_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
             {
@@ -395,11 +395,11 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_NOT_INT:
+        case dex_opcodes::opcodes::OP_NOT_INT:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_NOT_LONG:
+        case dex_opcodes::opcodes::OP_NOT_LONG:
             if (!dest_type)
                 dest_type = longType;
             {
@@ -414,39 +414,39 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction12x *instr)
             }
             break;
         /// casts
-        case DexOpcodes::opcodes::OP_INT_TO_LONG:
-        case DexOpcodes::opcodes::OP_FLOAT_TO_LONG:
-        case DexOpcodes::opcodes::OP_DOUBLE_TO_LONG:
+        case dex_opcodes::opcodes::OP_INT_TO_LONG:
+        case dex_opcodes::opcodes::OP_FLOAT_TO_LONG:
+        case dex_opcodes::opcodes::OP_DOUBLE_TO_LONG:
             if (!dest_type)
                 dest_type = longType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INT_TO_FLOAT:
-        case DexOpcodes::opcodes::OP_LONG_TO_FLOAT:
-        case DexOpcodes::opcodes::OP_DOUBLE_TO_FLOAT:
+        case dex_opcodes::opcodes::OP_INT_TO_FLOAT:
+        case dex_opcodes::opcodes::OP_LONG_TO_FLOAT:
+        case dex_opcodes::opcodes::OP_DOUBLE_TO_FLOAT:
             if (!dest_type)
                 dest_type = floatType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INT_TO_DOUBLE:
-        case DexOpcodes::opcodes::OP_LONG_TO_DOUBLE:
-        case DexOpcodes::opcodes::OP_FLOAT_TO_DOUBLE:
+        case dex_opcodes::opcodes::OP_INT_TO_DOUBLE:
+        case dex_opcodes::opcodes::OP_LONG_TO_DOUBLE:
+        case dex_opcodes::opcodes::OP_FLOAT_TO_DOUBLE:
             if (!dest_type)
                 dest_type = doubleType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_LONG_TO_INT:
-        case DexOpcodes::opcodes::OP_FLOAT_TO_INT:
-        case DexOpcodes::opcodes::OP_DOUBLE_TO_INT:
+        case dex_opcodes::opcodes::OP_LONG_TO_INT:
+        case dex_opcodes::opcodes::OP_FLOAT_TO_INT:
+        case dex_opcodes::opcodes::OP_DOUBLE_TO_INT:
             if (!dest_type)
                 dest_type = intType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INT_TO_BYTE:
+        case dex_opcodes::opcodes::OP_INT_TO_BYTE:
             if (!dest_type)
                 dest_type = byteType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INT_TO_CHAR:
+        case dex_opcodes::opcodes::OP_INT_TO_CHAR:
             if (!dest_type)
                 dest_type = charType;
             [[fallthrough]];
-        case DexOpcodes::opcodes::OP_INT_TO_SHORT:
+        case dex_opcodes::opcodes::OP_INT_TO_SHORT:
             if (!dest_type)
                 dest_type = shortType;
             {

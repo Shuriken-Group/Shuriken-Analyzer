@@ -8,14 +8,14 @@
 
 using namespace shuriken::MjolnIR;
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
     auto dest = instr->get_destination();
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_NEW_INSTANCE: {
+        case dex_opcodes::opcodes::OP_NEW_INSTANCE: {
 
             auto *cls = std::get<DVMType *>(instr->get_source_as_kind());
 
@@ -27,7 +27,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
 
             writeVariable(current_basic_block, dest, gen_value);
         } break;
-        case DexOpcodes::opcodes::OP_CONST_STRING: {
+        case dex_opcodes::opcodes::OP_CONST_STRING: {
 
             std::string_view str_value = std::get<std::string_view>(instr->get_source_as_kind());
             // instr->get_source_str();
@@ -41,13 +41,13 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
 
             writeVariable(current_basic_block, dest, gen_value);
         } break;
-        case DexOpcodes::opcodes::OP_SGET:
-        case DexOpcodes::opcodes::OP_SGET_WIDE:
-        case DexOpcodes::opcodes::OP_SGET_OBJECT:
-        case DexOpcodes::opcodes::OP_SGET_BOOLEAN:
-        case DexOpcodes::opcodes::OP_SGET_BYTE:
-        case DexOpcodes::opcodes::OP_SGET_CHAR:
-        case DexOpcodes::opcodes::OP_SGET_SHORT: {
+        case dex_opcodes::opcodes::OP_SGET:
+        case dex_opcodes::opcodes::OP_SGET_WIDE:
+        case dex_opcodes::opcodes::OP_SGET_OBJECT:
+        case dex_opcodes::opcodes::OP_SGET_BOOLEAN:
+        case dex_opcodes::opcodes::OP_SGET_BYTE:
+        case dex_opcodes::opcodes::OP_SGET_CHAR:
+        case dex_opcodes::opcodes::OP_SGET_SHORT: {
             auto *field = std::get<FieldID *>(instr->get_source_as_kind());
 
             std::string_view field_name = field->field_name();
@@ -63,13 +63,13 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction21c *instr)
 
             writeVariable(current_basic_block, dest, generated_value);
         } break;
-        case DexOpcodes::opcodes::OP_SPUT:
-        case DexOpcodes::opcodes::OP_SPUT_WIDE:
-        case DexOpcodes::opcodes::OP_SPUT_OBJECT:
-        case DexOpcodes::opcodes::OP_SPUT_BOOLEAN:
-        case DexOpcodes::opcodes::OP_SPUT_BYTE:
-        case DexOpcodes::opcodes::OP_SPUT_CHAR:
-        case DexOpcodes::opcodes::OP_SPUT_SHORT: {
+        case dex_opcodes::opcodes::OP_SPUT:
+        case dex_opcodes::opcodes::OP_SPUT_WIDE:
+        case dex_opcodes::opcodes::OP_SPUT_OBJECT:
+        case dex_opcodes::opcodes::OP_SPUT_BOOLEAN:
+        case dex_opcodes::opcodes::OP_SPUT_BYTE:
+        case dex_opcodes::opcodes::OP_SPUT_CHAR:
+        case dex_opcodes::opcodes::OP_SPUT_SHORT: {
             auto *field = std::get<FieldID *>(instr->get_source_as_kind());
 
             std::string_view field_name = field->field_name();

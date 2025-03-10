@@ -9,7 +9,7 @@
 #define SHURIKENLIB_DALVIK_INSTRUCTIONS_H
 
 #include "shuriken/common/Dex/dex_constants.h"
-#include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/common/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/parser.h"
 
 #include <iostream>
@@ -48,24 +48,6 @@ namespace shuriken::disassembler::dex {
         NONE_SWITCH
     };
 
-    /// Declaration for using it in InstructionUtils
-    class Instruction;
-
-    class InstructionUtils {
-    public:
-        /// @brief Get the operation type from the given opcode
-        /// @return operation type
-        static DexOpcodes::operation_type get_operation_type_from_opcode(DexOpcodes::opcodes opcode);
-
-        /// @brief Get operation type from a given instruction
-        /// @param instr instruction to retrieve the operation type
-        /// @return operation type
-        static DexOpcodes::operation_type get_operation_type_from_instruction(Instruction *instr);
-
-        /// @return if operation type is a jump of any type unconditional, conditional, switch
-        static bool is_jump_instruction(Instruction *instr);
-    };
-
     /// @brief Base type for all the instructions
     /// it implements all of the virtual functions
     /// and it contains the basic variables all instructions
@@ -73,7 +55,7 @@ namespace shuriken::disassembler::dex {
     class Instruction {
     private:
         /// @brief Instruction type from the enum
-        DexOpcodes::dexinsttype instruction_type;
+        dex_opcodes::dexinsttype instruction_type;
 
     protected:
         /// @brief Opcodes of the instruction
@@ -93,7 +75,7 @@ namespace shuriken::disassembler::dex {
         /// @param bytecode bytes of the instruction
         /// @param index index of the instruction in the buffer of bytes
         /// @param instruction_type type of instruction
-        Instruction(std::span<uint8_t> bytecode, std::size_t index, DexOpcodes::dexinsttype instruction_type);
+        Instruction(std::span<uint8_t> bytecode, std::size_t index, dex_opcodes::dexinsttype instruction_type);
 
         /// @brief Constructor of the Instruction, here is applied
         /// the parsing of the opcodes
@@ -101,7 +83,7 @@ namespace shuriken::disassembler::dex {
         /// @param index index of the instruction in the buffer of bytes
         /// @param instruction_type type of instruction
         /// @param length length of the instruction in bytes
-        Instruction(std::span<uint8_t> bytecode, std::size_t index, DexOpcodes::dexinsttype instruction_type, std::uint32_t length);
+        Instruction(std::span<uint8_t> bytecode, std::size_t index, dex_opcodes::dexinsttype instruction_type, std::uint32_t length);
 
         /// @brief Destructor of the instruction
         virtual ~Instruction() = default;
@@ -112,7 +94,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the instruction type from the enum
         /// @return dex instruction type
-        virtual DexOpcodes::dexinsttype get_instruction_type() const;
+        virtual dex_opcodes::dexinsttype get_instruction_type() const;
 
         /// @brief Get the length of the instruction
         /// @return current length of the instruction
@@ -213,7 +195,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the operand type of the destination
         /// @return operand type of destination
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the index of the source register
         /// @return index of source register
@@ -221,7 +203,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the operand type of the source
         /// @return operand type of source
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -253,7 +235,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the operand type of the destination
         /// @return operand type of destination
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the source value
         /// @return source value
@@ -261,7 +243,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the operand type of the source
         /// @return operand type of source
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -291,7 +273,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of operand for the destination
         /// @return operand type of register
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -320,7 +302,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get type of operand in this case an offset
         /// @return return offset type
-        DexOpcodes::operand_type get_operand_type() const;
+        dex_opcodes::operand_type get_operand_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -349,7 +331,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get type of operand in this case an offset
         /// @return return offset type
-        DexOpcodes::operand_type get_operand_type() const;
+        dex_opcodes::operand_type get_operand_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -380,7 +362,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of operand for the error operand
         /// @return literal type
-        DexOpcodes::operand_type get_error_operand_type() const;
+        dex_opcodes::operand_type get_error_operand_type() const;
 
         /// @brief Get the index to the appropriate table of the instruction.
         /// @return index into a type-appropriate table (e.g. method references for
@@ -389,7 +371,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the index
         /// @return a KIND type
-        DexOpcodes::operand_type get_index_operand_type() const;
+        dex_opcodes::operand_type get_index_operand_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -421,7 +403,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of operand from the destination
         /// @return operand type of destination
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the index of the register of the source
         /// @return index of source register
@@ -429,7 +411,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of operand from the source
         /// @return operand type of source
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -462,7 +444,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the checked register
         /// @return type register
-        DexOpcodes::operand_type get_check_reg_type() const;
+        dex_opcodes::operand_type get_check_reg_type() const;
 
         /// @brief Get the offset of the jump
         /// @return offset of jump
@@ -470,7 +452,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the offset of the jump
         /// @return type of offset
-        DexOpcodes::operand_type get_offset_type() const;
+        dex_opcodes::operand_type get_offset_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -503,7 +485,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the destination type of the instruction
         /// @return destination type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the source value of the instruction
         /// @return source value
@@ -511,7 +493,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the source type of the instruction
         /// @return source type
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -543,7 +525,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the destination type of the instruction
         /// @return destination type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the source value of the instruction
         /// @return source value
@@ -551,7 +533,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the source type of the instruction
         /// @return source type
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -584,7 +566,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the destination
         /// @return return register operand type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the index used as source operand,
         /// this is an index to a string, type, etc...
@@ -594,7 +576,7 @@ namespace shuriken::disassembler::dex {
         /// @brief Get the type of the source, this time is a KIND
         /// the KIND can be various things
         /// @return return operation_type type
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief This function is a copy of get_kind but it will
         /// be used to ask for the kind of the source operand.
@@ -636,7 +618,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the destination
         /// @return get REGISTER operand
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the register for the first source
         /// @return first source register
@@ -644,7 +626,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the first source
         /// @return get REGISTER operand
-        DexOpcodes::operand_type get_first_source_type() const;
+        dex_opcodes::operand_type get_first_source_type() const;
 
         /// @brief Get the register for the second source
         /// @return second source register
@@ -652,7 +634,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the second source
         /// @return get REGISTER operand
-        DexOpcodes::operand_type get_second_source_type() const;
+        dex_opcodes::operand_type get_second_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -687,7 +669,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the destination
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the first operand of the instruction
         /// @return index of register operand
@@ -695,7 +677,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the first operand
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_first_operand_type() const;
+        dex_opcodes::operand_type get_first_operand_type() const;
 
         /// @brief Get the value of the second operand
         /// @return value of second operand
@@ -703,7 +685,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the second operand
         /// @return return LITERAL type
-        DexOpcodes::operand_type get_second_operand_type() const;
+        dex_opcodes::operand_type get_second_operand_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -736,7 +718,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the first operand of the comparison
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_first_operand_type() const;
+        dex_opcodes::operand_type get_first_operand_type() const;
 
         /// @brief Get the second operand of the check
         /// @return index of register
@@ -744,7 +726,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the second operand of the comparison
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_second_operand_type() const;
+        dex_opcodes::operand_type get_second_operand_type() const;
 
         /// @brief Get the offset of the jump in case this is taken
         /// @return offset for the conditional jump
@@ -752,7 +734,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the offset for the jump
         /// @return return OFFSET type
-        DexOpcodes::operand_type get_offset_type() const;
+        dex_opcodes::operand_type get_offset_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -787,7 +769,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the operand used for destination
         /// @return get REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the first operand of the instruction
         /// @return index of register for operand
@@ -795,7 +777,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the first operand of the instruction
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_first_operand_type() const;
+        dex_opcodes::operand_type get_first_operand_type() const;
 
         /// @brief Get the second operand of the instruction
         /// @return literal value used in the instruction
@@ -803,7 +785,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the second operand of the instruction
         /// @return return LITERAL type
-        DexOpcodes::operand_type get_second_operand_type() const;
+        dex_opcodes::operand_type get_second_operand_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -841,7 +823,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the destination operand type
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the operand checked in the instruction
         /// @return index of the register checked
@@ -849,7 +831,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the operand of the instruction
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_operand_type() const;
+        dex_opcodes::operand_type get_operand_type() const;
 
         /// @brief Get the ID of the checked Type/Field
         /// @return ID of checked Type/Field
@@ -857,7 +839,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the checked ID
         /// @return return KIND type
-        DexOpcodes::operand_type get_checked_id_type() const;
+        dex_opcodes::operand_type get_checked_id_type() const;
 
         /// @brief Simply call the get_kind to know the kind of checked id
         /// @return kind of checked id
@@ -901,7 +883,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type for the register A
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_dest_source_register_type() const;
+        dex_opcodes::operand_type get_dest_source_register_type() const;
 
         /// @brief Get the index of the second register used in the instruction
         /// @return value of register B
@@ -909,7 +891,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type for the register B
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_register_object_type() const;
+        dex_opcodes::operand_type get_register_object_type() const;
 
         /// @brief Get the offset for the field
         /// @return int value with field for offset
@@ -917,7 +899,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type for the offset, probably KIND
         /// @return return KIND type (I think is that one...)
-        DexOpcodes::operand_type get_field_offset_type() const;
+        dex_opcodes::operand_type get_field_offset_type() const;
 
         /// @brief A copy of get_kind just for the last operator
         /// @return Kind of the instruction
@@ -954,7 +936,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the offset
         /// @return return OFFSET of the jump
-        DexOpcodes::operand_type get_offset_type() const;
+        dex_opcodes::operand_type get_offset_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -985,7 +967,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the destination operand
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the source operand of the instruction
         /// @return index of register source
@@ -993,7 +975,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the source operand
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -1025,7 +1007,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the destination operand type of the instruction
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the source operand of the instruction
         /// @return value of source operand
@@ -1037,7 +1019,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the source operand type of the instruction
         /// @return return LITERAL type
-        DexOpcodes::operand_type get_source_type() const;
+        dex_opcodes::operand_type get_source_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction
@@ -1075,7 +1057,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the reference register
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_ref_register_type() const;
+        dex_opcodes::operand_type get_ref_register_type() const;
 
         /// @brief Return the offset to the table with packed data
         /// @return offset to packed data
@@ -1083,7 +1065,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Return the type of the offset
         /// @return return OFFSET type
-        DexOpcodes::operand_type get_offset_type() const;
+        dex_opcodes::operand_type get_offset_type() const;
 
         /// @brief Get the type of switch in case the instruction
         /// is a switch
@@ -1134,7 +1116,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the destination type of the operand
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_destination_type() const;
+        dex_opcodes::operand_type get_destination_type() const;
 
         /// @brief Get the index of the string operand
         /// @return index of string
@@ -1142,7 +1124,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type from the string operand
         /// @return return OFFSET type
-        DexOpcodes::operand_type get_string_idx_type() const;
+        dex_opcodes::operand_type get_string_idx_type() const;
 
         /// @brief Get the value from the string pointed in the instruction
         /// @return constant reference to string value
@@ -1187,7 +1169,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the registers operand
         /// @return return REGISTER type
-        DexOpcodes::operand_type get_registers_type();
+        dex_opcodes::operand_type get_registers_type();
 
         /// @brief Get the idx of the type
         /// @return value with the type index
@@ -1195,7 +1177,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get the type of the value
         /// @return return KIND type
-        DexOpcodes::operand_type get_value_type() const;
+        dex_opcodes::operand_type get_value_type() const;
 
         /// @brief To get the type of the value
         /// @return type of the array
@@ -1251,7 +1233,7 @@ namespace shuriken::disassembler::dex {
 
         /// @brief Get type of the index
         /// @return get KIND type
-        DexOpcodes::operand_type get_index_type() const;
+        dex_opcodes::operand_type get_index_type() const;
 
         /// @brief To get the type of the array
         /// @return type of the array
@@ -1402,13 +1384,13 @@ namespace shuriken::disassembler::dex {
 
         std::uint8_t get_first_register() const;
 
-        DexOpcodes::operand_type get_first_register_type() const;
+        dex_opcodes::operand_type get_first_register_type() const;
 
         std::int64_t get_wide_value() const;
 
         double get_wide_value_as_double() const;
 
-        DexOpcodes::operand_type get_wide_value_type() const;
+        dex_opcodes::operand_type get_wide_value_type() const;
 
         /// @brief Return a string with the representation of the instruction
         /// @return string with instruction

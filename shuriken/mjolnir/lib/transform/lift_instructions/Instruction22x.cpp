@@ -5,7 +5,7 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22x *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -13,9 +13,9 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22x *instr)
     auto src = instr->get_source();
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_MOVE_FROM16:
-        case DexOpcodes::opcodes::OP_MOVE_WIDE_FROM16:
-        case DexOpcodes::opcodes::OP_MOVE_OBJECT_FROM16: {
+        case dex_opcodes::opcodes::OP_MOVE_FROM16:
+        case dex_opcodes::opcodes::OP_MOVE_WIDE_FROM16:
+        case dex_opcodes::opcodes::OP_MOVE_OBJECT_FROM16: {
             auto src_value = readVariable(current_basic_block, current_method->get_basic_blocks(), src);
 
             auto gen_value = builder.create<::mlir::shuriken ::MjolnIR::MoveOp>(location,

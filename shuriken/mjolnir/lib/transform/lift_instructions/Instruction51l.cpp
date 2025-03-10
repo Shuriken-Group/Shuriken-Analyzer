@@ -5,7 +5,7 @@
 
 using namespace shuriken::MjolnIR;
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction51l *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -16,7 +16,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction51l *instr)
     mlir::Type dest_type;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_CONST_WIDE:
+        case dex_opcodes::opcodes::OP_CONST_WIDE:
             if (!dest_type)
                 dest_type = doubleType;
             {

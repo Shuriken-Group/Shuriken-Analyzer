@@ -6,7 +6,7 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
     auto location_1 = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 1);
@@ -18,7 +18,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
     mlir::Value val;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_ADD_INT_LIT8:
+        case dex_opcodes::opcodes::OP_ADD_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -33,7 +33,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_SUB_INT_LIT8:
+        case dex_opcodes::opcodes::OP_SUB_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -48,7 +48,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_MUL_INT_LIT8:
+        case dex_opcodes::opcodes::OP_MUL_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -63,7 +63,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_DIV_INT_LIT8:
+        case dex_opcodes::opcodes::OP_DIV_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -78,7 +78,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_REM_INT_LIT8:
+        case dex_opcodes::opcodes::OP_REM_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -93,7 +93,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_AND_INT_LIT8:
+        case dex_opcodes::opcodes::OP_AND_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -108,7 +108,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_OR_INT_LIT8:
+        case dex_opcodes::opcodes::OP_OR_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -123,7 +123,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_XOR_INT_LIT8:
+        case dex_opcodes::opcodes::OP_XOR_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -138,7 +138,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_SHL_INT_LIT8:
+        case dex_opcodes::opcodes::OP_SHL_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -153,7 +153,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_SHR_INT_LIT8:
+        case dex_opcodes::opcodes::OP_SHR_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {
@@ -168,7 +168,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22b *instr)
                 writeVariable(current_basic_block, dest, generated_value);
             }
             break;
-        case DexOpcodes::opcodes::OP_USHR_INT_LIT8:
+        case dex_opcodes::opcodes::OP_USHR_INT_LIT8:
             if (!val)
                 val = builder.create<mlir::arith::ConstantIntOp>(location, src2, 8);
             {

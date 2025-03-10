@@ -21,16 +21,16 @@ std::vector<std::unique_ptr<Instruction>> LinearSweepDisassembler::disassembly(s
     std::vector<std::unique_ptr<Instruction>> instructions;// all the instructions from the method
     std::unique_ptr<Instruction> instr;                    // insruction to create
     auto buffer_size = buffer_bytes.size();                // size of the buffer
-    DexOpcodes::opcodes opcode;                            // opcode of the operation
+    dex_opcodes::opcodes opcode;                            // opcode of the operation
     bool exist_switch = false;                             // check a switch exist
 
     while (idx < buffer_size) {
-        opcode = static_cast<DexOpcodes::opcodes>(buffer_bytes[idx]);
+        opcode = static_cast<dex_opcodes::opcodes>(buffer_bytes[idx]);
 
         try {
             if (!exist_switch &&
-                (opcode == DexOpcodes::opcodes::OP_PACKED_SWITCH ||
-                 opcode == DexOpcodes::opcodes::OP_SPARSE_SWITCH))
+                (opcode == dex_opcodes::opcodes::OP_PACKED_SWITCH ||
+                 opcode == dex_opcodes::opcodes::OP_SPARSE_SWITCH))
                 exist_switch = true;
 
             instr = internal_disassembler->disassemble_instruction(
@@ -80,10 +80,10 @@ void LinearSweepDisassembler::assign_switch_if_any(
         std::vector<std::unique_ptr<Instruction>> &instructions,
         std::unordered_map<std::uint64_t, Instruction *> &cache_instructions) {
     for (auto &instr: instructions) {
-        auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+        auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
-        if (op_code == DexOpcodes::opcodes::OP_PACKED_SWITCH ||
-            op_code == DexOpcodes::opcodes::OP_SPARSE_SWITCH) {
+        if (op_code == dex_opcodes::opcodes::OP_PACKED_SWITCH ||
+            op_code == dex_opcodes::opcodes::OP_SPARSE_SWITCH) {
             auto *instr31t = reinterpret_cast<Instruction31t *>(instr.get());
 
             auto switch_idx = instr31t->get_address() + (instr31t->get_offset() * 2);
@@ -91,9 +91,9 @@ void LinearSweepDisassembler::assign_switch_if_any(
             auto it = cache_instructions.find(switch_idx);
 
             if (it != cache_instructions.end()) {
-                if (op_code == DexOpcodes::opcodes::OP_PACKED_SWITCH)
+                if (op_code == dex_opcodes::opcodes::OP_PACKED_SWITCH)
                     instr31t->set_packed_switch(reinterpret_cast<PackedSwitch *>(it->second));
-                else// DexOpcodes::opcodes::OP_SPARSE_SWITCH
+                else// dex_opcodes::opcodes::OP_SPARSE_SWITCH
                     instr31t->set_sparse_switch(reinterpret_cast<SparseSwitch *>(it->second));
             }
         }

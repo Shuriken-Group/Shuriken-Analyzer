@@ -7,7 +7,7 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22c *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -17,13 +17,13 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22c *instr)
     mlir::Type destination_type;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_IGET:
-        case DexOpcodes::opcodes::OP_IGET_WIDE:
-        case DexOpcodes::opcodes::OP_IGET_OBJECT:
-        case DexOpcodes::opcodes::OP_IGET_BOOLEAN:
-        case DexOpcodes::opcodes::OP_IGET_BYTE:
-        case DexOpcodes::opcodes::OP_IGET_CHAR:
-        case DexOpcodes::opcodes::OP_IGET_SHORT: {
+        case dex_opcodes::opcodes::OP_IGET:
+        case dex_opcodes::opcodes::OP_IGET_WIDE:
+        case dex_opcodes::opcodes::OP_IGET_OBJECT:
+        case dex_opcodes::opcodes::OP_IGET_BOOLEAN:
+        case dex_opcodes::opcodes::OP_IGET_BYTE:
+        case dex_opcodes::opcodes::OP_IGET_CHAR:
+        case dex_opcodes::opcodes::OP_IGET_SHORT: {
             auto *field = std::get<FieldID *>(instr->get_checked_id_as_kind());
             auto regB_value = readVariable(current_basic_block, current_method->get_basic_blocks(), regB);
 
@@ -42,13 +42,13 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22c *instr)
 
             writeVariable(current_basic_block, regA, generated_value);
         } break;
-        case DexOpcodes::opcodes::OP_IPUT:
-        case DexOpcodes::opcodes::OP_IPUT_WIDE:
-        case DexOpcodes::opcodes::OP_IPUT_OBJECT:
-        case DexOpcodes::opcodes::OP_IPUT_BOOLEAN:
-        case DexOpcodes::opcodes::OP_IPUT_BYTE:
-        case DexOpcodes::opcodes::OP_IPUT_CHAR:
-        case DexOpcodes::opcodes::OP_IPUT_SHORT: {
+        case dex_opcodes::opcodes::OP_IPUT:
+        case dex_opcodes::opcodes::OP_IPUT_WIDE:
+        case dex_opcodes::opcodes::OP_IPUT_OBJECT:
+        case dex_opcodes::opcodes::OP_IPUT_BOOLEAN:
+        case dex_opcodes::opcodes::OP_IPUT_BYTE:
+        case dex_opcodes::opcodes::OP_IPUT_CHAR:
+        case dex_opcodes::opcodes::OP_IPUT_SHORT: {
             auto *field = std::get<FieldID *>(instr->get_checked_id_as_kind());
             auto regA_value = readVariable(current_basic_block, current_method->get_basic_blocks(), regA);
             auto regB_value = readVariable(current_basic_block, current_method->get_basic_blocks(), regB);

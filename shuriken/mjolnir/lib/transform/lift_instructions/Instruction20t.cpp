@@ -4,12 +4,12 @@
 
 using namespace shuriken::MjolnIR;
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction20t *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_GOTO_16: {
+        case dex_opcodes::opcodes::OP_GOTO_16: {
             auto offset = instr->get_offset();
             auto target_idx = instr->get_address() + (offset * 2);
 

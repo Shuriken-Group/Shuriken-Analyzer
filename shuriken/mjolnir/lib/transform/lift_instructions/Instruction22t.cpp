@@ -5,7 +5,7 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -17,7 +17,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
     mlir::Type I1 = ::mlir::IntegerType::get(&context, 1);
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_IF_EQ: {
+        case dex_opcodes::opcodes::OP_IF_EQ: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,
@@ -28,7 +28,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
             }
             [[fallthrough]];
         }
-        case DexOpcodes::opcodes::OP_IF_NE: {
+        case dex_opcodes::opcodes::OP_IF_NE: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,
@@ -39,7 +39,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
             }
             [[fallthrough]];
         }
-        case DexOpcodes::opcodes::OP_IF_LT: {
+        case dex_opcodes::opcodes::OP_IF_LT: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,
@@ -50,7 +50,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
             }
             [[fallthrough]];
         }
-        case DexOpcodes::opcodes::OP_IF_GE: {
+        case dex_opcodes::opcodes::OP_IF_GE: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,
@@ -61,7 +61,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
             }
             [[fallthrough]];
         }
-        case DexOpcodes::opcodes::OP_IF_GT: {
+        case dex_opcodes::opcodes::OP_IF_GT: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,
@@ -72,7 +72,7 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction22t *instr)
             }
             [[fallthrough]];
         }
-        case DexOpcodes::opcodes::OP_IF_LE: {
+        case dex_opcodes::opcodes::OP_IF_LE: {
             if (!cmp_value) {
                 cmp_value = builder.create<::mlir::arith::CmpIOp>(
                     location,

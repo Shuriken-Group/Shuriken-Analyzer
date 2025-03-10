@@ -6,17 +6,17 @@
 
 using namespace shuriken::MjolnIR;
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction10x *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
     switch (op_code) {
 
-        case DexOpcodes::opcodes::OP_RETURN_VOID:
+        case dex_opcodes::opcodes::OP_RETURN_VOID:
             builder.create<::mlir::shuriken::MjolnIR::ReturnOp>(
                     location);
             break;
-        case DexOpcodes::opcodes::OP_NOP:
+        case dex_opcodes::opcodes::OP_NOP:
             builder.create<::mlir::shuriken::MjolnIR::Nop>(
                     location, "Nonthrowing Nop from 10x");
             break;

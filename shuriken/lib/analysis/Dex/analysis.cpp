@@ -210,11 +210,11 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
         auto off = instr->get_address();
         auto *instruction = instr;
         auto op_value =
-                static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+                static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
         // check for: `const-class` and `new-instance` instructions
-        if (op_value == DexOpcodes::opcodes::OP_CONST_CLASS ||
-            op_value == DexOpcodes::opcodes::OP_NEW_INSTANCE) {
+        if (op_value == dex_opcodes::opcodes::OP_CONST_CLASS ||
+            op_value == dex_opcodes::opcodes::OP_NEW_INSTANCE) {
             auto *const_class_new_instance =
                     reinterpret_cast<disassembler::dex::Instruction21c *>(instruction);
             auto *source_dvmtype = std::get<parser::dex::DVMType *>(
@@ -250,7 +250,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
                     class_analysis_working_on, current_method_analysis, off);
 
             /// Check if const-class
-            if (op_value == DexOpcodes::opcodes::OP_CONST_CLASS) {
+            if (op_value == dex_opcodes::opcodes::OP_CONST_CLASS) {
                 current_method_analysis->add_xrefconstclass(oth_cls, off);
                 oth_cls->add_xref_const_class(current_method_analysis, off);
             } else {
@@ -260,8 +260,8 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
         }
 
         /// Check for instructions invoke-*
-        else if (DexOpcodes::opcodes::OP_INVOKE_VIRTUAL <= op_value &&
-                 op_value <= DexOpcodes::opcodes::OP_INVOKE_INTERFACE) {
+        else if (dex_opcodes::opcodes::OP_INVOKE_VIRTUAL <= op_value &&
+                 op_value <= dex_opcodes::opcodes::OP_INVOKE_INTERFACE) {
             auto *invoke_ =
                     reinterpret_cast<disassembler::dex::Instruction35c *>(instruction);
 
@@ -301,8 +301,8 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
         }
 
         /// Check for instructions like: invoke-xxx/range
-        else if (DexOpcodes::opcodes::OP_INVOKE_VIRTUAL_RANGE <= op_value &&
-                 op_value <= DexOpcodes::opcodes::OP_INVOKE_INTERFACE_RANGE) {
+        else if (dex_opcodes::opcodes::OP_INVOKE_VIRTUAL_RANGE <= op_value &&
+                 op_value <= dex_opcodes::opcodes::OP_INVOKE_INTERFACE_RANGE) {
             auto *invoke_xxx_range =
                     reinterpret_cast<disassembler::dex::Instruction3rc *>(instruction);
 
@@ -336,7 +336,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
         }
 
         /// Now check for string usage
-        else if (op_value == DexOpcodes::opcodes::OP_CONST_STRING) {
+        else if (op_value == dex_opcodes::opcodes::OP_CONST_STRING) {
             auto *const_string =
                     reinterpret_cast<disassembler::dex::Instruction21c *>(instruction);
 
@@ -355,8 +355,8 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
         /// check now for field usage, we first
         /// analyze those from OP_IGET to OP_IPUT_SHORT
         /// then those from OP_SGET to OP_SPUT_SHORT
-        else if (DexOpcodes::opcodes::OP_IGET <= op_value &&
-                 op_value <= DexOpcodes::opcodes::OP_IPUT_SHORT) {
+        else if (dex_opcodes::opcodes::OP_IGET <= op_value &&
+                 op_value <= dex_opcodes::opcodes::OP_IPUT_SHORT) {
             auto *op_i =
                     reinterpret_cast<disassembler::dex::Instruction22c *>(instruction);
 
@@ -370,7 +370,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
                     disassembler::dex::InstructionUtils::get_operation_type_from_opcode(
                             op_value);
 
-            if (operation == DexOpcodes::FIELD_READ_DVM_OPCODE) {
+            if (operation == dex_opcodes::FIELD_READ_DVM_OPCODE) {
                 auto *field_item = checked_field->get_encoded_field();
                 FieldAnalysis *field_analysis = nullptr;
 
@@ -393,7 +393,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
                                                       field_analysis, off);
 
 
-            } else if (operation == DexOpcodes::FIELD_WRITE_DVM_OPCODE) {
+            } else if (operation == dex_opcodes::FIELD_WRITE_DVM_OPCODE) {
                 // retrieve the encoded field from the FieldID
                 auto *field_item = checked_field->get_encoded_field();
                 FieldAnalysis *field_analysis = nullptr;
@@ -417,8 +417,8 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
             }
         }
 
-        else if (DexOpcodes::opcodes::OP_SGET <= op_value &&
-                 op_value <= DexOpcodes::opcodes::OP_SPUT_SHORT) {
+        else if (dex_opcodes::opcodes::OP_SGET <= op_value &&
+                 op_value <= dex_opcodes::opcodes::OP_SPUT_SHORT) {
             auto *op_s =
                     reinterpret_cast<disassembler::dex::Instruction21c *>(instruction);
 
@@ -432,7 +432,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
                     disassembler::dex::InstructionUtils::get_operation_type_from_opcode(
                             op_value);
 
-            if (operation == DexOpcodes::FIELD_READ_DVM_OPCODE) {
+            if (operation == dex_opcodes::FIELD_READ_DVM_OPCODE) {
                 auto *field_item = checked_field->get_encoded_field();
                 FieldAnalysis *field_analysis = nullptr;
                 if (field_item != nullptr) {
@@ -451,7 +451,7 @@ void Analysis::_analyze_encoded_method(parser::dex::EncodedMethod *method,
                 }
                 current_method_analysis->add_xrefread(class_analysis_working_on,
                                                       field_analysis, off);
-            } else if (operation == DexOpcodes::FIELD_WRITE_DVM_OPCODE) {
+            } else if (operation == dex_opcodes::FIELD_WRITE_DVM_OPCODE) {
                 // retrieve the encoded field from the FieldID
                 auto *field_item = checked_field->get_encoded_field();
                 FieldAnalysis *field_analysis = nullptr;

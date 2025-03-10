@@ -6,7 +6,7 @@
 using namespace shuriken::MjolnIR;
 
 void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction31i *instr) {
-    auto op_code = static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode());
+    auto op_code = static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode());
 
     auto location = mlir::FileLineColLoc::get(&context, module_name, instr->get_address(), 0);
 
@@ -15,8 +15,8 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction31i *instr)
     mlir::Type dest_type;
 
     switch (op_code) {
-        case DexOpcodes::opcodes::OP_CONST:
-        case DexOpcodes::opcodes::OP_CONST_WIDE_32: {
+        case dex_opcodes::opcodes::OP_CONST:
+        case dex_opcodes::opcodes::OP_CONST_WIDE_32: {
             /// for the moment set destination type as a long,
             /// we need to think a better algorithm
             if (!dest_type)

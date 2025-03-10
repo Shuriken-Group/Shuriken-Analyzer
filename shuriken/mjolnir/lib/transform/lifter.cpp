@@ -274,10 +274,10 @@ void Lifter::gen_block(analysis::dex::DVMBasicBlock *bb) {
 
     for (auto *instr: bb->get_instructions()) {
         try {
-            auto operation = InstructionUtils::get_operation_type_from_opcode(static_cast<DexOpcodes::opcodes>(instr->get_instruction_opcode()));
+            auto operation = InstructionUtils::get_operation_type_from_opcode(static_cast<dex_opcodes::opcodes>(instr->get_instruction_opcode()));
             /// we will generate terminators later
             if (instr->is_terminator() &&
-                operation != shuriken::disassembler::dex::DexOpcodes::RET_BRANCH_DVM_OPCODE)
+                operation != shuriken::disassembler::dex::dex_opcodes::RET_BRANCH_DVM_OPCODE)
                 continue;
             /// generate the instruction
             gen_instruction(instr);
@@ -305,9 +305,9 @@ void Lifter::gen_terminators(DVMBasicBlock *bb) {
 
     builder.setInsertionPointToEnd(map_blocks[bb]);
     try {
-        auto operation = shuriken::disassembler::dex::InstructionUtils::get_operation_type_from_opcode(static_cast<disassembler::dex::DexOpcodes::opcodes>(last_instr->get_instruction_opcode()));
+        auto operation = shuriken::disassembler::dex::InstructionUtils::get_operation_type_from_opcode(static_cast<disassembler::dex::dex_opcodes::opcodes>(last_instr->get_instruction_opcode()));
 
-        if (operation == disassembler::dex::DexOpcodes::RET_BRANCH_DVM_OPCODE)
+        if (operation == disassembler::dex::dex_opcodes::RET_BRANCH_DVM_OPCODE)
             return;
         if (last_instr->is_terminator())
             gen_instruction(last_instr);
@@ -362,70 +362,70 @@ void Lifter::gen_instruction(shuriken::disassembler::dex::Instruction *instr) {
     using namespace shuriken::disassembler::dex;
     using shuriken::disassembler::dex::Instruction;
     switch (instr->get_instruction_type()) {
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION23X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION23X:
             gen_instruction(reinterpret_cast<Instruction23x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION12X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION12X:
             gen_instruction(reinterpret_cast<Instruction12x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION11X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION11X:
             gen_instruction(reinterpret_cast<Instruction11x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22C:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION22C:
             gen_instruction(reinterpret_cast<Instruction22c *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22T:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION22T:
             gen_instruction(reinterpret_cast<Instruction22t *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21T:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION21T:
             gen_instruction(reinterpret_cast<Instruction21t *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION10T:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION10T:
             gen_instruction(reinterpret_cast<Instruction10t *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION20T:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION20T:
             gen_instruction(reinterpret_cast<Instruction20t *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION30T:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION30T:
             gen_instruction(reinterpret_cast<Instruction30t *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION10X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION10X:
             gen_instruction(reinterpret_cast<Instruction10x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION11N:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION11N:
             gen_instruction(reinterpret_cast<Instruction11n *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21S:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION21S:
             gen_instruction(reinterpret_cast<Instruction21s *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21H:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION21H:
             gen_instruction(reinterpret_cast<Instruction21h *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION51L:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION51L:
             gen_instruction(reinterpret_cast<Instruction51l *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION35C:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION35C:
             gen_instruction(reinterpret_cast<Instruction35c *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION21C:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION21C:
             gen_instruction(reinterpret_cast<Instruction21c *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION22X:
             gen_instruction(reinterpret_cast<Instruction22x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION32X:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION32X:
             gen_instruction(reinterpret_cast<Instruction32x *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION31I:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION31I:
             gen_instruction(reinterpret_cast<Instruction31i *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION31C:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION31C:
             gen_instruction(reinterpret_cast<Instruction31c *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22S:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION22S:
             gen_instruction(reinterpret_cast<Instruction22s *>(instr));
             break;
-        case DexOpcodes::dexinsttype::DEX_INSTRUCTION22B:
+        case dex_opcodes::dexinsttype::DEX_INSTRUCTION22B:
             gen_instruction(reinterpret_cast<Instruction22b *>(instr));
             break;
         default:
