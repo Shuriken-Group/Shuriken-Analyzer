@@ -11,10 +11,6 @@
 #include <shuriken/common/Dex/dvm_types.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
-#ifdef MACHO
-    // Macho stuff
-    #include <shuriken/parser/Macho/macho_header.h>
-#endif
 
 
 #include <vector>
@@ -33,6 +29,9 @@ void show_help(std::string &prog_name) {
     fmt::println(" -N: analyze but do not print any information");
     #ifdef MACHO
         fmt::println(" -mh: show Mach-O file header");
+        fmt::println(" -mlcs: show Mach-O file load commands");
+        fmt::println(" -msegs: show Mach-O file segment commands");
+        fmt::println(" -msecs: show Mach-O file sections");
     #endif
 }
 
@@ -45,7 +44,10 @@ void print_field(shuriken::parser::dex::EncodedField *, size_t);
 void print_code(std::span<std::uint8_t>);
 #ifdef MACHO
     void parse_macho(std::string& macho_file);
-    void print_macho_header(shuriken::parser::macho::MachoHeader::machoheader_t macho_header);
+    void print_macho_header(const shuriken::parser::macho::MachoHeader &macho_header);
+    void print_macho_loadcommands(const shuriken::parser::macho::MachoCommands &commands);
+    void print_macho_segmentcommands(const shuriken::parser::macho::MachoCommands &commands);
+    void print_macho_sections(const shuriken::parser::macho::MachoSections &sections);
 #endif 
 
 bool headers = false;
@@ -60,6 +62,9 @@ bool xrefs = false;
 bool no_print = false;
 #ifdef MACHO
     bool macho_headers = false;
+    bool macho_loadcommands = false;
+    bool macho_segmentcommands = false;
+    bool macho_sections = false;
 #endif
 
 std::unique_ptr<shuriken::parser::apk::Apk> parsed_apk = nullptr;
@@ -68,6 +73,9 @@ std::unique_ptr<shuriken::disassembler::dex::DexDisassembler> disassembler_own =
 shuriken::disassembler::dex::DexDisassembler * disassembler = nullptr;
 std::unique_ptr<shuriken::analysis::dex::Analysis> dex_analysis_own = nullptr;
 shuriken::analysis::dex::Analysis * analysis = nullptr;
+#ifdef MACHO
+    std::unique_ptr<shuriken::parser::macho::Parser> parsed_macho = nullptr;
+#endif
 
 int main(int argc, char **argv) {
     std::vector<std::string> args{argv, argv + argc};
@@ -91,7 +99,10 @@ int main(int argc, char **argv) {
             {"-T", [&]() { running_time = true; }},
             {"-N", [&]() { no_print = true; }},
             #ifdef MACHO
-                {"-mh", [&]() { macho_headers = true; }}
+                {"-mh", [&]() { macho_headers = true; }},
+                {"-mlcs", [&]() { macho_loadcommands = true; }},
+                {"-msegs", [&]() { macho_segmentcommands = true; }},
+                {"-msecs", [&]() { macho_sections = true; }}
             #endif
     };
 
@@ -415,20 +426,22 @@ void print_code(std::span<std::uint8_t> bytecode) {
 
 #ifdef MACHO
     void parse_macho(std::string& macho_file) {
-        std::ifstream file(macho_file);
-        shuriken::common::ShurikenStream stream(file);
-
-        shuriken::parser::macho::MachoHeader parsed_macho;
-        parsed_macho.parse_header(stream);
+        parsed_macho = shuriken::parser::parse_macho(macho_file);
+        const shuriken::parser::macho::MachoHeader &header = parsed_macho->get_header();
+        const shuriken::parser::macho::MachoCommands &commands = parsed_macho->get_commands();
+        const shuriken::parser::macho::MachoSections &sections = parsed_macho->get_sections();
 
         if (!no_print) {
-            auto &header = parsed_macho.get_macho_header_const();
-
             if (macho_headers) print_macho_header(header);
+            if (macho_loadcommands) print_macho_loadcommands(commands);
+            if (macho_segmentcommands) print_macho_segmentcommands(commands);
+            if (macho_sections) print_macho_sections(sections);
         }
     }
 
-    void print_macho_header(shuriken::parser::macho::MachoHeader::machoheader_t macho_header) {
+    void print_macho_header(const shuriken::parser::macho::MachoHeader &header) {
+        auto &macho_header = header.get_macho_header_const();
+
         fmt::println("Mach-O Header:\n");
         fmt::print(" Magic:                 0x{:x}\n", macho_header.magic);
         fmt::print(" CPU type:              0x{:X}\n", macho_header.cputype);
@@ -438,5 +451,54 @@ void print_code(std::span<std::uint8_t> bytecode) {
         fmt::print(" Size of commands:      {} bytes\n", macho_header.sizeofcmds);
         fmt::print(" Flags:                 0x{:X}\n", macho_header.flags);
         fmt::print(" Reserved:              0x{:X}\n", macho_header.reserved);
+    }
+
+    void print_macho_loadcommands(const shuriken::parser::macho::MachoCommands &commands) {
+        const shuriken::parser::macho::MachoCommands::loadcommands_t& macho_loadcommands = commands.get_macho_loadcommands_const();
+
+        for (const std::unique_ptr<shuriken::parser::macho::MachoCommands::loadcommand_t>& loadcommand : macho_loadcommands) {
+            fmt::println("Load command:\n");
+            fmt::print(" Type:                  0x{:X}\n", loadcommand->cmd);
+            fmt::print(" Size:                  {} bytes\n", loadcommand->cmdsize);
+        }
+    }
+
+    void print_macho_segmentcommands(const shuriken::parser::macho::MachoCommands &commands) {
+        const shuriken::parser::macho::MachoCommands::segmentcommands_t& macho_segmentcommands = commands.get_macho_segmentcommands_const();
+
+        for (const std::unique_ptr<shuriken::parser::macho::MachoCommands::segmentcommand_t>& segmentcommand : macho_segmentcommands) {
+            fmt::println("Segment command:\n");
+            fmt::print(" Type:                  0x{:X}\n", segmentcommand->cmd);
+            fmt::print(" Size:                  {} bytes\n", segmentcommand->cmdsize);
+            fmt::print(" Name:                  {}\n", segmentcommand->segname);
+            fmt::print(" VM address:            0x{:X}\n", segmentcommand->vmaddr);
+            fmt::print(" VM size:               0x{:X}\n", segmentcommand->vmsize);
+            fmt::print(" Offset in file:        0x{:X}\n", segmentcommand->fileoff);
+            fmt::print(" Size in file:          0x{:X}\n", segmentcommand->filesize);
+            fmt::print(" Max memory protection: 0x{:X}\n", segmentcommand->maxprot);
+            fmt::print(" Initial memory prot:   0x{:X}\n", segmentcommand->initprot);
+            fmt::print(" Number of Sections:    0x{:X}\n", segmentcommand->nsects);
+            fmt::print(" Flags:                 0x{:X}\n", segmentcommand->flags);
+        }
+    }
+
+    void print_macho_sections(const shuriken::parser::macho::MachoSections &sections) {
+        const shuriken::parser::macho::MachoSections::sections_t&  macho_sections = sections.get_sections_const();
+
+        for (const std::shared_ptr<shuriken::parser::macho::MachoSections::section_t>& section: macho_sections) {
+            fmt::println("Section:\n");
+            fmt::print(" Type:                  {}\n", section->sectname);
+            fmt::print(" Seg:                   {}\n", section->segname);
+            fmt::print(" Address:               0x{:X}\n", section->addr);
+            fmt::print(" Size:                  {} bytes\n", section->size);
+            fmt::print(" File offset:           0x{:X}\n", section->offset);
+            fmt::print(" Alignment:             {} bytes\n", (1 << section->align));
+            fmt::print(" Relocation offset:     0x{:X}\n", section->reloff);
+            fmt::print(" Number of relocations: {}\n", section->nreloc);
+            fmt::print(" Flags:                 0x{:X}\n", section->flags);
+            fmt::print(" Reserved1:             0x{:X}\n", section->reserved1);
+            fmt::print(" Reserved2:             0x{:X}\n", section->reserved2);
+            fmt::print(" Reserved3:             0x{:X}\n", section->reserved3);
+        }
     }
 #endif

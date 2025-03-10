@@ -13,6 +13,7 @@
 #include "shuriken/common/shurikenstream.h"
 #include "shuriken/parser/Apk/apk.h"
 #include "shuriken/parser/Dex/parser.h"
+#include "shuriken/parser/Macho/parser.h"
 #include <memory>
 
 namespace shuriken::parser {
@@ -22,6 +23,10 @@ namespace shuriken::parser {
 
     std::unique_ptr<apk::Apk> parse_apk(const std::string &file_path, bool created_xrefs);
     std::unique_ptr<apk::Apk> parse_apk(const char *file_path, bool created_xrefs);
+
+    std::unique_ptr<macho::Parser> parse_macho(common::ShurikenStream &file);
+    std::unique_ptr<macho::Parser> parse_macho(const std::string &file_path);
+    macho::Parser *parse_macho(const char *file_path);
 }// namespace shuriken::parser
 
 #endif//SHURIKENLIB_SHURIKEN_PARSERS_H
