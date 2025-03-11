@@ -1,6 +1,6 @@
 
 #include "mjolnir/MjolnIRDialect.h"
-#include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/common/Dex/dex_opcodes.h"
 #include "transform/lifter.h"
 #include <mlir/IR/OpDefinition.h>
 

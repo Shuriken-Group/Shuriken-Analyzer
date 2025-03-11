@@ -7,7 +7,7 @@
 #include "shuriken/common/Dex/dex_constants.h"
 #include "shuriken/common/logger.h"
 #include "shuriken/disassembler/Dex/dex_instructions.h"
-#include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/common/Dex/dex_opcodes.h"
 #include "shuriken/disassembler/Dex/internal_disassembler.h"
 #include "shuriken/exceptions/invalidinstruction_exception.h"
 #include "shuriken/parser/Dex/dex_protos.h"
