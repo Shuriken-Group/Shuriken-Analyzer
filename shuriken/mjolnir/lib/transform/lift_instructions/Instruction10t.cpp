@@ -1,5 +1,5 @@
 
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 #include "transform/lifter.h"
 #include <cstdint>
 #include <mlir/IR/OpDefinition.h>

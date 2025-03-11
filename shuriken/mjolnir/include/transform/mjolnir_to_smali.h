@@ -25,7 +25,7 @@
 #include "mjolnir/MjolnIRDialect.h"
 #include "mjolnir/MjolnIROps.h"
 #include "mjolnir/MjolnIRTypes.h"
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 namespace shuriken::MjolnIR {
     using SmaliLine = std::string;
     using SmaliLines = std::vector<std::string>;

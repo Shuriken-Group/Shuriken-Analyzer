@@ -4,7 +4,7 @@
 #include "mjolnir/MjolnIROps.h"
 #include "mjolnir/MjolnIRTypes.h"
 #include "shuriken/analysis/Dex/dex_analysis.h"
-#include "shuriken/common/Dex/dvm_types.h"
+#include "shuriken/common/Dex/dex_constants.h"
 #include "shuriken/common/logger.h"
 #include "shuriken/disassembler/Dex/dex_instructions.h"
 #include "shuriken/disassembler/Dex/dex_opcodes.h"
