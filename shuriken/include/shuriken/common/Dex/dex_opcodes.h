@@ -7,8 +7,8 @@
 // in the dalvik virtual machine.
 
 
-#ifndef SHURIKENLIB_DEX_INSTRUCTION_H
-#define SHURIKENLIB_DEX_INSTRUCTION_H
+#ifndef SHURIKENLIB_DEX_OPCODES_H
+#define SHURIKENLIB_DEX_OPCODES_H
 
 #include <cstdint>
 #include <iostream>
@@ -91,4 +91,4 @@ ID = VAL,
     };
 }// namespace shuriken::disassembler::dex::dex_opcodes
 
-#endif//SHURIKENLIB_DEX_INSTRUCTION_H
+#endif// SHURIKENLIB_DEX_OPCODES_H

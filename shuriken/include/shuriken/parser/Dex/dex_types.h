@@ -22,14 +22,35 @@ namespace shuriken::parser::dex {
 
     using namespace shuriken::dex;
 
+    /// @brief DexTypes of the DVM we have by default fundamental,
+    /// classes and array DexTypes
+    enum type_e {
+        FUNDAMENTAL,//! fundamental type (int, float...)
+        CLASS,      //! user defined class
+        ARRAY,      //! an array type
+        UNKNOWN     //! maybe wrong?
+    };
+
+    /// @brief enum with the fundamental DexTypes
+    enum fundamental_e {
+        BOOLEAN,
+        BYTE,
+        CHAR,
+        DOUBLE,
+        FLOAT,
+        INT,
+        LONG,
+        SHORT,
+        VOID
+    };
+
     /// @brief Base for the different types from Dalvik
     /// it stores the type as a raw string given in the
     /// string constant pool
     class DVMType {
     private:
-
         /// @brief what type is it?
-        enum type_e type;
+        type_e type;
         /// @brief string with the type in raw
         std::string_view raw_type;
 

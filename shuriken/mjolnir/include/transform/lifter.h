@@ -14,7 +14,7 @@
 #include "mlir/IR/Dialect.h"
 #include "mlir/IR/MLIRContext.h"
 #include "shuriken/analysis/Dex/dex_analysis.h"
-#include "shuriken/disassembler/Dex/dex_opcodes.h"
+#include "shuriken/common/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/dex_fields.h"
 #include "shuriken/parser/Dex/dex_methods.h"
 #include "shuriken/parser/Dex/dex_protos.h"
@@ -53,10 +53,11 @@ namespace shuriken {
             TryBlock,
             CatchBlock
         };
+        using namespace ::shuriken::disassembler::dex;
+        using namespace ::shuriken::disassembler::dex::dex_opcodes;
         using ::shuriken::analysis::dex::BasicBlocks;
         using ::shuriken::analysis::dex::DVMBasicBlock;
         using ::shuriken::analysis::dex::MethodAnalysis;
-        using ::shuriken::disassembler::dex::DexOpcodes;
         using ::shuriken::disassembler::dex::InstructionUtils;
         using ::shuriken::parser::dex::ARRAY;
         using ::shuriken::parser::dex::CLASS;

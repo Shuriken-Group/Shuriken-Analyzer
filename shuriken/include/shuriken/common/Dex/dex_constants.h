@@ -19,28 +19,6 @@ namespace shuriken {
 
         static const std::uint8_t dex_magic[] = {'d', 'e', 'x', '\n'};
 
-        /// @brief DexTypes of the DVM we have by default fundamental,
-        /// classes and array DexTypes
-        enum type_e {
-            FUNDAMENTAL,//! fundamental type (int, float...)
-            CLASS,      //! user defined class
-            ARRAY,      //! an array type
-            UNKNOWN     //! maybe wrong?
-        };
-
-        /// @brief enum with the fundamental DexTypes
-        enum fundamental_e {
-            BOOLEAN,
-            BYTE,
-            CHAR,
-            DOUBLE,
-            FLOAT,
-            INT,
-            LONG,
-            SHORT,
-            VOID
-        };
-
         namespace TYPES {
             /// @brief Access flags used in class_def_item,
             /// encoded_field, encoded_method and InnerClass

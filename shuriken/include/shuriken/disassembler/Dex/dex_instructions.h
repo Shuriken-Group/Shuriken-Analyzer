@@ -8,9 +8,8 @@
 #ifndef SHURIKENLIB_DALVIK_INSTRUCTIONS_H
 #define SHURIKENLIB_DALVIK_INSTRUCTIONS_H
 
-#include "shuriken/common/Dex/dex_constants.h"
-#include "shuriken/common/Dex/dex_opcodes.h"
 #include "shuriken/parser/Dex/parser.h"
+#include "shuriken/common/Dex/dex_opcodes.h"
 
 #include <iostream>
 #include <span>
