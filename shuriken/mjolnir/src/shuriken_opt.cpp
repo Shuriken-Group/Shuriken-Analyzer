@@ -11,7 +11,7 @@
 #include "transform/mjolnir_to_smali.h"
 #include <llvm/Support/raw_ostream.h>
 #include <mlir/Support/LLVM.h>
-#include <shuriken/common/Dex/dvm_types.h>
+#include <shuriken/common/Dex/dex_constants.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
 

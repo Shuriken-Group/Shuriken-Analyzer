@@ -4,7 +4,7 @@
 
 #include "fmt/color.h"
 #include <mlir/IR/MLIRContext.h>
-#include <shuriken/common/Dex/dvm_types.h>
+#include <shuriken/common/Dex/dex_constants.h>
 #include <shuriken/disassembler/Dex/dex_disassembler.h>
 #include <shuriken/parser/shuriken_parsers.h>
 #include <string>
