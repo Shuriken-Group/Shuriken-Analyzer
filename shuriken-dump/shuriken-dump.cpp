@@ -485,7 +485,7 @@ void print_code(std::span<std::uint8_t> bytecode) {
     void print_macho_sections(const shuriken::parser::macho::MachoSections &sections) {
         const shuriken::parser::macho::MachoSections::sections_t&  macho_sections = sections.get_sections_const();
 
-        for (const std::shared_ptr<shuriken::parser::macho::MachoSections::section_t>& section: macho_sections) {
+        for (const std::unique_ptr<shuriken::parser::macho::MachoSections::section_t>& section: macho_sections) {
             fmt::println("Section:\n");
             fmt::print(" Type:                  {}\n", section->sectname);
             fmt::print(" Seg:                   {}\n", section->segname);

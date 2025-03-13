@@ -37,8 +37,8 @@ namespace shuriken::parser::macho {
             uint32_t reserved3;         //! reserved space for additional info
         };
 
-        using sections_t = std::vector<std::shared_ptr<section_t>>;
-        using segmentsections_t = std::map<uint32_t, sections_t>;
+        using sections_t = std::vector<std::unique_ptr<section_t>>;
+        using segmentsections_t = std::map<uint32_t, std::vector<std::reference_wrapper<section_t>>>;
 
     private:
         /// @brief array with the segment sections

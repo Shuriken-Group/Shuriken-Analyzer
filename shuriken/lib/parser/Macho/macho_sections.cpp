@@ -15,14 +15,14 @@ void MachoSections::parse_sections(common::ShurikenStream &stream,
 
     log(LEVEL::INFO, "Start parsing sections");
     
-    sections_t segmentsections;  
+    std::vector<std::reference_wrapper<section_t>> segmentsections;
 
     // parse sections
     for (uint32_t i = 0; i < number_of_sections; ++i) {
         section_t section;
         stream.read_data<section_t>(section, sizeof(section_t));
-        sections_.emplace_back(std::make_shared<section_t>(section));
-        segmentsections.emplace_back(std::make_shared<section_t>(section));
+        sections_.emplace_back(std::make_unique<section_t>(section));
+        segmentsections.emplace_back(*sections_.back());
     }
 
     segmentsections_[file_offset] = segmentsections;
