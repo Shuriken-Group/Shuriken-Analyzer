@@ -30,8 +30,13 @@ void MachoSections::parse_sections(common::ShurikenStream &stream,
     log(LEVEL::INFO, "Finished parsing sections");
 }
 
-const MachoSections::sections_t &MachoSections::get_sections_const() const {
-    return sections_;
+const MachoSections::sections_s_t &MachoSections::get_sections_const() const {
+    if (sections_s_.empty() || sections_s_.size() != sections_.size()) {
+        sections_s_.clear();
+        for (const auto &entry: sections_)
+            sections_s_.push_back(std::ref(*entry));
+    }
+    return sections_s_;
 }
 
 const MachoSections::segmentsections_t &MachoSections::get_segmentsections_const() const {

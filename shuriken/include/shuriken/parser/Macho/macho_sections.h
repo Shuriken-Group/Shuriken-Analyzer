@@ -38,11 +38,13 @@ namespace shuriken::parser::macho {
         };
 
         using sections_t = std::vector<std::unique_ptr<section_t>>;
+        using sections_s_t = std::vector<std::reference_wrapper<section_t>>;
         using segmentsections_t = std::map<uint32_t, std::vector<std::reference_wrapper<section_t>>>;
 
     private:
         /// @brief array with the segment sections
         sections_t sections_;
+        mutable sections_s_t sections_s_;
 
         /// @brief map with each segment's sections
         segmentsections_t segmentsections_;
@@ -64,7 +66,7 @@ namespace shuriken::parser::macho {
         /// @brief Obtain a reference of the segment sections 
         /// if not value will be modified, use this function
         /// @return const reference to segment sections
-        const sections_t &get_sections_const() const;
+        const sections_s_t &get_sections_const() const;
 
         /// @brief Obtain a reference of a macho segment's sections
         /// if not value will be modified, use this function

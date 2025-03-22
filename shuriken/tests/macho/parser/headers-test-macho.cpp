@@ -136,7 +136,7 @@ void check_header(const shuriken::parser::macho::MachoHeader &header) {
 
 void check_loadcommand(const shuriken::parser::macho::MachoCommands &commands) {
     [[maybe_unused]] auto &macho_loadcommands = commands.get_macho_loadcommands_const();
-    [[maybe_unused]] auto &macho_loadcommand = *macho_loadcommands.back();
+    [[maybe_unused]] auto &macho_loadcommand = macho_loadcommands.back().get();
 
     assert(loadcommand.cmd == macho_loadcommand.cmd && "Error: load command cmd incorrect");
     assert(loadcommand.cmdsize == macho_loadcommand.cmdsize && "Error: load command cmdsize incorrect");
@@ -144,7 +144,7 @@ void check_loadcommand(const shuriken::parser::macho::MachoCommands &commands) {
 
 void check_segmentcommand(const shuriken::parser::macho::MachoCommands &commands) {
     [[maybe_unused]] auto &macho_segmentcommands = commands.get_macho_segmentcommands_const();
-    [[maybe_unused]] auto &macho_segmentcommand = *macho_segmentcommands.back();
+    [[maybe_unused]] auto &macho_segmentcommand = macho_segmentcommands.back().get();
 
     assert(segmentcommand.cmd == macho_segmentcommand.cmd && "Error: segment command cmd incorrect");
     assert(segmentcommand.cmdsize == macho_segmentcommand.cmdsize && "Error: segment command cmdsize incorrect");
@@ -161,7 +161,7 @@ void check_segmentcommand(const shuriken::parser::macho::MachoCommands &commands
 
 void check_section(const shuriken::parser::macho::MachoSections &sections) {
     [[maybe_unused]] auto &macho_sections = sections.get_sections_const();
-    [[maybe_unused]] auto &macho_section = *macho_sections.back();
+    [[maybe_unused]] auto &macho_section = macho_sections.back().get();
 
     assert(std::strcmp(section.sectname, macho_section.sectname) == 0 && "Error: section sectname incorrect");
     assert(std::strcmp(section.segname, macho_section.segname) == 0 && "Error: section segname incorrect");

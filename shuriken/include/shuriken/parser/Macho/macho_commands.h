@@ -43,14 +43,19 @@ namespace shuriken::parser::macho {
         };
 
         using loadcommands_t = std::vector<std::unique_ptr<loadcommand_t>>;
+        using loadcommands_s_t = std::vector<std::reference_wrapper<loadcommand_t>>;
+
         using segmentcommands_t = std::vector<std::unique_ptr<segmentcommand_t>>;
+        using segmentcommands_s_t = std::vector<std::reference_wrapper<segmentcommand_t>>;
 
     private:
         /// @brief array with the load commands from the macho
         loadcommands_t loadcommands;
+        mutable loadcommands_s_t loadcommands_s;
 
         /// @brief array with the segment commands from the macho
         segmentcommands_t segmentcommands;
+        mutable segmentcommands_s_t segmentcommands_s;
 
     public:
         /// @brief Constructor for the load command, default one
@@ -69,12 +74,12 @@ namespace shuriken::parser::macho {
         /// @brief Obtain a reference of the macho load commands 
         /// if not value will be modified, use this function
         /// @return const reference to macho load commands
-        const loadcommands_t &get_macho_loadcommands_const() const;
+        const loadcommands_s_t &get_macho_loadcommands_const() const;
 
         /// @brief Obtain a reference of the macho segment commands
         /// if not value will be modified, use this function
         /// @return const reference to macho segment commands
-        const segmentcommands_t &get_macho_segmentcommands_const() const;
+        const segmentcommands_s_t &get_macho_segmentcommands_const() const;
     };
 }// namespace shuriken::parser::macho
 

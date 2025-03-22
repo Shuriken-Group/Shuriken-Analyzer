@@ -454,51 +454,54 @@ void print_code(std::span<std::uint8_t> bytecode) {
     }
 
     void print_macho_loadcommands(const shuriken::parser::macho::MachoCommands &commands) {
-        const shuriken::parser::macho::MachoCommands::loadcommands_t& macho_loadcommands = commands.get_macho_loadcommands_const();
+        const shuriken::parser::macho::MachoCommands::loadcommands_s_t& macho_loadcommands = commands.get_macho_loadcommands_const();
 
-        for (const std::unique_ptr<shuriken::parser::macho::MachoCommands::loadcommand_t>& loadcommand : macho_loadcommands) {
+        for (const auto& loadcommand : macho_loadcommands) {
+            const auto& loadcommand_ref = loadcommand.get();  
             fmt::println("Load command:\n");
-            fmt::print(" Type:                  0x{:X}\n", loadcommand->cmd);
-            fmt::print(" Size:                  {} bytes\n", loadcommand->cmdsize);
+            fmt::print(" Type:                  0x{:X}\n", loadcommand_ref.cmd);
+            fmt::print(" Size:                  {} bytes\n", loadcommand_ref.cmdsize);
         }
     }
 
     void print_macho_segmentcommands(const shuriken::parser::macho::MachoCommands &commands) {
-        const shuriken::parser::macho::MachoCommands::segmentcommands_t& macho_segmentcommands = commands.get_macho_segmentcommands_const();
+        const shuriken::parser::macho::MachoCommands::segmentcommands_s_t& macho_segmentcommands = commands.get_macho_segmentcommands_const();
 
-        for (const std::unique_ptr<shuriken::parser::macho::MachoCommands::segmentcommand_t>& segmentcommand : macho_segmentcommands) {
+        for (const auto& segmentcommand : macho_segmentcommands) {
+            const auto& segmentcommand_ref = segmentcommand.get();  
             fmt::println("Segment command:\n");
-            fmt::print(" Type:                  0x{:X}\n", segmentcommand->cmd);
-            fmt::print(" Size:                  {} bytes\n", segmentcommand->cmdsize);
-            fmt::print(" Name:                  {}\n", segmentcommand->segname);
-            fmt::print(" VM address:            0x{:X}\n", segmentcommand->vmaddr);
-            fmt::print(" VM size:               0x{:X}\n", segmentcommand->vmsize);
-            fmt::print(" Offset in file:        0x{:X}\n", segmentcommand->fileoff);
-            fmt::print(" Size in file:          0x{:X}\n", segmentcommand->filesize);
-            fmt::print(" Max memory protection: 0x{:X}\n", segmentcommand->maxprot);
-            fmt::print(" Initial memory prot:   0x{:X}\n", segmentcommand->initprot);
-            fmt::print(" Number of Sections:    0x{:X}\n", segmentcommand->nsects);
-            fmt::print(" Flags:                 0x{:X}\n", segmentcommand->flags);
+            fmt::print(" Type:                  0x{:X}\n", segmentcommand_ref.cmd);
+            fmt::print(" Size:                  {} bytes\n", segmentcommand_ref.cmdsize);
+            fmt::print(" Name:                  {}\n", segmentcommand_ref.segname);
+            fmt::print(" VM address:            0x{:X}\n", segmentcommand_ref.vmaddr);
+            fmt::print(" VM size:               0x{:X}\n", segmentcommand_ref.vmsize);
+            fmt::print(" Offset in file:        0x{:X}\n", segmentcommand_ref.fileoff);
+            fmt::print(" Size in file:          0x{:X}\n", segmentcommand_ref.filesize);
+            fmt::print(" Max memory protection: 0x{:X}\n", segmentcommand_ref.maxprot);
+            fmt::print(" Initial memory prot:   0x{:X}\n", segmentcommand_ref.initprot);
+            fmt::print(" Number of Sections:    0x{:X}\n", segmentcommand_ref.nsects);
+            fmt::print(" Flags:                 0x{:X}\n", segmentcommand_ref.flags);
         }
     }
 
     void print_macho_sections(const shuriken::parser::macho::MachoSections &sections) {
-        const shuriken::parser::macho::MachoSections::sections_t&  macho_sections = sections.get_sections_const();
+        const shuriken::parser::macho::MachoSections::sections_s_t&  macho_sections = sections.get_sections_const();
 
-        for (const std::unique_ptr<shuriken::parser::macho::MachoSections::section_t>& section: macho_sections) {
+        for (const auto& section: macho_sections) {
+            const auto& section_ref = section.get();  
             fmt::println("Section:\n");
-            fmt::print(" Type:                  {}\n", section->sectname);
-            fmt::print(" Seg:                   {}\n", section->segname);
-            fmt::print(" Address:               0x{:X}\n", section->addr);
-            fmt::print(" Size:                  {} bytes\n", section->size);
-            fmt::print(" File offset:           0x{:X}\n", section->offset);
-            fmt::print(" Alignment:             {} bytes\n", (1 << section->align));
-            fmt::print(" Relocation offset:     0x{:X}\n", section->reloff);
-            fmt::print(" Number of relocations: {}\n", section->nreloc);
-            fmt::print(" Flags:                 0x{:X}\n", section->flags);
-            fmt::print(" Reserved1:             0x{:X}\n", section->reserved1);
-            fmt::print(" Reserved2:             0x{:X}\n", section->reserved2);
-            fmt::print(" Reserved3:             0x{:X}\n", section->reserved3);
+            fmt::print(" Type:                  {}\n", section_ref.sectname);
+            fmt::print(" Seg:                   {}\n", section_ref.segname);
+            fmt::print(" Address:               0x{:X}\n", section_ref.addr);
+            fmt::print(" Size:                  {} bytes\n", section_ref.size);
+            fmt::print(" File offset:           0x{:X}\n", section_ref.offset);
+            fmt::print(" Alignment:             {} bytes\n", (1 << section_ref.align));
+            fmt::print(" Relocation offset:     0x{:X}\n", section_ref.reloff);
+            fmt::print(" Number of relocations: {}\n", section_ref.nreloc);
+            fmt::print(" Flags:                 0x{:X}\n", section_ref.flags);
+            fmt::print(" Reserved1:             0x{:X}\n", section_ref.reserved1);
+            fmt::print(" Reserved2:             0x{:X}\n", section_ref.reserved2);
+            fmt::print(" Reserved3:             0x{:X}\n", section_ref.reserved3);
         }
     }
 #endif

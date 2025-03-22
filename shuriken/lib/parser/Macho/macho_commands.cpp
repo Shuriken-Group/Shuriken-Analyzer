@@ -48,10 +48,20 @@ void MachoCommands::parse_commands(common::ShurikenStream &stream,
     log(LEVEL::INFO, "Finished parsing commands");
 }
 
-const MachoCommands::loadcommands_t &MachoCommands::get_macho_loadcommands_const() const {
-    return loadcommands;
+const MachoCommands::loadcommands_s_t &MachoCommands::get_macho_loadcommands_const() const {
+    if (loadcommands_s.empty() || loadcommands_s.size() != loadcommands.size()) {
+        loadcommands_s.clear();
+        for (const auto &entry: loadcommands)
+            loadcommands_s.push_back(std::ref(*entry));
+    }
+    return loadcommands_s;
 }
 
-const MachoCommands::segmentcommands_t &MachoCommands::get_macho_segmentcommands_const() const {
-    return segmentcommands;
+const MachoCommands::segmentcommands_s_t &MachoCommands::get_macho_segmentcommands_const() const {
+    if (segmentcommands_s.empty() || segmentcommands_s.size() != segmentcommands.size()) {
+        segmentcommands_s.clear();
+        for (const auto &entry: segmentcommands)
+            segmentcommands_s.push_back(std::ref(*entry));
+    }
+    return segmentcommands_s;
 }
