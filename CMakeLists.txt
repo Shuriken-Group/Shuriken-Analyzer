@@ -1,17 +1,11 @@
-cmake_minimum_required(VERSION 3.5)
-
-# Information from Shuriken project
+cmake_minimum_required(VERSION 3.29)
 project(
         ShurikenProject
-        LANGUAGES CXX
-        VERSION 0.0.1
-        DESCRIPTION "Top folder from Shuriken project"
-        HOMEPAGE_URL https://github.com/Fare9/Shuriken-Analyzer/
+        DESCRIPTION "Shuriken Analyzer project for analysis of file formats"
+        HOMEPAGE_URL https://github.com/Shuriken-Group/Shuriken-Analyzer/
 )
 
+set(CMAKE_CXX_STANDARD 20)
 
 enable_testing()
-include(cmake/cmake_install_uninstall.cmake)
-add_subdirectory(externals/)
-add_subdirectory(shuriken/)
-add_subdirectory(shuriken-dump/)
+add_subdirectory(shuriken-lib/)

@@ -1,0 +1,107 @@
+
+#include "shuriken/sdk/dex/method.hpp"
+
+using namespace shuriken::dex;
+
+Method::Method(DexMethodProvider & dex_method_provider) : dex_method_provider(dex_method_provider){
+}
+
+std::string_view Method::get_name() const {
+    return std::string_view();
+}
+
+std::string Method::get_name_string() const {
+    return std::string();
+}
+
+types::access_flags Method::get_method_access_flags() const {
+    return types::ACC_NATIVE;
+}
+
+const DVMPrototype *Method::get_method_prototype() const {
+    return nullptr;
+}
+
+DVMPrototype *Method::get_method_prototype() {
+    return nullptr;
+}
+
+const Class *Method::get_owner_class() const {
+    return nullptr;
+}
+
+Class *Method::get_owner_class() {
+    return nullptr;
+}
+
+const Dex *Method::get_owner_dex() const {
+    return nullptr;
+}
+
+Dex *Method::get_owner_dex() {
+    return nullptr;
+}
+
+std::string_view Method::get_descriptor() const {
+    return std::string_view();
+}
+
+std::string Method::get_descriptor_string() const {
+    return std::string();
+}
+
+std::uint16_t Method::registers_size() const {
+    return 0;
+}
+
+std::span<std::uint8_t> Method::get_bytecode() const {
+    return std::span<std::uint8_t>();
+}
+
+size_t Method::get_number_of_instructions() const {
+    return 0;
+}
+
+shuriken::iterator_range<instruction_list_iterator_t> Method::get_instructions() const {
+    instruction_list_t empty{};
+    return shuriken::iterator_range<instruction_list_iterator_t>(empty);
+}
+
+const instruction_list_t Method::get_instructions_container() const {
+    return shuriken::dex::instruction_list_t();
+}
+
+Instruction *Method::get_instruction_at(std::uint64_t idx) {
+    return nullptr;
+}
+
+shuriken::iterator_range<span_class_field_idx_iterator_t> Method::get_xref_read_fields_in_method() {
+    span_class_field_idx_t empty{};
+    return shuriken::iterator_range<span_class_field_idx_iterator_t>(empty);
+}
+
+shuriken::iterator_range<span_class_field_idx_iterator_t> Method::get_xref_written_fields_in_method() {
+    span_class_field_idx_t empty{};
+    return shuriken::iterator_range<span_class_field_idx_iterator_t>(empty);
+}
+
+shuriken::iterator_range<span_class_method_idx_iterator_t> Method::get_xref_methods_called() {
+    span_class_method_idx_t empty{};
+    return shuriken::iterator_range<span_class_method_idx_iterator_t>(empty);
+}
+
+shuriken::iterator_range<span_class_method_idx_iterator_t> Method::get_xref_caller_methods() {
+    span_class_method_idx_t empty{};
+    return shuriken::iterator_range<span_class_method_idx_iterator_t>(empty);
+}
+
+shuriken::iterator_range<span_class_idx_iterator_t> Method::get_xref_new_instance_classes() {
+    span_class_idx_t empty{};
+    return shuriken::iterator_range<span_class_idx_iterator_t>(empty);
+}
+
+shuriken::iterator_range<span_class_idx_iterator_t> Method::get_xref_const_class() {
+    span_class_idx_t empty{};
+    return shuriken::iterator_range<span_class_idx_iterator_t>(empty);
+}
+
