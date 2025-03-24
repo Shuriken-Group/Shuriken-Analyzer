@@ -65,6 +65,23 @@ namespace types {
         VALUE_BOOLEAN = 0x1F       //! None
     };
 
+    /// @brief References used in the xrefs of the classes
+    /// to store the type of references
+    enum class ref_type {
+        REF_NEW_INSTANCE = 0x22,      // new instance of a class
+        REF_CLASS_USAGE = 0x1c,       // class is used somewhere
+        REF_INVOKE_VIRTUAL = 0x6e,    // call of a method from a class
+        REF_INVOKE_SUPER = 0x6f,      // call of constructor of super class
+        REF_INVOKE_DIRECT = 0x70,     // call a method from a class
+        REF_INVOKE_STATIC = 0x71,     // call a static method from a class
+        REF_INVOKE_INTERFACE = 0x72,  // call an interface method
+        // same with ranges
+        REF_INVOKE_VIRTUAL_RANGE = 0x74,
+        REF_INVOKE_SUPER_RANGE = 0x75,
+        REF_INVOKE_DIRECT_RANGE = 0x76,
+        REF_INVOKE_STATIC_RANGE = 0x77,
+        REF_INVOKE_INTERFACE_RANGE = 0x78
+    };
 } // namespace types
 
 } // namespace dex
