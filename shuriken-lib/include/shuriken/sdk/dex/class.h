@@ -73,7 +73,7 @@ public:
     /**
      * @return An iterator range of all methods in this class
      */
-    iterator_range<methods_ref_iterator_t> get_methods();
+    method_deref_iterator_t get_methods();
 
     /**
      * Find a method by its name and prototype
@@ -113,7 +113,7 @@ public:
     /**
      * @return An iterator range of all fields in this class
      */
-    iterator_range<fields_ref_iterator_t> get_fields();
+    fields_deref_iterator_t get_fields();
 
     /**
      * Find a field by its name

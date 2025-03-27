@@ -121,7 +121,7 @@ public:
     /**
      * @return iterator to a list of instructions
      */
-    iterator_range<instruction_list_iterator_t> get_instructions() const;
+    instruction_list_deref_iterator_t get_instructions() const;
 
     /**
      * @return get a span object with all the instructions

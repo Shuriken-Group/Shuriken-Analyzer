@@ -62,9 +62,9 @@ size_t Method::get_number_of_instructions() const {
     return 0;
 }
 
-shuriken::iterator_range<instruction_list_iterator_t> Method::get_instructions() const {
+instruction_list_deref_iterator_t Method::get_instructions() const {
     instruction_list_t empty{};
-    return shuriken::iterator_range<instruction_list_iterator_t>(empty);
+    return instruction_list_deref_iterator_t {empty};
 }
 
 const instruction_list_t Method::get_instructions_container() const {

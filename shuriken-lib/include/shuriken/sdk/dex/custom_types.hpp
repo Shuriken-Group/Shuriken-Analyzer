@@ -12,32 +12,32 @@
 #include <unordered_map>
 #include <set>
 
+#include <shuriken/sdk/common/deref_iterator_range.hpp>
 #include <shuriken/sdk/dex/constants.hpp>
 
 namespace shuriken {
     namespace dex {
 
         class Class;
-
         class ExternalClass;
-
         class Method;
-
         class ExternalMethod;
-
         class Field;
-
         class ExternalField;
-
         class Instruction;
+        class DVMTypes;
 
         using class_t = std::reference_wrapper<Class>;
         using method_t = std::reference_wrapper<Method>;
         using field_t = std::reference_wrapper<Field>;
+        using instruction_t = std::reference_wrapper<Instruction>;
+        using dvmtypes_t = std::reference_wrapper<DVMTypes>;
 
         using externalclass_t = std::reference_wrapper<ExternalClass>;
         using externalmethod_t = std::reference_wrapper<ExternalMethod>;
         using externalfield_t = std::reference_wrapper<ExternalField>;
+
+
 
         using class_external_class_t = std::variant<class_t, externalclass_t, std::monostate>;
 
@@ -78,17 +78,17 @@ namespace shuriken {
         using span_method_idx_iterator_t = span_method_idx_t::iterator;
 
         using methods_ref_t = std::span<method_t>;
-        using methods_ref_iterator_t = methods_ref_t::iterator;
+        using method_deref_iterator_t = deref_iterator_range<methods_ref_t>;
 
-        using field_t = std::reference_wrapper<Field>;
+
         using fields_ref_t = std::span<field_t>;
-        using fields_ref_iterator_t = fields_ref_t::iterator;
+        using fields_deref_iterator_t = deref_iterator_range<fields_ref_t>;
 
-
-        using instruction_t = std::reference_wrapper<Instruction>;
         using instruction_list_t = std::span<instruction_t>;
-        using instruction_list_iterator_t = instruction_list_t::iterator;
+        using instruction_list_deref_iterator_t = deref_iterator_range<instruction_list_t>;
 
+        using dvmtypes_list_t = std::span<dvmtypes_t>;
+        using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
     } // namespace dex
 } // namespace shuriken

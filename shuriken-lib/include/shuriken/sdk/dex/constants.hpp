@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <iostream>
+#include <unordered_map>
 
 namespace shuriken {
 namespace dex {
@@ -82,6 +83,37 @@ namespace types {
         REF_INVOKE_STATIC_RANGE = 0x77,
         REF_INVOKE_INTERFACE_RANGE = 0x78
     };
+
+    enum class type_e {
+        FUNDAMENTAL, //! fundamental type (int, float...)
+        CLASS,       //! user defined classes
+        ARRAY,       //! array types
+    };
+
+    enum class fundamental_e {
+        BOOLEAN,
+        BYTE,
+        CHAR,
+        DOUBLE,
+        FLOAT,
+        INT,
+        LONG,
+        SHORT,
+        VOID
+    };
+
+    const std::unordered_map<fundamental_e, std::string> fundamental_s =
+            {
+                {fundamental_e::BOOLEAN, "boolean"},
+                {fundamental_e::BYTE, "byte"},
+                {fundamental_e::CHAR, "char"},
+                {fundamental_e::DOUBLE, "double"},
+                {fundamental_e::FLOAT, "float"},
+                {fundamental_e::INT, "int"},
+                {fundamental_e::LONG, "long"},
+                {fundamental_e::SHORT, "short"},
+                {fundamental_e::VOID, "void"}
+            };
 } // namespace types
 
 } // namespace dex

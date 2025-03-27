@@ -34,9 +34,9 @@ std::size_t Class::get_number_of_methods() const {
     return 0;
 }
 
-shuriken::iterator_range<methods_ref_iterator_t> Class::get_methods() {
+method_deref_iterator_t Class::get_methods() {
     methods_ref_t empty{};
-    return shuriken::iterator_range<methods_ref_iterator_t>(empty);
+    return method_deref_iterator_t {empty};
 }
 
 const Method *Class::get_method_by_name_prototype(const std::string &name, const std::string &prototype) const {
@@ -59,9 +59,9 @@ std::size_t Class::get_number_of_fields() const {
     return 0;
 }
 
-shuriken::iterator_range<fields_ref_iterator_t> Class::get_fields() {
+fields_deref_iterator_t Class::get_fields() {
     fields_ref_t empty{};
-    return shuriken::iterator_range<fields_ref_iterator_t>(empty);
+    return fields_deref_iterator_t {empty};
 }
 
 const Field *Class::get_field_by_name(const std::string &name) const {

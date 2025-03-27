@@ -15,7 +15,7 @@
 #include <shuriken/sdk/dex/constants.hpp>
 
 namespace shuriken {
-namespace dex {
+    namespace dex {
 class DexFieldProvider;
 class Dex;
 class Class;
@@ -26,11 +26,13 @@ private:
     std::reference_wrapper<DexFieldProvider> dex_field_provider;
 public:
     // constructors & destructors
-    Field(DexFieldProvider&);
+    Field(DexFieldProvider &);
+
     ~Field() = default;
 
-    Field(const Field&) = delete;
-    Field& operator=(const Field&) = delete;
+    Field(const Field &) = delete;
+
+    Field &operator=(const Field &) = delete;
 
     // information from the field
 
@@ -52,48 +54,48 @@ public:
     /***
      * @return const type pointer of the current field
      */
-     const DVMType* get_field_type() const;
+    const DVMType *get_field_type() const;
 
-     /***
-      * @return type pointer of the current field
-      */
-      DVMType* get_field_type();
+    /***
+     * @return type pointer of the current field
+     */
+    DVMType *get_field_type();
 
     /***
      * @return constant pointer to owner class for this Field
      * it can be `nullptr`
      */
-    const Class* get_owner_class() const;
+    const Class *get_owner_class() const;
 
     /***
      * @return pointer to owner class for this field
      * it can be `nullptr`
      */
-    Class* get_owner_class();
+    Class *get_owner_class();
 
     /***
      * @return constant pointer to dex where the class of this field
      * is
      */
-     const Dex* get_owner_dex() const;
+    const Dex *get_owner_dex() const;
 
     /***
     * @return pointer to dex where the class of this field
     * is
     */
-    Dex* get_owner_dex();
+    Dex *get_owner_dex();
 
     /***
      * @return a view of field's descriptor
      * package_name/class_name->field_name:type
      */
-     std::string_view get_descriptor() const;
+    std::string_view get_descriptor() const;
 
-     /***
-      * @return a string of field's descriptor
-      * package_name/class_name->field_name:type
-      */
-      std::string get_descriptor_string() const;
+    /***
+     * @return a string of field's descriptor
+     * package_name/class_name->field_name:type
+     */
+    std::string get_descriptor_string() const;
 
     /***
      * @return iterator to a view of cross-references where
@@ -106,8 +108,8 @@ public:
      * @return iterator to a view of cross-references where
      * the field is being written.
      */
-     iterator_range<span_class_method_idx_iterator_t>
-     get_xref_write();
+    iterator_range<span_class_method_idx_iterator_t>
+    get_xref_write();
 };
 
 } // namespace dex
