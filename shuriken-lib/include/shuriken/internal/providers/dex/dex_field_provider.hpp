@@ -8,13 +8,13 @@
 #include <vector>
 
 #include <shuriken/sdk/dex/constants.hpp>
+#include <shuriken/sdk/dex/custom_types.hpp>
 
 namespace shuriken {
 namespace dex {
 class Dex;
 class DexEngine;
 class Class;
-class DVMType;
 
 class DexFieldProvider {
 private:

@@ -14,7 +14,6 @@
 namespace shuriken {
 namespace dex {
 class DVMPrototypeProvider;
-class DVMType;
 
 class DVMPrototype {
 private:

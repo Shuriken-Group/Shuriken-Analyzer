@@ -17,31 +17,7 @@ class DVMFundamentalProvider;
 class DVMClassProvider;
 class DVMArrayProvider;
 
-class DVMType {
-private:
-    std::reference_wrapper<DVMTypeProvider> dvm_type_provider;
-public:
-    DVMType(DVMTypeProvider &);
-    virtual ~DVMType() = default;
-
-    DVMType(const DVMType&) = delete;
-    DVMType& operator=(const DVMType&) = delete;
-
-    /**
-     * @return current type, used to differentiate between objects.
-     */
-    virtual types::type_e get_type() const = 0;
-
-    virtual std::string_view get_dalvik_format() const = 0;
-
-    virtual std::string get_dalvik_format_string() const = 0;
-
-    virtual std::string_view get_canonical_name() const = 0;
-
-    virtual std::string get_canonical_name_string() const = 0;
-};
-
-class DVMFundamental : public DVMType {
+class DVMFundamental {
 private:
     std::reference_wrapper<DVMFundamentalProvider> dvm_fundamental_provider;
 public:
@@ -52,20 +28,20 @@ public:
     DVMFundamental& operator=(const DVMFundamental&) = delete;
 
 
-    types::type_e get_type() const override;
+    types::type_e get_type() const;
 
-    std::string_view get_dalvik_format() const override;
+    std::string_view get_dalvik_format() const;
 
-    std::string get_dalvik_format_string() const override;
+    std::string get_dalvik_format_string() const;
 
-    std::string_view get_canonical_name() const override;
+    std::string_view get_canonical_name() const;
 
-    std::string get_canonical_name_string() const override;
+    std::string get_canonical_name_string() const;
 
     types::fundamental_e get_fundamental_type() const;
 };
 
-class DVMClass : public DVMType {
+class DVMClass {
 private:
     std::reference_wrapper<DVMClassProvider> dvm_class_provider;
 public:
@@ -75,18 +51,18 @@ public:
     DVMClass(const DVMClass&) = delete;
     DVMClass& operator=(const DVMClass&) = delete;
 
-    types::type_e get_type() const override;
+    types::type_e get_type() const;
 
-    std::string_view get_dalvik_format() const override;
+    std::string_view get_dalvik_format() const;
 
-    std::string get_dalvik_format_string() const override;
+    std::string get_dalvik_format_string() const;
 
-    std::string_view get_canonical_name() const override;
+    std::string_view get_canonical_name() const;
 
-    std::string get_canonical_name_string() const override;
+    std::string get_canonical_name_string() const;
 };
 
-class DVMArray : public DVMType {
+class DVMArray {
 private:
     std::reference_wrapper<DVMArrayProvider> dvm_array_provider;
 public:
@@ -96,20 +72,56 @@ public:
     DVMArray(const DVMArray&) = delete;
     DVMArray& operator=(const DVMArray&) = delete;
 
-    types::type_e get_type() const override;
+    types::type_e get_type() const;
 
-    std::string_view get_dalvik_format() const override;
+    std::string_view get_dalvik_format() const;
 
-    std::string get_dalvik_format_string() const override;
+    std::string get_dalvik_format_string() const;
 
-    std::string_view get_canonical_name() const override;
+    std::string_view get_canonical_name() const;
 
-    std::string get_canonical_name_string() const override;
+    std::string get_canonical_name_string() const;
 
     size_t get_array_depth() const;
 
     const DVMType* get_base_type() const;
 };
+
+/**
+ * @param type type to obtain its main type_e
+ * @return type_e of provided object
+ */
+types::type_e get_type(const DVMType& type);
+
+/**
+ * @param type type to obtain its name in dalvik format
+ * @return dalvik format of type as string_view
+ */
+std::string_view get_dalvik_format_string(const DVMType& type);
+
+/**
+ * @param type type to obtain its name in dalvik format
+ * @return dalvik format of type as string
+ */
+std::string get_dalvik_format(const DVMType& type);
+
+/**
+ * @param type type to obtain its name in canonical format
+ * @return canonical format of type as string
+ */
+std::string_view get_canonical_name(const DVMType& type);
+
+/**
+ * @param type type to obtain its name in canonical format
+ * @return canonical format of type as string
+ */
+std::string get_canonical_name_string(const DVMType& type);
+
+const DVMFundamental * as_fundamental(const DVMType& type);
+
+const DVMClass * as_class(const DVMType& type);
+
+const DVMArray * as_array(const DVMType& type);
 
 } // namespace dex
 } // namespace shuriken

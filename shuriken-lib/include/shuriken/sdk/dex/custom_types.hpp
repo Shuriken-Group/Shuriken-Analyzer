@@ -25,17 +25,24 @@ namespace shuriken {
         class Field;
         class ExternalField;
         class Instruction;
-        class DVMTypes;
+        class DVMFundamental;
+        class DVMClass;
+        class DVMArray;
+
 
         using class_t = std::reference_wrapper<Class>;
         using method_t = std::reference_wrapper<Method>;
         using field_t = std::reference_wrapper<Field>;
         using instruction_t = std::reference_wrapper<Instruction>;
-        using dvmtypes_t = std::reference_wrapper<DVMTypes>;
 
         using externalclass_t = std::reference_wrapper<ExternalClass>;
         using externalmethod_t = std::reference_wrapper<ExternalMethod>;
         using externalfield_t = std::reference_wrapper<ExternalField>;
+
+        using DVMType = std::variant<DVMFundamental, DVMClass, DVMArray>;
+        using dvmtype_t = std::reference_wrapper<DVMType>;
+        using dvmtypes_list_t = std::span<dvmtype_t>;
+        using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
 
 
@@ -86,9 +93,6 @@ namespace shuriken {
 
         using instruction_list_t = std::span<instruction_t>;
         using instruction_list_deref_iterator_t = deref_iterator_range<instruction_list_t>;
-
-        using dvmtypes_list_t = std::span<dvmtypes_t>;
-        using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
     } // namespace dex
 } // namespace shuriken

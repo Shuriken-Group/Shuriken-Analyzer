@@ -15,11 +15,11 @@
 #include <shuriken/sdk/dex/constants.hpp>
 
 namespace shuriken {
-    namespace dex {
+namespace dex {
+
 class DexFieldProvider;
 class Dex;
 class Class;
-class DVMType;
 
 class Field {
 private:

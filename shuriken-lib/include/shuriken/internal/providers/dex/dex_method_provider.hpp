@@ -19,7 +19,6 @@ namespace dex {
 class Dex;
 class DexEngine;
 class Class;
-class DVMType;
 class DVMPrototype;
 
 class DexMethodProvider {
