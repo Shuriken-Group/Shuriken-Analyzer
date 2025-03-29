@@ -166,7 +166,7 @@ public:
      * @brief Gets the base type of the array elements
      * @return Pointer to the DVMType representing the array's element type
      */
-    const DVMType* get_base_type() const;
+    const DVMType& get_base_type() const;
 };
 
 /**

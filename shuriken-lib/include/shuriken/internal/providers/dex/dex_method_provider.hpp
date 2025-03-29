@@ -29,11 +29,11 @@ private:
     // @brief access flags from the method
     types::access_flags method_access_flags;
     // @brief pointer to the prototype of the method
-    DVMPrototype * method_prototype;
+    std::reference_wrapper<DVMPrototype> method_prototype;
     // @brief Pointer to owner class (it can be nullptr)
-    Class * owner_class;
+    std::reference_wrapper<Class> owner_class;
     // @brief Pointer to owner Dex (it can be nullptr)
-    Dex * owner_dex;
+    std::reference_wrapper<Dex> owner_dex;
     // @brief descriptor of the method
     std::string method_descriptor;
     // @brief number of registers used in the bytecode
@@ -59,7 +59,9 @@ public:
     // constructors & destructors
     DexMethodProvider(const std::string& name,
                       types::access_flags access_flags,
-                      DVMPrototype * method_prototype,
+                      DVMPrototype & method_prototype,
+                      Class & owner_class,
+                      Dex & owner_dex,
                       DexEngine& dex_engine);
     ~DexMethodProvider() = default;
 
@@ -85,37 +87,37 @@ public:
      * @return constant pointer to the prototype of the
      * method. It may return nullptr
      */
-    const DVMPrototype* get_method_prototype() const;
+    const DVMPrototype& get_method_prototype() const;
 
     /***
     * @return pointer to the prototype of the
     * method. It may return nullptr
     */
-    DVMPrototype* get_method_prototype();
+    DVMPrototype& get_method_prototype();
 
     /***
      * @return constant pointer to owner class for this method
      * it can be `nullptr`
      */
-    const Class* get_owner_class() const;
+    const Class& get_owner_class() const;
 
     /***
      * @return pointer to owner class for this method
      * it can be `nullptr`
      */
-    Class* get_owner_class();
+    Class& get_owner_class();
 
     /***
      * @return constant pointer to dex where the class of this method
      * is
      */
-    const Dex* get_owner_dex() const;
+    const Dex& get_owner_dex() const;
 
     /***
     * @return pointer to dex where the class of this method
     * is
     */
-    Dex* get_owner_dex();
+    Dex& get_owner_dex();
 
     /***
     * @return a view of method's descriptor
@@ -139,7 +141,7 @@ public:
     /**
      * @return return the bytecode that belongs to the method
      */
-    std::span<std::uint8_t> get_bytecode() const;
+    std::span<const std::uint8_t> get_bytecode() const;
 };
 }
 }

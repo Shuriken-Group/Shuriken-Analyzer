@@ -54,36 +54,36 @@ public:
     /***
      * @return const type pointer of the current field
      */
-    const DVMType *get_field_type() const;
+    const DVMType & get_field_type() const;
 
     /***
      * @return type pointer of the current field
      */
-    DVMType *get_field_type();
+    DVMType & get_field_type();
 
     /***
      * @return constant pointer to owner class for this Field
      * it can be `nullptr`
      */
-    const Class *get_owner_class() const;
+    const Class &get_owner_class() const;
 
     /***
      * @return pointer to owner class for this field
      * it can be `nullptr`
      */
-    Class *get_owner_class();
+    Class &get_owner_class();
 
     /***
      * @return constant pointer to dex where the class of this field
      * is
      */
-    const Dex *get_owner_dex() const;
+    const Dex &get_owner_dex() const;
 
     /***
     * @return pointer to dex where the class of this field
     * is
     */
-    Dex *get_owner_dex();
+    Dex &get_owner_dex();
 
     /***
      * @return a view of field's descriptor

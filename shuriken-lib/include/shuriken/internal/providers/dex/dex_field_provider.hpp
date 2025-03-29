@@ -26,15 +26,17 @@ private:
     // @brief access flags from the field
     types::access_flags access_flags;
     // @brief DVMType object that represent the type of the field
-    DVMType * field_type;
+    std::reference_wrapper<DVMType> field_type;
     // @brief Pointer to owner class (it can be nullptr)
-    Class * owner_class;
+    std::reference_wrapper<Class>  owner_class;
     // @brief Pointer to owner Dex (it can be nullptr)
-    Dex * owner_dex;
+    std::reference_wrapper<Dex> owner_dex;
 public:
     DexFieldProvider(const std::string& name,
-                     DVMType* type,
+                     DVMType & type,
                      types::access_flags access_flags,
+                     Class& owner_class,
+                     Dex& owner_dex,
                      DexEngine& dex_engine);
     ~DexFieldProvider() = default;
 
@@ -59,36 +61,36 @@ public:
     /***
     * @return const type pointer of the current field
     */
-    const DVMType* get_field_type() const;
+    const DVMType& get_field_type() const;
 
     /***
      * @return type pointer of the current field
      */
-    DVMType* get_field_type();
+    DVMType& get_field_type();
 
     /***
      * @return constant pointer to owner class for this Field
      * it can be `nullptr`
      */
-    const Class* get_owner_class() const;
+    const Class& get_owner_class() const;
 
     /***
      * @return pointer to owner class for this field
      * it can be `nullptr`
      */
-    Class* get_owner_class();
+    Class& get_owner_class();
 
     /***
     * @return constant pointer to dex where the class of this field
     * is
     */
-    const Dex* get_owner_dex() const;
+    const Dex& get_owner_dex() const;
 
     /***
     * @return pointer to dex where the class of this field
     * is
     */
-    Dex* get_owner_dex();
+    Dex& get_owner_dex();
 
     /***
      * @return a view of field's descriptor

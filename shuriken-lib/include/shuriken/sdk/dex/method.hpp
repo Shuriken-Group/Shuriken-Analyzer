@@ -54,37 +54,37 @@ public:
      * @return constant pointer to the prototype of the
      * method. It may return nullptr
      */
-     const DVMPrototype* get_method_prototype() const;
+     const DVMPrototype& get_method_prototype() const;
 
     /***
     * @return pointer to the prototype of the
     * method. It may return nullptr
     */
-    DVMPrototype* get_method_prototype();
+    DVMPrototype& get_method_prototype();
 
     /***
      * @return constant pointer to owner class for this method
      * it can be `nullptr`
      */
-    const Class* get_owner_class() const;
+    const Class& get_owner_class() const;
 
     /***
      * @return pointer to owner class for this method
      * it can be `nullptr`
      */
-    Class* get_owner_class();
+    Class& get_owner_class();
 
     /***
      * @return constant pointer to dex where the class of this method
      * is
      */
-    const Dex* get_owner_dex() const;
+    const Dex& get_owner_dex() const;
 
     /***
     * @return pointer to dex where the class of this method
     * is
     */
-    Dex* get_owner_dex();
+    Dex& get_owner_dex();
 
     /***
     * @return a view of method's descriptor

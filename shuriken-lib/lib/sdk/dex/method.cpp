@@ -1,5 +1,6 @@
 
 #include "shuriken/sdk/dex/method.hpp"
+#include "shuriken/internal/providers/dex/dex_method_provider.hpp"
 
 using namespace shuriken::dex;
 
@@ -7,47 +8,47 @@ Method::Method(DexMethodProvider & dex_method_provider) : dex_method_provider(de
 }
 
 std::string_view Method::get_name() const {
-    return std::string_view();
+    return dex_method_provider.get().get_name();
 }
 
 std::string Method::get_name_string() const {
-    return std::string();
+    return  dex_method_provider.get().get_name_string();
 }
 
 types::access_flags Method::get_method_access_flags() const {
-    return types::ACC_NATIVE;
+    return dex_method_provider.get().get_method_access_flags();
 }
 
-const DVMPrototype *Method::get_method_prototype() const {
-    return nullptr;
+const DVMPrototype &Method::get_method_prototype() const {
+    return dex_method_provider.get().get_method_prototype();
 }
 
-DVMPrototype *Method::get_method_prototype() {
-    return nullptr;
+DVMPrototype &Method::get_method_prototype() {
+    return dex_method_provider.get().get_method_prototype();
 }
 
-const Class *Method::get_owner_class() const {
-    return nullptr;
+const Class &Method::get_owner_class() const {
+    return dex_method_provider.get().get_owner_class();
 }
 
-Class *Method::get_owner_class() {
-    return nullptr;
+Class &Method::get_owner_class() {
+    return dex_method_provider.get().get_owner_class();
 }
 
-const Dex *Method::get_owner_dex() const {
-    return nullptr;
+const Dex &Method::get_owner_dex() const {
+    return dex_method_provider.get().get_owner_dex();
 }
 
-Dex *Method::get_owner_dex() {
-    return nullptr;
+Dex &Method::get_owner_dex() {
+    return dex_method_provider.get().get_owner_dex();
 }
 
 std::string_view Method::get_descriptor() const {
-    return std::string_view();
+    return dex_method_provider.get().get_descriptor();
 }
 
 std::string Method::get_descriptor_string() const {
-    return std::string();
+    return dex_method_provider.get().get_descriptor_string();
 }
 
 std::uint16_t Method::registers_size() const {

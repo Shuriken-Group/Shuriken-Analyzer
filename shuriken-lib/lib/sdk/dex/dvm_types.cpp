@@ -18,23 +18,23 @@ types::type_e DVMFundamental::get_type() const {
 }
 
 std::string_view DVMFundamental::get_dalvik_format() const {
-    return std::string_view();
+    return dvm_fundamental_provider.get().get_dalvik_format();
 }
 
 std::string DVMFundamental::get_dalvik_format_string() const {
-    return std::string();
+    return dvm_fundamental_provider.get().get_canonical_name_string();
 }
 
 std::string_view DVMFundamental::get_canonical_name() const {
-    return std::string_view();
+    return dvm_fundamental_provider.get().get_canonical_name();
 }
 
 std::string DVMFundamental::get_canonical_name_string() const {
-    return std::string();
+    return dvm_fundamental_provider.get().get_canonical_name_string();
 }
 
 types::fundamental_e DVMFundamental::get_fundamental_type() const {
-    return types::fundamental_e::LONG;
+    return dvm_fundamental_provider.get().get_fundamental_type();
 }
 
 
@@ -47,19 +47,19 @@ types::type_e DVMClass::get_type() const {
 }
 
 std::string_view DVMClass::get_dalvik_format() const {
-    return std::string_view();
+    return dvm_class_provider.get().get_dalvik_format();
 }
 
 std::string DVMClass::get_dalvik_format_string() const {
-    return std::string();
+    return dvm_class_provider.get().get_dalvik_format_string();
 }
 
 std::string_view DVMClass::get_canonical_name() const {
-    return std::string_view();
+    return dvm_class_provider.get().get_canonical_name();
 }
 
 std::string DVMClass::get_canonical_name_string() const {
-    return std::string();
+    return dvm_class_provider.get().get_canonical_name_string();
 }
 
 DVMArray::DVMArray(DVMArrayProvider &dvm_array_provider) : dvm_array_provider(dvm_array_provider) {
@@ -70,27 +70,27 @@ types::type_e DVMArray::get_type() const {
 }
 
 std::string_view DVMArray::get_dalvik_format() const {
-    return std::string_view();
+    return dvm_array_provider.get().get_dalvik_format();
 }
 
 std::string DVMArray::get_dalvik_format_string() const {
-    return std::string();
+    return dvm_array_provider.get().get_dalvik_format_string();
 }
 
 std::string_view DVMArray::get_canonical_name() const {
-    return std::string_view();
+    return dvm_array_provider.get().get_canonical_name();
 }
 
 std::string DVMArray::get_canonical_name_string() const {
-    return std::string();
+    return dvm_array_provider.get().get_canonical_name_string();
 }
 
 size_t DVMArray::get_array_depth() const {
-    return 0;
+    return dvm_array_provider.get().get_array_depth();
 }
 
-const DVMType *DVMArray::get_base_type() const {
-    return nullptr;
+const DVMType & DVMArray::get_base_type() const {
+    return dvm_array_provider.get().get_base_type();
 }
 
 // Helper template for std::visit

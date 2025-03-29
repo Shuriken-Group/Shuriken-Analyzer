@@ -124,7 +124,7 @@ private:
     // @brief depth of the array
     const size_t array_depth;
     // @brief base type of the array
-    const DVMType * base_type;
+    std::reference_wrapper<DVMType> base_type;
 public:
     /**
      * @brief Constructs an array provider from its components
@@ -132,7 +132,7 @@ public:
      * @param array_depth The nesting depth of the array
      * @param base_type Pointer to the base type of the array elements
      */
-    DVMArrayProvider(const std::string& dalvik_format, const size_t array_depth, const DVMType * base_type);
+    DVMArrayProvider(const std::string& dalvik_format, const size_t array_depth, DVMType & base_type);
     ~DVMArrayProvider() = default;
 
     /**
@@ -179,7 +179,7 @@ public:
      * @brief Gets the base type of the array elements
      * @return Pointer to the DVMType representing the array's element type
      */
-    const DVMType* get_base_type() const;
+    const DVMType& get_base_type() const;
 };
 
 } // namespace dex

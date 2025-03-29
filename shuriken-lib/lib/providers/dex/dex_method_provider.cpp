@@ -3,13 +3,28 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include "shuriken/internal/providers/dex/dex_method_provider.hpp"
-#include "shuriken/sdk/dex/instruction.hpp"
+#include "shuriken/sdk/dex/dvm_prototypes.hpp"
+#include "shuriken/sdk/dex/dvm_types.hpp"
+#include "shuriken/sdk/dex/class.h"
 
-shuriken::dex::DexMethodProvider::DexMethodProvider(const std::string &name, types::access_flags access_flags,
-                                                    DVMPrototype *method_prototype, DexEngine &dex_engine)
+using namespace shuriken::dex;
+
+shuriken::dex::DexMethodProvider::DexMethodProvider(const std::string &name,
+                                                    types::access_flags access_flags,
+                                                    DVMPrototype &method_prototype,
+                                                    Class &owner_class,
+                                                    Dex &owner_dex,
+                                                    DexEngine &dex_engine)
         : method_name(name),
           method_access_flags(access_flags), method_prototype(method_prototype),
+          owner_class(owner_class), owner_dex(owner_dex),
           dex_engine(dex_engine) {
+    method_descriptor = owner_class.get_name_string() + "->"
+                        + name + "(";
+    for (const auto &type: method_prototype.get_parameters())
+        method_descriptor += ::get_dalvik_format(type);
+
+    method_descriptor += ")" + ::get_dalvik_format(method_prototype.get_return_type());
 }
 
 
@@ -28,44 +43,42 @@ shuriken::dex::types::access_flags shuriken::dex::DexMethodProvider::get_method_
 }
 
 
-const shuriken::dex::DVMPrototype *shuriken::dex::DexMethodProvider::get_method_prototype() const {
+const shuriken::dex::DVMPrototype &shuriken::dex::DexMethodProvider::get_method_prototype() const {
     return method_prototype;
 }
 
 
-shuriken::dex::DVMPrototype *shuriken::dex::DexMethodProvider::get_method_prototype() {
+shuriken::dex::DVMPrototype &shuriken::dex::DexMethodProvider::get_method_prototype() {
     return method_prototype;
 }
 
 
-const shuriken::dex::Class *shuriken::dex::DexMethodProvider::get_owner_class() const {
+const shuriken::dex::Class &shuriken::dex::DexMethodProvider::get_owner_class() const {
     return owner_class;
 }
 
 
-shuriken::dex::Class *shuriken::dex::DexMethodProvider::get_owner_class() {
+shuriken::dex::Class &shuriken::dex::DexMethodProvider::get_owner_class() {
     return owner_class;
 }
 
-const shuriken::dex::Dex *shuriken::dex::DexMethodProvider::get_owner_dex() const {
+const shuriken::dex::Dex &shuriken::dex::DexMethodProvider::get_owner_dex() const {
     return owner_dex;
 }
 
 
-shuriken::dex::Dex *shuriken::dex::DexMethodProvider::get_owner_dex() {
+shuriken::dex::Dex &shuriken::dex::DexMethodProvider::get_owner_dex() {
     return owner_dex;
 }
 
 
 std::string_view shuriken::dex::DexMethodProvider::get_descriptor() const {
-    if (!method_descriptor.empty()) return method_descriptor;
-    return std::string_view {};
+    return method_descriptor;
 }
 
 
 std::string shuriken::dex::DexMethodProvider::get_descriptor_string() const {
-    if (!method_descriptor.empty()) return method_descriptor;
-    return std::string();
+    return method_descriptor;
 }
 
 
@@ -74,8 +87,6 @@ std::uint16_t shuriken::dex::DexMethodProvider::registers_size() const {
 }
 
 
-std::span<std::uint8_t> shuriken::dex::DexMethodProvider::get_bytecode() const {
-    // Direct construction from vector data and size
-    std::span<std::uint8_t> data{};
-    return data;
+std::span<const std::uint8_t> shuriken::dex::DexMethodProvider::get_bytecode() const {
+    return bytecode;
 }

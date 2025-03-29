@@ -2,29 +2,25 @@
 // Shuriken-Analyzer: library for bytecode analysis.
 // @author Farenain <kunai.static.analysis@gmail.com>
 
-
 #pragma once
 
-#include <functional>
-#include <string_view>
-#include <string>
-
-#include "shuriken/sdk/dex/custom_types.hpp"
+#include <shuriken/sdk/dex/constants.hpp>
+#include <shuriken/sdk/dex/custom_types.hpp>
 
 namespace shuriken {
 namespace dex {
-class DVMPrototypeProvider;
 
-class DVMPrototype {
+class DVMPrototypeProvider {
 private:
-    std::reference_wrapper<DVMPrototypeProvider> dvm_prototype_provider;
+    // @brief shorty_idx representing the prototype in a dalvik format
+    const std::string shorty_idx;
+    // @brief return type of the prototype
+    dvmtype_t return_type;
+    // @brief all the parameters from the prototype
+    std::vector<dvmtype_t> parameter_types;
 public:
-    // constructors & destructors
-    DVMPrototype(DVMPrototypeProvider&);
-    ~DVMPrototype() = default;
-
-    DVMPrototype(const DVMPrototype&) = delete;
-    DVMPrototype& operator=(const DVMPrototype&) = delete;
+    DVMPrototypeProvider(const std::string& shorty_idx, DVMType& return_type, std::vector<dvmtype_t>& parameter_types);
+    ~DVMPrototypeProvider() = default;
 
     /**
      * @return Get the shorty_idx with a string version of the prototype
@@ -52,5 +48,6 @@ public:
     dvmtypes_list_deref_iterator_t get_parameters();
 };
 
-}
-}
+
+} // namespace dex
+} // namespace shuriken
