@@ -23,9 +23,6 @@ public:
     DVMPrototype(DVMPrototypeProvider&);
     ~DVMPrototype() = default;
 
-    DVMPrototype(const DVMPrototype&) = delete;
-    DVMPrototype& operator=(const DVMPrototype&) = delete;
-
     /**
      * @return Get the shorty_idx with a string version of the prototype
      */

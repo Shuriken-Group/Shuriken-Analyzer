@@ -22,7 +22,7 @@ std::string_view DVMFundamental::get_dalvik_format() const {
 }
 
 std::string DVMFundamental::get_dalvik_format_string() const {
-    return dvm_fundamental_provider.get().get_canonical_name_string();
+    return dvm_fundamental_provider.get().get_dalvik_format_string();
 }
 
 std::string_view DVMFundamental::get_canonical_name() const {
@@ -102,7 +102,7 @@ struct overloaded : Ts... {
 // Deduction guide (C++17 or later)
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
-types::type_e get_type(const DVMType& type) {
+types::type_e shuriken::dex::get_type(const DVMType& type) {
     return std::visit(overloaded {
             [](const DVMFundamental&) { return types::type_e::FUNDAMENTAL; },
             [](const DVMClass&) { return types::type_e::CLASS; },
@@ -110,7 +110,7 @@ types::type_e get_type(const DVMType& type) {
     }, type);
 }
 
-std::string_view get_dalvik_format_string(const DVMType& type) {
+std::string_view shuriken::dex::get_dalvik_format_string(const DVMType& type) {
     return std::visit(overloaded {
             [](const DVMFundamental& t) { return t.get_dalvik_format(); },
             [](const DVMClass& t) { return t.get_dalvik_format(); },
@@ -118,7 +118,7 @@ std::string_view get_dalvik_format_string(const DVMType& type) {
     }, type);
 }
 
-std::string get_dalvik_format(const DVMType& type) {
+std::string shuriken::dex::get_dalvik_format(const DVMType& type) {
     return std::visit(overloaded {
             [](const DVMFundamental& t) { return t.get_dalvik_format_string(); },
             [](const DVMClass& t) { return t.get_dalvik_format_string(); },
@@ -126,7 +126,7 @@ std::string get_dalvik_format(const DVMType& type) {
     }, type);
 }
 
-std::string_view get_canonical_name(const DVMType& type) {
+std::string_view shuriken::dex::get_canonical_name(const DVMType& type) {
     return std::visit(overloaded {
             [](const DVMFundamental& t) { return t.get_canonical_name(); },
             [](const DVMClass& t) { return t.get_canonical_name(); },
@@ -134,7 +134,7 @@ std::string_view get_canonical_name(const DVMType& type) {
     }, type);
 }
 
-std::string get_canonical_name_string(const DVMType& type) {
+std::string shuriken::dex::get_canonical_name_string(const DVMType& type) {
     return std::visit(overloaded {
             [](const DVMFundamental& t) { return t.get_canonical_name_string(); },
             [](const DVMClass& t) { return t.get_canonical_name_string(); },
@@ -142,15 +142,15 @@ std::string get_canonical_name_string(const DVMType& type) {
     }, type);
 }
 
-const DVMFundamental * as_fundamental(const DVMType& type) {
+const DVMFundamental * shuriken::dex::as_fundamental(const DVMType& type) {
     return std::get_if<DVMFundamental>(&type);
 }
 
-const DVMClass * as_class(const DVMType& type) {
+const DVMClass * shuriken::dex::as_class(const DVMType& type) {
     return std::get_if<DVMClass>(&type);
 }
 
-const DVMArray * as_array(const DVMType& type) {
+const DVMArray * shuriken::dex::as_array(const DVMType& type) {
     return std::get_if<DVMArray>(&type);
 }
 

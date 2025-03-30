@@ -48,3 +48,8 @@ target_include_directories(LIB_SHURIKEN
             "$<BUILD_INTERFACE:${SHURIKEN_PUBLIC_INCLUDE_DIR}>"
             "$<INSTALL_INTERFACE:include/shuriken/sdk>"
         PRIVATE "${SHURIKEN_PRIVATE_INCLUDE_DIR}")
+
+# SHURIKEN testing
+# ================
+
+add_subdirectory(tests/)
