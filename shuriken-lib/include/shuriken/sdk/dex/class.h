@@ -23,11 +23,13 @@ private:
     std::reference_wrapper<DexClassProvider> dex_class_provider;
 public:
     // constructors & destructors
-    Class(DexClassProvider&);
+    Class(DexClassProvider &);
+
     ~Class() = default;
 
-    Class(const Class&) = delete;
-    Class& operator=(const Class&) = delete;
+    Class(const Class &) = delete;
+
+    Class &operator=(const Class &) = delete;
 
     // information from the class
 
@@ -40,6 +42,41 @@ public:
      * @return string with class' name
      */
     std::string get_name_string() const;
+
+    /**
+     * @return name of the package from the class
+     */
+    std::string_view get_package_name() const;
+
+    /**
+     * @return name of the package as string
+     */
+    std::string get_package_name_string() const;
+
+    /**
+     * @return name of the class in dalvik format as
+     * package/name->className
+     */
+    std::string_view get_dalvik_name() const;
+
+    /**
+    * @return name of the class in dalvik format as
+    * package/name->className as string
+    */
+    std::string get_dalvik_name_string() const;
+
+    /**
+     * @return name of the class in canonical format as
+     * package.name.ClassName
+     */
+    std::string_view get_canonical_name() const;
+
+    /**
+    * @return name of the class in canonical format as
+     * package.name.ClassName as string
+    */
+    std::string get_canonical_name_string() const;
+
 
     /**
      * @return A std::variant representing both possibilities:
@@ -68,7 +105,7 @@ public:
     /**
      * @return number of methods in the class
      */
-     std::size_t get_number_of_methods() const;
+    std::size_t get_number_of_methods() const;
 
     /**
      * @return An iterator range of all methods in this class
@@ -81,7 +118,7 @@ public:
      * @param prototype The method prototype/signature
      * @return Const pointer to the method if found, nullptr otherwise
      */
-    const Method* get_method_by_name_prototype(const std::string& name, const std::string& prototype) const;
+    const Method *get_method_by_name_prototype(const std::string &name, const std::string &prototype) const;
 
     /**
      * Find a method by its name and prototype
@@ -89,26 +126,26 @@ public:
      * @param prototype The method prototype/signature
      * @return Pointer to the method if found, nullptr otherwise
      */
-    Method* get_method_by_name_prototype(const std::string& name, const std::string& prototype);
+    Method *get_method_by_name_prototype(const std::string &name, const std::string &prototype);
 
     /**
      * Find a method by its full descriptor
      * @param descriptor The complete method descriptor
      * @return Const pointer to the method if found, nullptr otherwise
      */
-    const Method* get_method_by_descriptor(const std::string& descriptor) const;
+    const Method *get_method_by_descriptor(const std::string &descriptor) const;
 
     /**
      * Find a method by its full descriptor
      * @param descriptor The complete method descriptor
      * @return Pointer to the method if found, nullptr otherwise
      */
-    Method* get_method_by_descriptor(const std::string& descriptor);
+    Method *get_method_by_descriptor(const std::string &descriptor);
 
     /**
      * @return number of fields in the class
      */
-     std::size_t get_number_of_fields() const;
+    std::size_t get_number_of_fields() const;
 
     /**
      * @return An iterator range of all fields in this class
@@ -120,28 +157,28 @@ public:
      * @param name The field name
      * @return Const pointer to the field if found, nullptr otherwise
      */
-    const Field* get_field_by_name(const std::string& name) const;
+    const Field *get_field_by_name(const std::string &name) const;
 
     /**
      * Find a field by its name
      * @param name The field name
      * @return Pointer to the field if found, nullptr otherwise
      */
-    Field* get_field_by_name(const std::string& name);
+    Field *get_field_by_name(const std::string &name);
 
     /**
      * Look for methods matching the provided descriptor.
      * @param descriptor_regex regular expression for the method descriptor
      * @return vector with methods matching the provided descriptor
      */
-    std::vector<Method*> found_method_by_regex(const std::string& descriptor_regex);
+    std::vector<Method *> found_method_by_regex(const std::string &descriptor_regex);
 
     /**
      * Look for fields matching the provided descriptor.
      * @param descriptor_regex regular expression for the field descriptor
      * @return vector with fields matching the provided descriptor
      */
-    std::vector<Field*> found_field_by_regex(const std::string& descriptor_regex);
+    std::vector<Field *> found_field_by_regex(const std::string &descriptor_regex);
 
     // xrefs information
     /**

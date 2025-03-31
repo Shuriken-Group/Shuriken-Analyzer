@@ -47,6 +47,10 @@ public:
      * @return an iterator to the list of parameter types from the prototype
      */
     dvmtypes_list_deref_iterator_t get_parameters();
+
+    std::string_view get_descriptor();
+
+    std::string get_descriptor_string();
 };
 
 }

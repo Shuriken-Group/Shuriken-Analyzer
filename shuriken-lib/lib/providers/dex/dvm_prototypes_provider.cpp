@@ -11,6 +11,10 @@ DVMPrototypeProvider::DVMPrototypeProvider(const std::string &shorty_idx, DVMTyp
                                            std::vector<dvmtype_t> &parameter_types) :
         shorty_idx(shorty_idx), return_type(return_type),
         parameter_types(std::move(parameter_types)) {
+    descriptor = "(";
+    for (const auto &type: parameter_types)
+        descriptor += ::get_dalvik_format(type);
+    descriptor += ")" + ::get_dalvik_format(return_type);
 }
 
 std::string_view DVMPrototypeProvider::get_shorty_idx() const {
@@ -32,5 +36,13 @@ DVMType &DVMPrototypeProvider::get_return_type() {
 dvmtypes_list_deref_iterator_t DVMPrototypeProvider::get_parameters() {
     static dvmtypes_list_t parameters{parameter_types.data(), parameter_types.size()};
     return parameters;
+}
+
+std::string_view DVMPrototypeProvider::get_descriptor() {
+    return descriptor;
+}
+
+std::string DVMPrototypeProvider::get_descriptor_string() {
+    return descriptor;
 }
 

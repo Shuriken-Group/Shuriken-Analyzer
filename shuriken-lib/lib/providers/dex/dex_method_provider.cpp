@@ -20,11 +20,7 @@ shuriken::dex::DexMethodProvider::DexMethodProvider(const std::string &name,
           owner_class(owner_class), owner_dex(owner_dex),
           dex_engine(dex_engine) {
     method_descriptor = owner_class.get_name_string() + "->"
-                        + name + "(";
-    for (const auto &type: method_prototype.get_parameters())
-        method_descriptor += ::get_dalvik_format(type);
-
-    method_descriptor += ")" + ::get_dalvik_format(method_prototype.get_return_type());
+                        + name + method_prototype.get_descriptor_string();
 }
 
 

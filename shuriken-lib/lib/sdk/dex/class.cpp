@@ -16,6 +16,31 @@ std::string Class::get_name_string() const {
     return std::string();
 }
 
+std::string_view Class::get_package_name() const {
+    return std::string_view();
+}
+
+std::string Class::get_package_name_string() const {
+    return std::string();
+}
+
+
+std::string_view Class::get_dalvik_name() const {
+    return std::string_view();
+}
+
+std::string Class::get_dalvik_name_string() const {
+    return std::string();
+}
+
+std::string_view Class::get_canonical_name() const {
+    return std::string_view();
+}
+
+std::string Class::get_canonical_name_string() const {
+    return std::string();
+}
+
 class_external_class_t Class::get_extended_class() {
     return std::monostate{};
 }

@@ -31,4 +31,12 @@ dvmtypes_list_deref_iterator_t DVMPrototype::get_parameters() {
     return dvm_prototype_provider.get().get_parameters();
 }
 
+std::string_view DVMPrototype::get_descriptor() {
+    return dvm_prototype_provider.get().get_descriptor();
+}
+
+std::string DVMPrototype::get_descriptor_string() {
+    return dvm_prototype_provider.get().get_descriptor_string();
+}
+
 
