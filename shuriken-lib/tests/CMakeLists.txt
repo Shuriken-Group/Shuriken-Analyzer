@@ -17,6 +17,7 @@ if (BUILD_TESTS)
             main.cpp
             dex/dvm_type_tests.cpp
             # Add other test files here
+            dex/dvm_prototypes_tests.cpp
     )
 
     # Link against the Shuriken library

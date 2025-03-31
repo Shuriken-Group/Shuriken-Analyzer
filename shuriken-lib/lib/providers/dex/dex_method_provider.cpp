@@ -88,5 +88,6 @@ std::uint16_t shuriken::dex::DexMethodProvider::registers_size() const {
 
 
 std::span<const std::uint8_t> shuriken::dex::DexMethodProvider::get_bytecode() const {
-    return bytecode;
+    static std::span<const std::uint8_t> data {bytecode};
+    return data;
 }

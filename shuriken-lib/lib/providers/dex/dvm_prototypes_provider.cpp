@@ -30,7 +30,7 @@ DVMType &DVMPrototypeProvider::get_return_type() {
 }
 
 dvmtypes_list_deref_iterator_t DVMPrototypeProvider::get_parameters() {
-    dvmtypes_list_t parameters{parameter_types.data(), parameter_types.size()};
+    static dvmtypes_list_t parameters{parameter_types.data(), parameter_types.size()};
     return parameters;
 }
 
