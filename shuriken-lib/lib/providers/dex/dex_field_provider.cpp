@@ -1,7 +1,7 @@
 
 #include <shuriken/internal/providers/dex/dex_field_provider.hpp>
 #include <shuriken/sdk/dex/dvm_types.hpp>
-#include <shuriken/sdk/dex/class.h>
+#include <shuriken/sdk/dex/class.hpp>
 
 using namespace shuriken::dex;
 

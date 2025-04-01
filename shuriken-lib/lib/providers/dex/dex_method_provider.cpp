@@ -5,7 +5,7 @@
 #include "shuriken/internal/providers/dex/dex_method_provider.hpp"
 #include "shuriken/sdk/dex/dvm_prototypes.hpp"
 #include "shuriken/sdk/dex/dvm_types.hpp"
-#include "shuriken/sdk/dex/class.h"
+#include "shuriken/sdk/dex/class.hpp"
 
 using namespace shuriken::dex;
 

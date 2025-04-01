@@ -1,5 +1,5 @@
 
-#include <shuriken/sdk/dex/class.h>
+#include <shuriken/sdk/dex/class.hpp>
 #include <shuriken/internal/providers/dex/dex_class_provider.hpp>
 #include <unordered_map>
 #include <set>

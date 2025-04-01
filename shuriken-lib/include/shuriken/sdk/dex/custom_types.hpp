@@ -16,83 +16,85 @@
 #include <shuriken/sdk/dex/constants.hpp>
 
 namespace shuriken {
-    namespace dex {
+namespace dex {
 
-        class Class;
-        class ExternalClass;
-        class Method;
-        class ExternalMethod;
-        class Field;
-        class ExternalField;
-        class Instruction;
-        class DVMFundamental;
-        class DVMClass;
-        class DVMArray;
-
-
-        using class_t = std::reference_wrapper<Class>;
-        using method_t = std::reference_wrapper<Method>;
-        using field_t = std::reference_wrapper<Field>;
-        using instruction_t = std::reference_wrapper<Instruction>;
-
-        using externalclass_t = std::reference_wrapper<ExternalClass>;
-        using externalmethod_t = std::reference_wrapper<ExternalMethod>;
-        using externalfield_t = std::reference_wrapper<ExternalField>;
-
-        using DVMType = std::variant<DVMFundamental, DVMClass, DVMArray>;
-        using dvmtype_t = std::reference_wrapper<DVMType>;
-        using dvmtypes_list_t = std::span<dvmtype_t>;
-        using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
+class Class;
+class ExternalClass;
+class Method;
+class ExternalMethod;
+class Field;
+class ExternalField;
+class Instruction;
+class DVMFundamental;
+class DVMClass;
+class DVMArray;
 
 
+using class_t = std::reference_wrapper<Class>;
+using method_t = std::reference_wrapper<Method>;
+using field_t = std::reference_wrapper<Field>;
+using instruction_t = std::reference_wrapper<Instruction>;
 
-        using class_external_class_t = std::variant<class_t, externalclass_t, std::monostate>;
+using externalclass_t = std::reference_wrapper<ExternalClass>;
+using externalmethod_t = std::reference_wrapper<ExternalMethod>;
+using externalfield_t = std::reference_wrapper<ExternalField>;
 
-        // A type which points to an instruction in a given index, from
-        // a specific method, from a specific class
-        using class_method_idx_t = std::tuple<class_t, method_t, std::uint64_t>;
-        using span_class_method_idx_t = std::span<class_method_idx_t>;
-        using span_class_method_idx_iterator_t = span_class_method_idx_t::iterator;
-
-        using class_field_idx_t = std::tuple<class_t, field_t, std::uint64_t>;
-        using span_class_field_idx_t = std::span<class_field_idx_t>;
-        using span_class_field_idx_iterator_t = span_class_field_idx_t::iterator;
-
-        using class_idx_t = std::tuple<class_t, std::uint64_t>;
-        using span_class_idx_t = std::span<class_idx_t>;
-        using span_class_idx_iterator_t = span_class_idx_t::iterator;
-
-        using span_class_external_class_t = std::span<class_external_class_t>;
-        using span_class_external_class_iterator_t = span_class_external_class_t::iterator;
-
-        /**
-         * Maps a class to a set of reference points (ref_type, method, instruction offset)
-         * Used to represent cross-references between classes
-         * - Key: The referenced/referencing class
-         * - Value: Set of tuples containing:
-         *    - The type of reference (instantiation, method call, etc.)
-         *    - The method containing the reference
-         *    - The offset of the instruction within the method
-         */
-        using classxref_t = std::unordered_map<class_t,
-                std::set<std::tuple<types::ref_type,
-                        method_t,
-                        std::uint64_t>>>;
-        using classxref_iterator_t = classxref_t::iterator;
-
-        using method_idx_t = std::pair<method_t, std::uint64_t>;
-        using span_method_idx_t = std::span<method_idx_t>;
-        using span_method_idx_iterator_t = span_method_idx_t::iterator;
-
-        using methods_ref_t = std::span<method_t>;
-        using method_deref_iterator_t = deref_iterator_range<methods_ref_t>;
+using DVMType = std::variant<DVMFundamental, DVMClass, DVMArray>;
+using dvmtype_t = std::reference_wrapper<DVMType>;
+using dvmtypes_list_t = std::span<dvmtype_t>;
+using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
 
-        using fields_ref_t = std::span<field_t>;
-        using fields_deref_iterator_t = deref_iterator_range<fields_ref_t>;
 
-        using instruction_list_t = std::span<instruction_t>;
-        using instruction_list_deref_iterator_t = deref_iterator_range<instruction_list_t>;
+using class_external_class_t = std::variant<class_t, externalclass_t, std::monostate>;
 
-    } // namespace dex
+// A type which points to an instruction in a given index, from
+// a specific method, from a specific class
+using class_method_idx_t = std::tuple<class_t, method_t, std::uint64_t>;
+using span_class_method_idx_t = std::span<class_method_idx_t>;
+using span_class_method_idx_iterator_t = span_class_method_idx_t::iterator;
+
+using class_field_idx_t = std::tuple<class_t, field_t, std::uint64_t>;
+using span_class_field_idx_t = std::span<class_field_idx_t>;
+using span_class_field_idx_iterator_t = span_class_field_idx_t::iterator;
+
+using class_idx_t = std::tuple<class_t, std::uint64_t>;
+using span_class_idx_t = std::span<class_idx_t>;
+using span_class_idx_iterator_t = span_class_idx_t::iterator;
+
+using span_class_external_class_t = std::span<class_external_class_t>;
+using span_class_external_class_iterator_t = span_class_external_class_t::iterator;
+
+/**
+ * Maps a class to a set of reference points (ref_type, method, instruction offset)
+ * Used to represent cross-references between classes
+ * - Key: The referenced/referencing class
+ * - Value: Set of tuples containing:
+ *    - The type of reference (instantiation, method call, etc.)
+ *    - The method containing the reference
+ *    - The offset of the instruction within the method
+ */
+using classxref_t = std::unordered_map<class_t,
+        std::set<std::tuple<types::ref_type,
+                method_t,
+                std::uint64_t>>>;
+using classxref_iterator_t = classxref_t::iterator;
+
+using method_idx_t = std::pair<method_t, std::uint64_t>;
+using span_method_idx_t = std::span<method_idx_t>;
+using span_method_idx_iterator_t = span_method_idx_t::iterator;
+
+using fields_ref_t = std::span<field_t>;
+using fields_deref_iterator_t = deref_iterator_range<fields_ref_t>;
+
+using methods_ref_t = std::span<method_t>;
+using method_deref_iterator_t = deref_iterator_range<methods_ref_t>;
+
+using classes_ref_t = std::span<class_t>;
+using classes_deref_iterator_t = deref_iterator_range<classes_ref_t>;
+
+using instruction_list_t = std::span<instruction_t>;
+using instruction_list_deref_iterator_t = deref_iterator_range<instruction_list_t>;
+
+} // namespace dex
 } // namespace shuriken
