@@ -118,7 +118,7 @@ public:
      * @param prototype The method prototype/signature
      * @return Const pointer to the method if found, nullptr otherwise
      */
-    const Method *get_method_by_name_prototype(const std::string &name, const std::string &prototype) const;
+    const Method *get_method_by_name_prototype(std::string_view name, std::string_view prototype) const;
 
     /**
      * Find a method by its name and prototype
@@ -126,21 +126,21 @@ public:
      * @param prototype The method prototype/signature
      * @return Pointer to the method if found, nullptr otherwise
      */
-    Method *get_method_by_name_prototype(const std::string &name, const std::string &prototype);
+    Method *get_method_by_name_prototype(std::string_view name, std::string_view prototype);
 
     /**
      * Find a method by its full descriptor
      * @param descriptor The complete method descriptor
      * @return Const pointer to the method if found, nullptr otherwise
      */
-    const Method *get_method_by_descriptor(const std::string &descriptor) const;
+    const Method *get_method_by_descriptor(std::string_view descriptor) const;
 
     /**
      * Find a method by its full descriptor
      * @param descriptor The complete method descriptor
      * @return Pointer to the method if found, nullptr otherwise
      */
-    Method *get_method_by_descriptor(const std::string &descriptor);
+    Method *get_method_by_descriptor(std::string_view descriptor);
 
     /**
      * @return number of fields in the class
@@ -157,28 +157,28 @@ public:
      * @param name The field name
      * @return Const pointer to the field if found, nullptr otherwise
      */
-    const Field *get_field_by_name(const std::string &name) const;
+    const Field *get_field_by_name(std::string_view name) const;
 
     /**
      * Find a field by its name
      * @param name The field name
      * @return Pointer to the field if found, nullptr otherwise
      */
-    Field *get_field_by_name(const std::string &name);
+    Field *get_field_by_name(std::string_view name);
 
     /**
      * Look for methods matching the provided descriptor.
      * @param descriptor_regex regular expression for the method descriptor
      * @return vector with methods matching the provided descriptor
      */
-    std::vector<Method *> found_method_by_regex(const std::string &descriptor_regex);
+    std::vector<Method *> found_method_by_regex(std::string_view descriptor_regex);
 
     /**
      * Look for fields matching the provided descriptor.
      * @param descriptor_regex regular expression for the field descriptor
      * @return vector with fields matching the provided descriptor
      */
-    std::vector<Field *> found_field_by_regex(const std::string &descriptor_regex);
+    std::vector<Field *> found_field_by_regex(std::string_view descriptor_regex);
 
     // xrefs information
     /**
