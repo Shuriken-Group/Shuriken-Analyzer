@@ -9,6 +9,7 @@
 
 #include <shuriken/sdk/dex/custom_types.hpp>
 #include <shuriken/internal/providers/dex/custom_types.hpp>
+#include <shuriken/internal/io/shurikenstream.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -23,32 +24,23 @@ class DexFieldProvider;
 class DVMPrototype;
 class DVMPrototypeProvider;
 
-
 class DexEngine {
 private:
-    // ownership of classes
-    std::vector<std::unique_ptr<Class>> sdk_classes;
-    std::vector<std::unique_ptr<DexClassProvider>> dex_class_providers;
+    class Impl; // Forward declaration of implementation class
+    std::unique_ptr<Impl> pimpl; // The pointer to implementation
+    io::ShurikenStream shuriken_stream;
+public:
+    // Constructor/destructor
+    DexEngine(io::ShurikenStream stream);
+    ~DexEngine() = default;
 
-    // ownership of methods
-    std::vector<std::unique_ptr<Method>> sdk_methods;
-    std::vector<std::unique_ptr<DexMethodProvider>> dex_methods_providers;
+    // Move operations
+    DexEngine(DexEngine&&) noexcept = delete;
+    DexEngine& operator=(DexEngine&&) noexcept = delete;
 
-    // ownership of fields
-    std::vector<std::unique_ptr<Field>> sdk_fields;
-    std::vector<std::unique_ptr<DexFieldProvider>> dex_fields_providers;
-
-    // ownership of prototypes
-    std::vector<std::unique_ptr<DVMPrototype>> sdk_prototypes;
-    std::vector<std::unique_ptr<DVMPrototypeProvider>> dex_prototypes_providers;
-
-    // ownership of types
-    std::vector<std::unique_ptr<DVMType>> sdk_dvmtypes;
-    std::vector<std::unique_ptr<DVMTypeProvider>> dex_type_providers;
-
-    
-
-
+    // Disable copy
+    DexEngine(const DexEngine&) = delete;
+    DexEngine& operator=(const DexEngine&) = delete;
 };
 }
 }

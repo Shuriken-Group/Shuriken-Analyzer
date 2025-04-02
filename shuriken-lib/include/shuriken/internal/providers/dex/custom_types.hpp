@@ -6,6 +6,7 @@
 
 #include <variant>
 #include <span>
+#include <shuriken/sdk/common/deref_iterator_range.hpp>
 
 namespace shuriken {
 namespace dex {
