@@ -20,11 +20,12 @@ class Field;
 
 class Dex {
 private:
-    std::unique_ptr<DexEngine> dex_engine;
+    class Impl; // Forward declaration of implementation class
+    Impl * pimpl; // The pointer to implementation
 public:
-    Dex(std::unique_ptr<DexEngine> dex_engine);
+    Dex(std::string_view dex_path);
 
-    ~Dex() = default;
+    ~Dex();
 
     /**
      * @brief Get the path of the DEX file as a string_view
@@ -163,8 +164,6 @@ public:
      * @return vector with fields matching the provided descriptor
      */
     std::vector<Field *> found_field_by_regex(std::string_view descriptor_regex);
-
-
 };
 }
 }

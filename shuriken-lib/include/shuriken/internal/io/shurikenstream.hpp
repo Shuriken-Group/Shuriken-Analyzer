@@ -35,7 +35,7 @@ namespace shuriken {
             ShurikenStream& operator=(ShurikenStream&&) noexcept;
 
             // Factory methods
-            static error::Result<ShurikenStream> from_file(const std::string& path);
+            static error::Result<ShurikenStream> from_file(std::string_view path);
             static error::Result<ShurikenStream> from_memory(const std::string& data);
 
             // Stream operations

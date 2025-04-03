@@ -174,7 +174,7 @@ std::vector<Method *> DexClassProvider::found_method_by_regex(std::string_view d
     for (const auto& method : methods) {
         std::string descriptor = method.get().get_descriptor_string();
         if (std::regex_match(descriptor, pattern)) {
-            matching_methods.push_back(&(method.get()));
+            matching_methods.emplace_back(&(method.get()));
         }
     }
 

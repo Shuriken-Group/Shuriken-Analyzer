@@ -25,8 +25,8 @@ namespace detail {
         std::ifstream stream;
 
     public:
-        explicit FileStreamImpl(const std::string& path)
-                : stream(path, std::ios::binary) {}
+        explicit FileStreamImpl(std::string_view path)
+                : stream(path.data(), std::ios::binary) {}
 
         std::streampos position() const override {
             return const_cast<std::ifstream&>(stream).tellg();
@@ -100,12 +100,12 @@ ShurikenStream::ShurikenStream(ShurikenStream&& other) noexcept
 
 ShurikenStream& ShurikenStream::operator=(ShurikenStream&&) noexcept = default;
 
-error::Result<ShurikenStream> ShurikenStream::from_file(const std::string& path) {
+error::Result<ShurikenStream> ShurikenStream::from_file(std::string_view path) {
     auto impl = std::make_unique<detail::FileStreamImpl>(path);
     if (!impl->good()) {
         return error::make_error<ShurikenStream>(
                 error::ErrorCode::FileNotFound,
-                "Failed to open file: " + path
+                "Failed to open file: " + std::string(path)
         );
     }
 
