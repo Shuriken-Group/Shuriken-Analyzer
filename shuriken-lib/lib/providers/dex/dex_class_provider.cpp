@@ -29,14 +29,12 @@ namespace {
     }
 }
 
-DexClassProvider::DexClassProvider(std::string name, std::string package_name, externalclass_t extended_class,
-                                   std::vector<class_external_class_t> &implemented_classes,
-                                   std::vector<method_t> &methods, std::vector<field_t> &fields) :
+DexClassProvider::DexClassProvider(std::string_view name, std::string_view package_name,
+                                   std::string_view extended_class, std::vector<std::string>& implemented_classes) :
         name(name), package_name(package_name), extended_class(extended_class),
-        implemented_classes(std::move(implemented_classes)), methods(std::move(methods)),
-        fields(std::move(fields)) {
-    dalvik_format = package_name + "->" + name;
-    canonical_format = ::dalvik_to_canonical(package_name) + "." + name;
+        implemented_classes(std::move(implemented_classes))  {
+    dalvik_format = this->package_name + "->" + this->name;
+    canonical_format = ::dalvik_to_canonical(this->package_name) + "." + this->name;
 }
 
 std::string_view DexClassProvider::get_name() const {
@@ -71,7 +69,11 @@ std::string DexClassProvider::get_canonical_name_string() const {
     return canonical_format;
 }
 
-class_external_class_t DexClassProvider::get_extended_class() {
+std::string_view DexClassProvider::get_extended_class() {
+    return extended_class;
+}
+
+std::string DexClassProvider::get_extended_class_string() {
     return extended_class;
 }
 
@@ -79,9 +81,17 @@ std::size_t DexClassProvider::get_number_of_implemented_classes() {
     return implemented_classes.size();
 }
 
-shuriken::iterator_range <span_class_external_class_iterator_t> DexClassProvider::get_implemented_classes() {
-    static std::span<class_external_class_t> implemented{implemented_classes};
-    return make_range(implemented.begin(), implemented.end());
+std::span<std::string> DexClassProvider::get_implemented_classes() {
+    static std::span<std::string> implemented{implemented_classes};
+    return implemented;
+}
+
+void DexClassProvider::add_method(method_t method) {
+    methods.emplace_back(method);
+}
+
+void DexClassProvider::add_field(field_t field) {
+    fields.emplace_back(field);
 }
 
 std::size_t DexClassProvider::get_number_of_methods() const {

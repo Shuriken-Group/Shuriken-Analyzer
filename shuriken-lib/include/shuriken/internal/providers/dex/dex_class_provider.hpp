@@ -24,17 +24,16 @@ private:
     // @brief canonical name format of the class name
     std::string canonical_format;
     // @brief extended class
-    class_external_class_t extended_class;
+    std::string extended_class;
     // @brief possible implemented classes
-    std::vector<class_external_class_t> implemented_classes;
+    std::vector<std::string> implemented_classes;
     // @brief Methods from the class
     std::vector<method_t> methods;
     // @brief fields from the class
     std::vector<field_t> fields;
 public:
-    DexClassProvider(std::string name, std::string package_name,
-                     externalclass_t extended_class, std::vector<class_external_class_t>& implemented_classes,
-                     std::vector<method_t>& methods, std::vector<field_t>& fields);
+    DexClassProvider(std::string_view name, std::string_view package_name,
+                     std::string_view extended_class, std::vector<std::string>& implemented_classes);
     ~DexClassProvider() = default;
 
     /***
@@ -83,12 +82,14 @@ public:
 
 
     /**
-     * @return A std::variant representing both possibilities:
-     *         - Class* in case it extends a class inside the DEX
-     *         - ExternalClass* in case it extends a class outside the DEX
-     *         Returns empty variant if the class doesn't extend any class
+     * @return A std::string_view representing the extended class
      */
-    class_external_class_t get_extended_class();
+    std::string_view get_extended_class();
+
+    /**
+     * @return A std::string representing the extended class
+     */
+    std::string get_extended_class_string();
 
     /**
      * @return The number of interfaces implemented by this class
@@ -99,9 +100,17 @@ public:
      * @return An iterator range over the interfaces implemented by this class
      *         Each element can be either a Class* (internal) or ExternalClass* (external)
      */
-    iterator_range<span_class_external_class_iterator_t> get_implemented_classes();
+    std::span<std::string> get_implemented_classes();
 
+    /**
+     * @param method new method to add
+     */
+    void add_method(method_t method);
 
+    /**
+     * @param field new field to add
+     */
+    void add_field(field_t field);
 
     // A few interesting getters for fields
     // and methods belonging to the current class

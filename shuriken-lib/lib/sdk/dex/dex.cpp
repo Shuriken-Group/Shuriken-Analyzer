@@ -16,8 +16,21 @@ public:
     std::string dex_path_str;
 
     Impl() : initialized(false), last_error(error::ErrorCode::Success) {}
+
     ~Impl() = default;
 };
+
+
+shuriken::error::Result<std::unique_ptr<Dex>> shuriken::dex::Dex::create_from_file(std::string_view path) {
+    std::unique_ptr<Dex> dex = std::make_unique<Dex>(path);
+
+    if (!dex->initialized()) {
+        return shuriken::error::make_error<std::unique_ptr<Dex>>(dex->get_last_error().get_code(),
+                                                                 dex->get_last_error().get_message());
+    }
+
+    return shuriken::error::make_success(std::move(dex));
+}
 
 
 shuriken::dex::Dex::Dex(std::string_view dex_path) : pimpl(new Dex::Impl()) {
@@ -31,12 +44,20 @@ shuriken::dex::Dex::Dex(std::string_view dex_path) : pimpl(new Dex::Impl()) {
     }
 
     // Simply create the engine - don't use try/catch
-    pimpl->dex_engine = std::make_unique<DexEngine>(std::move(stream_result.value()), dex_path);
+    pimpl->dex_engine = std::make_unique<DexEngine>(std::move(stream_result.value()), dex_path, *this);
     pimpl->initialized = true;
 }
 
 shuriken::dex::Dex::~Dex() {
     delete pimpl;
+}
+
+bool shuriken::dex::Dex::initialized() {
+    return pimpl->initialized;
+}
+
+shuriken::error::Error shuriken::dex::Dex::get_last_error() {
+    return pimpl->last_error;
 }
 
 std::string_view shuriken::dex::Dex::get_dex_path() const {
@@ -120,6 +141,8 @@ std::vector<Method *> shuriken::dex::Dex::found_method_by_regex(std::string_view
 std::vector<Field *> shuriken::dex::Dex::found_field_by_regex(std::string_view descriptor_regex) {
     return pimpl->dex_engine->found_field_by_regex(descriptor_regex);
 }
+
+
 
 
 

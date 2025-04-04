@@ -13,7 +13,7 @@
 
 namespace shuriken {
 namespace dex {
-
+class Dex;
 class Class;
 class DexClassProvider;
 class Method;
@@ -31,8 +31,8 @@ private:
     io::ShurikenStream shuriken_stream;
 public:
     // Constructor/destructor
-    DexEngine(io::ShurikenStream stream);
-    DexEngine(io::ShurikenStream stream, std::string_view dex_path);
+    DexEngine(io::ShurikenStream stream, Dex& owner_dex);
+    DexEngine(io::ShurikenStream stream, std::string_view dex_path, Dex& owner_dex);
     ~DexEngine();
 
     // Move operations

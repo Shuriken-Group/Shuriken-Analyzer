@@ -43,16 +43,19 @@ std::string Class::get_canonical_name_string() const {
     return dex_class_provider.get().get_canonical_name_string();
 }
 
-class_external_class_t Class::get_extended_class() {
+std::string_view Class::get_extended_class() {
     return dex_class_provider.get().get_extended_class();
 }
 
+std::string Class::get_extended_class_string() {
+    return dex_class_provider.get().get_extended_class_string();
+}
 
 std::size_t Class::get_number_of_implemented_classes() {
     return dex_class_provider.get().get_number_of_implemented_classes();
 }
 
-shuriken::iterator_range<span_class_external_class_iterator_t> Class::get_implemented_classes() {
+std::span<std::string> Class::get_implemented_classes() {
     return dex_class_provider.get().get_implemented_classes();
 }
 

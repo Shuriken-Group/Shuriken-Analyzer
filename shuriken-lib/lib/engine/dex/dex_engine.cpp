@@ -10,6 +10,7 @@
 
 #include <shuriken/internal/engine/dex/dex_engine.hpp>
 
+#include "shuriken/sdk/dex/dex.hpp"
 #include "shuriken/sdk/dex/class.hpp"
 #include "shuriken/sdk/dex/method.hpp"
 #include "shuriken/sdk/dex/field.hpp"
@@ -27,6 +28,8 @@ using namespace shuriken::dex;
 
 class DexEngine::Impl {
 public:
+    std::reference_wrapper<Dex> owner_dex;
+
     std::string dex_path;
     std::string dex_name;
     // ownership of classes
@@ -61,16 +64,16 @@ public:
     std::vector<std::reference_wrapper<DVMType>> ref_sdk_dvmtypes;
     std::vector<std::reference_wrapper<DVMTypeProvider>> ref_dex_type_providers;
 
-    Impl() = default;
+    Impl(Dex& owner_dex) : owner_dex(owner_dex) {}
     ~Impl() = default;
 };
 
-DexEngine::DexEngine(shuriken::io::ShurikenStream stream) : shuriken_stream(std::move(stream)),
-            pimpl(new DexEngine::Impl()) {
+DexEngine::DexEngine(shuriken::io::ShurikenStream stream, Dex& owner_dex) : shuriken_stream(std::move(stream)),
+            pimpl(new DexEngine::Impl(owner_dex)) {
 }
 
-shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path) : shuriken_stream(std::move(stream)),
-                                                                                                      pimpl(new DexEngine::Impl()) {
+shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex& owner_dex) : shuriken_stream(std::move(stream)),
+                                                                                                      pimpl(new DexEngine::Impl(owner_dex)) {
     this->pimpl->dex_path = dex_path;
     if (!dex_path.empty())
         this->pimpl->dex_name = std::filesystem::path(dex_path).filename();

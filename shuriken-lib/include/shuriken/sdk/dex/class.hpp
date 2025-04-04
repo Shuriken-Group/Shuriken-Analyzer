@@ -79,12 +79,14 @@ public:
 
 
     /**
-     * @return A std::variant representing both possibilities:
-     *         - Class* in case it extends a class inside the DEX
-     *         - ExternalClass* in case it extends a class outside the DEX
-     *         Returns empty variant if the class doesn't extend any class
+     * @return A std::string_view with the extended class
      */
-    class_external_class_t get_extended_class();
+    std::string_view get_extended_class();
+
+    /**
+     * @return A std::string_ with the extended class
+     */
+    std::string get_extended_class_string();
 
     /**
      * @return The number of interfaces implemented by this class
@@ -95,9 +97,7 @@ public:
      * @return An iterator range over the interfaces implemented by this class
      *         Each element can be either a Class* (internal) or ExternalClass* (external)
      */
-    iterator_range<span_class_external_class_iterator_t> get_implemented_classes();
-
-
+    std::span<std::string> get_implemented_classes();
 
     // A few interesting getters for fields
     // and methods belonging to the current class

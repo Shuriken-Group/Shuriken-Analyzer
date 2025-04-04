@@ -10,6 +10,7 @@
 #include <string_view>
 
 #include <shuriken/sdk/dex/custom_types.hpp>
+#include <shuriken/sdk/common/error.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -23,9 +24,16 @@ private:
     class Impl; // Forward declaration of implementation class
     Impl * pimpl; // The pointer to implementation
 public:
-    Dex(std::string_view dex_path);
+    // static methods
+    static error::Result<std::unique_ptr<Dex>> create_from_file(std::string_view path);
 
+    // Constructors & Destructors
+    Dex(std::string_view dex_path);
     ~Dex();
+
+    bool initialized();
+
+    error::Error get_last_error();
 
     /**
      * @brief Get the path of the DEX file as a string_view
