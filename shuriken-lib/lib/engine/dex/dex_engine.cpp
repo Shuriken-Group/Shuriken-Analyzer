@@ -23,11 +23,15 @@
 #include "shuriken/internal/providers/dex/dvm_prototypes_provider.hpp"
 #include "shuriken/internal/providers/dex/custom_types.hpp"
 
+#include "shuriken/internal/engine/dex/parser/parser.hpp"
+
 
 using namespace shuriken::dex;
 
 class DexEngine::Impl {
 public:
+    Parser parser;
+
     std::reference_wrapper<Dex> owner_dex;
 
     std::string dex_path;
@@ -81,6 +85,17 @@ shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::st
 
 shuriken::dex::DexEngine::~DexEngine() {
     delete pimpl;
+}
+
+shuriken::error::VoidResult DexEngine::parse() {
+    auto result = pimpl->parser.parse(shuriken_stream);
+    if (!result) {
+        return result;
+    }
+
+    // fill the data with the information from the header
+
+    return error::make_success();
 }
 
 std::string_view shuriken::dex::DexEngine::get_dex_path() const {

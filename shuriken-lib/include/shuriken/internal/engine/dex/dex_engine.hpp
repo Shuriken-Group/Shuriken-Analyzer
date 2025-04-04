@@ -35,6 +35,8 @@ public:
     DexEngine(io::ShurikenStream stream, std::string_view dex_path, Dex& owner_dex);
     ~DexEngine();
 
+    error::VoidResult parse();
+
     // Move operations
     DexEngine(DexEngine&&) noexcept = default;
     DexEngine& operator=(DexEngine&&) noexcept = default;

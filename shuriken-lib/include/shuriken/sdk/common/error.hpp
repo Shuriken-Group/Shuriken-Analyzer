@@ -21,8 +21,9 @@ enum class ErrorCode {
     InvalidFile,
     ParseError,
     MemoryError,
-    UnknownError
+    UnknownError,
     // Add more specific error codes as needed
+    ParsingError,
 };
 
 // Error class to hold error information
