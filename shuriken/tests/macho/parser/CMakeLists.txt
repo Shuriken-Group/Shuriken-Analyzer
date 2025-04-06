@@ -5,21 +5,21 @@ if(MACHO AND MACHO_TESTS)
     )
 
     # First Test Executable
-    message(STATUS "Compiling test headers-test-macho")
-    add_executable(headers-test-macho
-            ${CMAKE_CURRENT_SOURCE_DIR}/headers-test-macho.cpp
+    message(STATUS "Compiling test parse-test-macho")
+    add_executable(parse-test-macho
+            ${CMAKE_CURRENT_SOURCE_DIR}/parse-test-macho.cpp
     )
 
-    target_include_directories(headers-test-macho
+    target_include_directories(parse-test-macho
             BEFORE
             PUBLIC ${SHURIKEN_INCLUDE_PATH}
     )
 
     # Add dependency on shuriken library
-    add_dependencies(headers-test-macho shuriken)
+    add_dependencies(parse-test-macho shuriken)
 
-    target_link_libraries(headers-test-macho shuriken)
+    target_link_libraries(parse-test-macho shuriken)
 
-    add_test(NAME headers-test-macho
-            COMMAND headers-test-macho)
+    add_test(NAME parse-test-macho
+            COMMAND parse-test-macho)
 endif ()
