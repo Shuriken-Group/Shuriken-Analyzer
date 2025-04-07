@@ -10,5 +10,5 @@ var dir_e1929ebc44a132c06e01b9d9b262798a =
     [ "dex_protos.h", "dex__protos_8h.html", "dex__protos_8h" ],
     [ "dex_strings.h", "dex__strings_8h.html", "dex__strings_8h" ],
     [ "dex_types.h", "dex__types_8h.html", "dex__types_8h" ],
-    [ "parser.h", "parser_8h.html", "parser_8h" ]
+    [ "parser.h", "Dex_2parser_8h.html", "Dex_2parser_8h" ]
 ];

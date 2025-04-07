@@ -1,0 +1,5 @@
+<map id="shuriken/include/shuriken/parser/Ipa/ipa.h" name="shuriken/include/shuriken/parser/Ipa/ipa.h">
+<area shape="rect" id="Node000001" title="File to analyze IPA files, an IPA file will contain information from all the Mach&#45;O files from the IP..." alt="" coords="8,5,177,46"/>
+<area shape="rect" id="Node000002" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="5,94,180,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,62,95,94,90,94,90,62"/>
+</map>

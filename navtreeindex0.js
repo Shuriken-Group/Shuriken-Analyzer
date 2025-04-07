@@ -1,5 +1,9 @@
 var NAVTREEINDEX0 =
 {
+"Dex_2parser_8h.html":[2,0,0,0,0,5,1,10],
+"Dex_2parser_8h_source.html":[2,0,0,0,0,5,1,10],
+"Macho_2parser_8h.html":[2,0,0,0,0,5,3,3],
+"Macho_2parser_8h_source.html":[2,0,0,0,0,5,3,3],
 "analysis_8h.html":[2,0,0,0,0,0,0,0],
 "analysis_8h_source.html":[2,0,0,0,0,0,0,0],
 "annotated.html":[1,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX0 =
 "classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a57e3194c29e379f49d4c64e3fecdc329":[0,0,1,0,0,3,0],
 "classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a57e3194c29e379f49d4c64e3fecdc329":[1,0,1,0,0,3,0],
 "classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a5c0e36c2b86ee896bcf3391b2a22f4e4":[0,0,1,0,0,3,20],
-"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a5c0e36c2b86ee896bcf3391b2a22f4e4":[1,0,1,0,0,3,20],
-"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a64cc3d9df1ca7f729ce662927bf97078":[0,0,1,0,0,3,22],
-"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a64cc3d9df1ca7f729ce662927bf97078":[1,0,1,0,0,3,22],
-"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a6f6a53eb9564566391d4a6bf4a653a53":[0,0,1,0,0,3,6],
-"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a6f6a53eb9564566391d4a6bf4a653a53":[1,0,1,0,0,3,6]
+"classshuriken_1_1analysis_1_1dex_1_1DVMBasicBlock.html#a5c0e36c2b86ee896bcf3391b2a22f4e4":[1,0,1,0,0,3,20]
 };

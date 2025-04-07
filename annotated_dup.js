@@ -109,8 +109,14 @@ var annotated_dup =
           [ "TryItem", "structshuriken_1_1parser_1_1dex_1_1TryItem.html", "structshuriken_1_1parser_1_1dex_1_1TryItem" ],
           [ "Unknown", "classshuriken_1_1parser_1_1dex_1_1Unknown.html", "classshuriken_1_1parser_1_1dex_1_1Unknown" ]
         ] ],
+        [ "ipa", "namespaceshuriken_1_1parser_1_1ipa.html", [
+          [ "Ipa", "classshuriken_1_1parser_1_1ipa_1_1Ipa.html", "classshuriken_1_1parser_1_1ipa_1_1Ipa" ]
+        ] ],
         [ "macho", "namespaceshuriken_1_1parser_1_1macho.html", [
-          [ "MachoHeader", "classshuriken_1_1parser_1_1macho_1_1MachoHeader.html", "classshuriken_1_1parser_1_1macho_1_1MachoHeader" ]
+          [ "MachoCommands", "classshuriken_1_1parser_1_1macho_1_1MachoCommands.html", "classshuriken_1_1parser_1_1macho_1_1MachoCommands" ],
+          [ "MachoHeader", "classshuriken_1_1parser_1_1macho_1_1MachoHeader.html", "classshuriken_1_1parser_1_1macho_1_1MachoHeader" ],
+          [ "MachoSections", "classshuriken_1_1parser_1_1macho_1_1MachoSections.html", "classshuriken_1_1parser_1_1macho_1_1MachoSections" ],
+          [ "Parser", "classshuriken_1_1parser_1_1macho_1_1Parser.html", "classshuriken_1_1parser_1_1macho_1_1Parser" ]
         ] ]
       ] ],
       [ "deref_iterator_range", "structshuriken_1_1deref__iterator__range.html", "structshuriken_1_1deref__iterator__range" ],

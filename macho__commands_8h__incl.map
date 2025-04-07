@@ -1,0 +1,26 @@
+<map id="shuriken/include/shuriken/parser/Macho/macho_commands.h" name="shuriken/include/shuriken/parser/Macho/macho_commands.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="369,5,597,46"/>
+<area shape="rect" id="Node000002" href="$macho__sections_8h.html" title=" " alt="" coords="349,94,502,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="472,48,449,83,445,80,468,45"/>
+<area shape="rect" id="Node000003" href="$shurikenstream_8h.html" title=" " alt="" coords="10,183,238,208"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="441,49,339,96,164,178,162,173,336,92,439,44"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="512,183,569,208"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="496,45,517,93,537,167,532,168,512,95,491,48"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="593,183,660,208"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="501,44,609,169,605,173,497,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="351,138,186,181,185,176,350,133"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="262,183,322,208"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="394,138,327,177,324,172,391,133"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="346,183,417,208"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="417,136,398,170,393,168,412,134"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="455,133,512,171,509,176,452,137"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="477,133,583,174,581,179,475,138"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="441,183,487,208"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="437,134,454,167,449,170,433,136"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,256,70,282"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,211,65,248,62,244,108,207"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="94,256,154,282"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="127,209,127,241,122,241,122,209"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="178,256,244,282"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="141,207,186,244,183,248,137,211"/>
+</map>

@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="270,5,439,46"/>
 <area shape="rect" id="Node000002" href="$dex__encoded_8h.html" title=" " alt="" coords="74,360,251,401"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="330,59,260,151,223,210,190,272,175,319,168,360,162,359,170,318,186,270,218,208,256,148,326,56"/>
-<area shape="rect" id="Node000009" href="$parser_8h.html" title=" " alt="" coords="528,545,696,586"/>
+<area shape="rect" id="Node000009" href="$Dex_2parser_8h.html" title=" " alt="" coords="528,545,696,586"/>
 <area shape="poly" id="edge41_Node000001_Node000009" title=" " alt="" coords="454,26,553,37,604,49,653,66,696,88,731,118,754,155,761,177,763,202,763,382,759,409,750,435,737,459,720,481,682,519,645,546,642,542,679,515,716,478,732,456,746,433,754,408,757,382,757,202,755,178,749,157,727,121,693,93,651,70,603,54,552,43,454,31"/>
 <area shape="rect" id="Node000015" href="$dex__fields_8h.html" title=" " alt="" coords="200,271,368,312"/>
 <area shape="poly" id="edge27_Node000001_Node000015" title=" " alt="" coords="348,62,339,95,292,271,287,270,333,93,343,60"/>
@@ -21,7 +21,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="316,894,336,935,365,984,401,1034,443,1079,481,1106,522,1126,520,1131,479,1111,440,1083,397,1038,361,987,332,938,311,897"/>
 <area shape="rect" id="Node000005" href="$apk_8h.html" title=" " alt="" coords="638,1218,807,1259"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="624,1176,691,1215,688,1220,621,1180"/>
-<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title=" " alt="" coords="696,1307,870,1347"/>
+<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="696,1307,870,1347"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="747,1270,771,1305,767,1308,743,1273"/>
 <area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="221,607,295,840,290,841,216,609"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="326,491,533,542,532,547,325,496"/>

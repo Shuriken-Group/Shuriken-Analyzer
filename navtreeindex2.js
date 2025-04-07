@@ -1,5 +1,9 @@
 var NAVTREEINDEX2 =
 {
+"classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html":[0,0,1,3,0,4],
+"classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html":[1,0,1,3,0,4],
+"classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925b":[0,0,1,3,0,4,2],
+"classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925b":[1,0,1,3,0,4,2],
 "classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925ba30ff5942cf74df6b49aa177b02c0986a":[0,0,1,3,0,4,2,4],
 "classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925ba30ff5942cf74df6b49aa177b02c0986a":[1,0,1,3,0,4,2,4],
 "classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925ba97e8e786f8ab0c3e9fef7bee59f8e6e7":[0,0,1,3,0,4,2,0],
@@ -245,9 +249,5 @@ var NAVTREEINDEX2 =
 "classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a0fc09a122aac66477fca635f995f370c":[0,0,1,3,0,12,5],
 "classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a0fc09a122aac66477fca635f995f370c":[1,0,1,3,0,12,5],
 "classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a5ba82d27a443573e34f12378de7d544b":[0,0,1,3,0,12,1],
-"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a5ba82d27a443573e34f12378de7d544b":[1,0,1,3,0,12,1],
-"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a917e6870793392137cc8ad33872cc7e1":[0,0,1,3,0,12,7],
-"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a917e6870793392137cc8ad33872cc7e1":[1,0,1,3,0,12,7],
-"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a9cdb51cfeedf5a478416ea9e5b271bc1":[0,0,1,3,0,12,3],
-"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a9cdb51cfeedf5a478416ea9e5b271bc1":[1,0,1,3,0,12,3]
+"classshuriken_1_1disassembler_1_1dex_1_1Instruction11n.html#a5ba82d27a443573e34f12378de7d544b":[1,0,1,3,0,12,1]
 };

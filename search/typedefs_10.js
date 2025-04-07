@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zip_5ft_0',['zip_t',['../extract__file_8h.html#af7c0c993e704679caf470cedb9781985',1,'extract_file.h']]]
+  ['value_5ftype_0',['value_type',['../structshuriken_1_1deref__iterator__range_1_1iterator.html#ae4624d17f75445fd74be022801ff2fff',1,'shuriken::deref_iterator_range::iterator']]]
 ];

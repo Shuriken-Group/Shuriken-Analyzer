@@ -12,14 +12,14 @@
 <area shape="poly" id="edge35_Node000001_Node000018" title=" " alt="" coords="411,53,465,91,462,96,408,57"/>
 <area shape="rect" id="Node000003" href="$dex__classes_8h.html" title=" " alt="" coords="59,360,232,401"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,325,138,358,134,361,117,327"/>
-<area shape="rect" id="Node000004" href="$parser_8h.html" title=" " alt="" coords="428,456,596,497"/>
+<area shape="rect" id="Node000004" href="$Dex_2parser_8h.html" title=" " alt="" coords="428,456,596,497"/>
 <area shape="poly" id="edge23_Node000002_Node000004" title=" " alt="" coords="72,325,56,343,45,363,42,382,49,399,94,412,193,429,428,462,427,467,192,434,93,417,45,403,36,382,40,361,52,340,67,321"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="238,402,436,453,435,458,237,408"/>
 <area shape="rect" id="Node000005" href="$dex__analysis_8h.html" title=" " alt="" coords="204,752,391,793"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="449,506,414,527,384,554,362,591,340,647,306,752,301,751,335,645,358,589,380,551,411,523,446,501"/>
 <area shape="rect" id="Node000007" href="$apk_8h.html" title=" " alt="" coords="583,1129,751,1170"/>
 <area shape="poly" id="edge21_Node000004_Node000007" title=" " alt="" coords="613,490,728,514,776,531,809,550,830,577,840,603,842,632,842,668,842,974,838,1001,828,1027,813,1050,795,1071,752,1106,710,1131,707,1127,749,1101,791,1067,809,1047,823,1024,833,1000,836,973,836,667,837,632,835,604,826,580,805,554,774,536,726,519,612,495"/>
-<area shape="rect" id="Node000008" href="$shuriken__parsers_8h.html" title=" " alt="" coords="640,1218,814,1259"/>
+<area shape="rect" id="Node000008" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="640,1218,814,1259"/>
 <area shape="poly" id="edge22_Node000004_Node000008" title=" " alt="" coords="611,500,673,524,731,559,755,581,774,606,787,635,791,667,791,1062,789,1094,785,1118,765,1171,742,1219,737,1217,761,1169,780,1117,784,1093,786,1062,786,668,781,637,769,609,751,585,728,563,671,529,609,505"/>
 <area shape="rect" id="Node000009" href="$dex__disassembler_8h.html" title=" " alt="" coords="449,952,696,993"/>
 <area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="582,501,616,523,645,551,675,598,688,641,699,744,716,828,716,864,699,905,672,934,638,954,636,949,669,930,694,903,710,863,711,828,694,745,683,642,670,601,641,554,612,527,579,506"/>

@@ -2,7 +2,7 @@ var searchData=
 [
   ['off_0',['OFF',['../namespaceshuriken.html#ad6077f094241bc295b3b90992a34159ea88559a0cfd8250c9d65970cc145c92d4',1,'shuriken']]],
   ['offset_1',['OFFSET',['../classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#a18e50a004d475555194b3d14bac3925bac6b7360c58ee29d103b56c53aa4a3437',1,'shuriken::disassembler::dex::DexOpcodes']]],
-  ['offset_2',['offset',['../structshuriken_1_1parser_1_1dex_1_1DexMapList_1_1map__item.html#a817986bfb0807a521bbbeebe6d272b0a',1,'shuriken::parser::dex::DexMapList::map_item']]],
+  ['offset_2',['offset',['../structshuriken_1_1parser_1_1dex_1_1DexMapList_1_1map__item.html#a817986bfb0807a521bbbeebe6d272b0a',1,'shuriken::parser::dex::DexMapList::map_item::offset'],['../structshuriken_1_1parser_1_1macho_1_1MachoSections_1_1section__t.html#aef043c427bee4726face79b74ca5795e',1,'shuriken::parser::macho::MachoSections::section_t::offset']]],
   ['op_3',['op',['../structhdvminstruction__t__.html#a37a7905e91d8ec8bfd02d6714baf5245',1,'hdvminstruction_t_::op'],['../classshuriken_1_1disassembler_1_1dex_1_1Instruction.html#a55f5cae644f995a0966fb4665ddb286e',1,'shuriken::disassembler::dex::Instruction::op']]],
   ['op_5fcodes_4',['op_codes',['../classshuriken_1_1disassembler_1_1dex_1_1Instruction.html#aefd2c39a7034ef171fd171a1e993d465',1,'shuriken::disassembler::dex::Instruction']]],
   ['opcode_5',['OPCODE',['../classshuriken_1_1disassembler_1_1dex_1_1DexOpcodes.html#ae793f3a51805cd231cd51b0c39851a0ca1aca7cd5a9699534ea1653ff2a3a63c8',1,'shuriken::disassembler::dex::DexOpcodes::OPCODE'],['../dex__opcodes_8h.html#a7ad64ca9dad8afb0907b146d82bfa699',1,'OPCODE:&#160;dex_opcodes.h']]],

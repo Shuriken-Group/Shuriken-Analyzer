@@ -4,7 +4,7 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="598,51,640,76,680,110,697,130,710,152,719,176,722,202,722,478,719,506,709,532,694,556,676,578,631,615,586,643,583,638,628,611,672,574,690,553,704,530,714,505,717,478,717,202,714,177,706,154,693,133,676,114,637,81,595,56"/>
 <area shape="rect" id="Node000010" href="$dex__fields_8h.html" title=" " alt="" coords="453,183,621,223"/>
 <area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="540,61,540,182,534,182,534,61"/>
-<area shape="rect" id="Node000014" href="$parser_8h.html" title=" " alt="" coords="246,456,415,497"/>
+<area shape="rect" id="Node000014" href="$Dex_2parser_8h.html" title=" " alt="" coords="246,456,415,497"/>
 <area shape="poly" id="edge36_Node000001_Node000014" title=" " alt="" coords="576,54,605,82,632,117,653,157,659,179,661,202,661,293,655,333,636,366,609,394,574,417,536,435,495,449,416,468,414,462,493,444,534,430,572,412,605,390,632,363,650,331,656,293,656,202,654,180,648,159,628,120,601,86,573,58"/>
 <area shape="rect" id="Node000016" href="$dex__methods_8h.html" title=" " alt="" coords="179,183,357,223"/>
 <area shape="poly" id="edge30_Node000001_Node000016" title=" " alt="" coords="439,42,377,62,348,77,322,96,304,116,291,139,275,183,270,181,286,137,300,113,318,92,345,73,375,57,437,37"/>
@@ -20,7 +20,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,803,335,1038,331,1042,124,806"/>
 <area shape="rect" id="Node000005" href="$apk_8h.html" title=" " alt="" coords="328,1129,496,1170"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="375,1093,400,1127,396,1130,371,1096"/>
-<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title=" " alt="" coords="423,1218,598,1259"/>
+<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="423,1218,598,1259"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="447,1178,490,1216,486,1220,444,1182"/>
 <area shape="poly" id="edge7_Node000007_Node000004" title=" " alt="" coords="409,1006,372,1042,368,1038,405,1002"/>
 <area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="448,1008,452,1044,449,1082,440,1108,427,1130,423,1128,435,1106,444,1081,447,1044,443,1008"/>

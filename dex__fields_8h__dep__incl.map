@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="301,5,470,46"/>
 <area shape="rect" id="Node000002" href="$dex__encoded_8h.html" title=" " alt="" coords="173,94,350,135"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,57,291,96,288,91,343,53"/>
-<area shape="rect" id="Node000009" href="$parser_8h.html" title=" " alt="" coords="397,279,566,320"/>
+<area shape="rect" id="Node000009" href="$Dex_2parser_8h.html" title=" " alt="" coords="397,279,566,320"/>
 <area shape="poly" id="edge27_Node000001_Node000009" title=" " alt="" coords="415,56,455,112,473,146,487,182,492,208,492,234,488,278,483,278,487,234,486,208,482,183,468,148,450,115,410,59"/>
 <area shape="rect" id="Node000003" href="$dex__analysis_8h.html" title=" " alt="" coords="112,575,299,616"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="249,150,226,217,217,257,213,298,213,397,209,574,204,574,208,397,208,298,212,257,220,216,244,148"/>
@@ -15,7 +15,7 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="226,627,288,717,330,768,378,813,418,840,459,860,456,865,415,844,374,817,326,771,284,720,222,630"/>
 <area shape="rect" id="Node000005" href="$apk_8h.html" title=" " alt="" coords="547,952,715,993"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="551,911,605,949,602,954,548,915"/>
-<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title=" " alt="" coords="604,1041,778,1081"/>
+<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="604,1041,778,1081"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="655,1004,679,1039,675,1042,651,1007"/>
 <area shape="poly" id="edge7_Node000007_Node000003" title=" " alt="" coords="108,340,200,573,195,575,103,342"/>
 <area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="418,232,463,277,460,280,414,236"/>

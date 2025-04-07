@@ -1,0 +1,31 @@
+<map id="shuriken/include/shuriken/parser/Dex/parser.h" name="shuriken/include/shuriken/parser/Dex/parser.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="244,5,412,46"/>
+<area shape="rect" id="Node000002" href="$dex__analysis_8h.html" title=" " alt="" coords="387,294,573,334"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="384,52,407,70,428,92,455,145,471,202,479,254,482,293,477,294,474,254,466,203,450,147,423,96,404,74,380,56"/>
+<area shape="rect" id="Node000004" href="$apk_8h.html" title=" " alt="" coords="274,671,443,712"/>
+<area shape="poly" id="edge18_Node000001_Node000004" title=" " alt="" coords="428,45,491,68,551,102,576,123,596,148,609,177,613,209,613,516,609,546,597,573,578,597,554,618,498,651,440,673,438,668,496,646,551,614,574,594,592,571,604,545,608,515,608,209,604,178,591,151,572,127,548,106,489,73,426,51"/>
+<area shape="rect" id="Node000005" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="65,760,239,800"/>
+<area shape="poly" id="edge19_Node000001_Node000005" title=" " alt="" coords="229,43,154,63,117,78,83,96,53,117,29,143,14,174,8,209,8,604,11,629,19,653,48,695,84,731,120,757,117,761,81,735,44,699,15,655,6,630,3,604,3,209,8,172,25,140,49,113,80,91,115,73,153,58,228,38"/>
+<area shape="rect" id="Node000006" href="$dex__disassembler_8h.html" title=" " alt="" coords="176,494,422,534"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="362,56,374,74,384,93,394,133,395,165,384,239,369,314,348,387,309,494,304,492,343,385,363,313,379,238,390,165,389,134,379,95,370,76,358,59"/>
+<area shape="rect" id="Node000007" href="$dex__instructions_8h.html" title=" " alt="" coords="132,94,369,135"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="302,60,270,95,266,92,298,56"/>
+<area shape="rect" id="Node000009" href="$internal__disassembler_8h.html" title=" " alt="" coords="42,286,216,342"/>
+<area shape="poly" id="edge17_Node000001_Node000009" title=" " alt="" coords="229,37,199,45,170,57,144,73,122,96,110,118,102,142,100,195,109,245,121,285,116,287,103,246,95,195,97,141,105,116,118,92,140,69,167,52,197,40,228,32"/>
+<area shape="rect" id="Node000003" href="$analysis_8h.html" title=" " alt="" coords="336,582,504,623"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="475,351,427,582,421,581,470,350"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="399,637,375,672,370,669,395,634"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="299,720,200,762,198,757,297,716"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="340,541,394,580,391,584,337,546"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="307,549,327,622,349,669,345,672,321,624,302,550"/>
+<area shape="rect" id="Node000008" href="$disassembled__method_8h.html" title=" " alt="" coords="156,183,369,238"/>
+<area shape="poly" id="edge9_Node000007_Node000008" title=" " alt="" coords="258,150,262,182,257,182,252,150"/>
+<area shape="poly" id="edge16_Node000007_Node000009" title=" " alt="" coords="189,145,165,162,146,184,135,209,129,236,129,286,123,286,124,235,130,207,142,181,162,158,186,140"/>
+<area shape="poly" id="edge10_Node000008_Node000002" title=" " alt="" coords="336,243,439,291,437,296,334,248"/>
+<area shape="poly" id="edge11_Node000008_Node000006" title=" " alt="" coords="270,253,299,493,294,494,265,254"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="216,250,167,288,164,284,213,246"/>
+<area shape="poly" id="edge13_Node000009_Node000006" title=" " alt="" coords="183,350,225,388,264,443,292,492,287,494,260,446,221,392,179,354"/>
+<area shape="rect" id="Node000010" href="$linear__sweep__disassembler_8h.html" title=" " alt="" coords="42,390,211,446"/>
+<area shape="poly" id="edge14_Node000009_Node000010" title=" " alt="" coords="131,358,130,389,125,389,126,358"/>
+<area shape="poly" id="edge15_Node000010_Node000006" title=" " alt="" coords="191,451,264,491,261,495,188,456"/>
+</map>

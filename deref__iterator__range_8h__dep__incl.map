@@ -10,13 +10,13 @@
 <area shape="poly" id="edge31_Node000001_Node000016" title=" " alt="" coords="404,77,404,197,399,197,399,77"/>
 <area shape="rect" id="Node000017" href="$dex__protos_8h.html" title=" " alt="" coords="566,109,734,150"/>
 <area shape="poly" id="edge34_Node000001_Node000017" title=" " alt="" coords="489,64,599,106,597,111,487,69"/>
-<area shape="rect" id="Node000003" href="$parser_8h.html" title=" " alt="" coords="191,471,359,512"/>
+<area shape="rect" id="Node000003" href="$Dex_2parser_8h.html" title=" " alt="" coords="191,471,359,512"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="278,431,278,471,272,471,272,431"/>
 <area shape="rect" id="Node000004" href="$dex__analysis_8h.html" title=" " alt="" coords="465,767,651,808"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="375,511,427,532,451,547,473,565,493,589,510,615,535,672,550,725,558,766,553,767,545,727,530,674,506,618,489,592,469,569,448,552,425,537,373,516"/>
 <area shape="rect" id="Node000006" href="$apk_8h.html" title=" " alt="" coords="70,1144,238,1185"/>
 <area shape="poly" id="edge20_Node000003_Node000006" title=" " alt="" coords="219,522,174,549,131,586,113,607,99,630,89,655,86,683,86,988,92,1033,106,1076,125,1114,142,1143,138,1145,120,1116,102,1078,87,1035,81,989,81,682,84,654,94,628,109,604,127,582,171,545,216,517"/>
-<area shape="rect" id="Node000007" href="$shuriken__parsers_8h.html" title=" " alt="" coords="5,1233,180,1274"/>
+<area shape="rect" id="Node000007" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="5,1233,180,1274"/>
 <area shape="poly" id="edge21_Node000003_Node000007" title=" " alt="" coords="197,520,142,546,89,581,68,602,50,626,39,653,35,683,35,1077,37,1108,41,1132,60,1184,83,1231,78,1234,55,1186,36,1133,31,1109,30,1077,30,682,34,652,46,624,63,599,86,577,139,541,195,515"/>
 <area shape="rect" id="Node000008" href="$dex__disassembler_8h.html" title=" " alt="" coords="136,967,382,1008"/>
 <area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="237,524,203,553,171,591,146,634,139,658,136,683,136,789,139,816,147,843,174,892,207,934,238,965,234,969,203,938,169,895,142,845,134,817,131,789,131,682,134,657,141,632,166,588,199,549,233,520"/>

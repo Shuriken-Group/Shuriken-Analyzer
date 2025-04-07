@@ -1,12 +1,12 @@
 <map id="shuriken/include/shuriken/parser/Dex/dex_mapitem.h" name="shuriken/include/shuriken/parser/Dex/dex_mapitem.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="239,5,417,46"/>
-<area shape="rect" id="Node000002" href="$parser_8h.html" title=" " alt="" coords="244,94,412,135"/>
+<area shape="rect" id="Node000002" href="$Dex_2parser_8h.html" title=" " alt="" coords="244,94,412,135"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="331,62,331,94,325,94,325,62"/>
 <area shape="rect" id="Node000003" href="$dex__analysis_8h.html" title=" " alt="" coords="387,382,573,423"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,141,407,159,428,181,455,234,471,290,479,342,482,382,477,382,474,343,466,292,450,236,423,184,404,163,380,145"/>
 <area shape="rect" id="Node000005" href="$apk_8h.html" title=" " alt="" coords="274,760,443,800"/>
 <area shape="poly" id="edge19_Node000002_Node000005" title=" " alt="" coords="428,134,491,157,551,190,576,212,596,237,609,265,613,298,613,604,609,635,597,662,578,686,554,707,498,739,440,761,438,757,496,734,551,702,574,682,592,659,604,633,608,604,608,298,604,267,591,240,572,215,548,195,489,162,426,139"/>
-<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title=" " alt="" coords="65,848,239,889"/>
+<area shape="rect" id="Node000006" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="65,848,239,889"/>
 <area shape="poly" id="edge20_Node000002_Node000006" title=" " alt="" coords="229,132,154,152,117,166,83,184,53,206,29,232,14,262,8,298,8,693,11,718,19,741,48,784,84,819,120,846,117,850,81,823,44,788,15,744,6,719,3,693,3,298,8,261,25,229,49,202,80,180,115,161,153,147,228,127"/>
 <area shape="rect" id="Node000007" href="$dex__disassembler_8h.html" title=" " alt="" coords="176,582,422,623"/>
 <area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="362,145,374,162,384,182,394,221,395,254,384,327,369,403,348,476,309,583,304,581,343,474,363,401,379,327,390,254,389,222,379,184,370,165,358,148"/>

@@ -1,0 +1,35 @@
+<map id="shuriken/include/shuriken/parser/Macho/parser.h" name="shuriken/include/shuriken/parser/Macho/parser.h">
+<area shape="rect" id="Node000001" title="Parser for the Mach&#45;O file, here we contain objects for all the other fields." alt="" coords="341,5,510,46"/>
+<area shape="rect" id="Node000002" href="$shurikenstream_8h.html" title=" " alt="" coords="10,271,238,297"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="342,39,270,55,193,82,156,101,121,124,91,152,65,184,59,202,65,222,78,243,95,260,91,263,74,246,60,224,54,202,60,181,87,148,118,120,153,97,191,77,269,50,340,34"/>
+<area shape="rect" id="Node000006" href="$macho__header_8h.html" title=" " alt="" coords="76,183,229,223"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="397,49,197,176,194,172,394,44"/>
+<area shape="rect" id="Node000007" href="$macho__commands_8h.html" title=" " alt="" coords="406,94,560,135"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="441,45,464,80,459,83,436,48"/>
+<area shape="rect" id="Node000008" href="$macho__sections_8h.html" title=" " alt="" coords="305,183,458,223"/>
+<area shape="poly" id="edge18_Node000001_Node000008" title=" " alt="" coords="417,47,397,95,390,132,386,168,380,167,384,131,392,93,412,45"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="604,271,661,297"/>
+<area shape="poly" id="edge19_Node000001_Node000011" title=" " alt="" coords="511,39,559,59,581,74,600,92,622,132,634,177,638,220,638,256,632,256,633,220,629,178,617,134,595,96,577,78,556,64,509,44"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="512,271,579,297"/>
+<area shape="poly" id="edge20_Node000001_Node000012" title=" " alt="" coords="511,44,546,64,574,92,584,113,589,135,587,181,576,224,561,259,556,257,571,222,582,180,584,136,579,115,570,96,543,68,508,49"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,345,70,371"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,300,65,337,62,333,108,295"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,345,154,371"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="127,297,127,329,122,329,122,297"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="178,345,244,371"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="141,295,186,333,183,337,137,300"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="148,225,136,257,131,256,143,223"/>
+<area shape="poly" id="edge15_Node000007_Node000002" title=" " alt="" coords="412,138,353,158,295,185,268,204,242,226,165,267,163,262,239,221,265,200,292,180,351,153,410,133"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="462,137,418,174,414,170,458,133"/>
+<area shape="poly" id="edge16_Node000007_Node000011" title=" " alt="" coords="502,133,613,258,609,261,498,137"/>
+<area shape="poly" id="edge17_Node000007_Node000012" title=" " alt="" coords="493,134,538,256,533,258,488,136"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="318,226,179,269,177,264,316,221"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="262,271,322,297"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="361,226,319,263,315,259,358,222"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="346,271,417,297"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="384,224,384,256,379,256,379,224"/>
+<area shape="poly" id="edge12_Node000008_Node000011" title=" " alt="" coords="445,221,589,267,588,272,443,226"/>
+<area shape="poly" id="edge13_Node000008_Node000012" title=" " alt="" coords="424,222,508,262,506,267,421,226"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="441,271,487,297"/>
+<area shape="poly" id="edge14_Node000008_Node000013" title=" " alt="" coords="404,222,442,258,438,262,400,226"/>
+</map>

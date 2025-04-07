@@ -1,0 +1,12 @@
+<map id="shuriken/include/shuriken/parser/Macho/macho_sections.h" name="shuriken/include/shuriken/parser/Macho/macho_sections.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,302,46"/>
+<area shape="rect" id="Node000002" href="$macho__commands_8h.html" title=" " alt="" coords="5,94,234,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,60,139,95,135,92,166,56"/>
+<area shape="rect" id="Node000003" href="$Macho_2parser_8h.html" title="Parser for the Mach&#45;O file, here we contain objects for all the other fields." alt="" coords="111,183,280,223"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="228,57,249,93,253,114,249,136,235,162,218,184,214,180,231,159,244,134,248,114,244,95,223,59"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="149,145,180,180,176,184,145,148"/>
+<area shape="rect" id="Node000004" href="$ipa_8h.html" title="File to analyze IPA files, an IPA file will contain information from all the Mach&#45;O files from the IP..." alt="" coords="111,271,280,312"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="198,239,198,271,193,271,193,239"/>
+<area shape="rect" id="Node000005" href="$shuriken__parsers_8h.html" title="Declaration of all the parsers of the library: DEX, APK, Mach&#45;O and IPA." alt="" coords="108,360,283,401"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="198,328,198,360,193,360,193,328"/>
+</map>
