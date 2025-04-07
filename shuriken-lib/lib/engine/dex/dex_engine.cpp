@@ -94,6 +94,12 @@ shuriken::error::VoidResult DexEngine::parse() {
     }
 
     // fill the data with the information from the header
+    pimpl->dex_type_providers = std::move(pimpl->parser.get_types_pool());
+    pimpl->sdk_dvmtypes = std::move(pimpl->parser.get_dvm_types_pool());
+    pimpl->dex_prototypes_providers = std::move(pimpl->parser.get_prototypes_pool());
+    pimpl->sdk_prototypes = std::move(pimpl->parser.get_dvm_prototype_pool());
+
+    // do not use parser after this line!!!
 
     return error::make_success();
 }

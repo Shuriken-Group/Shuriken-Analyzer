@@ -18,6 +18,7 @@ if (BUILD_TESTS)
             dex/dvm_type_tests.cpp
             # Add other test files here
             dex/dvm_prototypes_tests.cpp
+            dex/dex_loading_tests.cpp
     )
 
     # Link against the Shuriken library
@@ -34,6 +35,11 @@ if (BUILD_TESTS)
             ${SHURIKEN_PUBLIC_INCLUDE_DIR}
             ${SHURIKEN_PRIVATE_INCLUDE_DIR}
     )
+
+    set(DEX_FILES_FOLDER "${CMAKE_CURRENT_SOURCE_DIR}/compiled/dex")
+    configure_file(
+            ${CMAKE_CURRENT_SOURCE_DIR}/dex/dex-files-folder.in
+            ${CMAKE_CURRENT_SOURCE_DIR}/dex/dex-files-folder.inc)
 
     # Enable CTest integration
     include(GoogleTest)

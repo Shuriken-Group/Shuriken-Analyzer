@@ -5,6 +5,8 @@
 #pragma once
 
 #include <shuriken/internal/engine/dex/parser/dex_header.hpp>
+#include <shuriken/internal/engine/dex/parser/field_id.hpp>
+#include <shuriken/internal/engine/dex/parser/method_id.hpp>
 
 
 #include <shuriken/internal/io/shurikenstream.hpp>
@@ -25,6 +27,8 @@ private:
     std::vector<std::unique_ptr<DVMType>> dvm_types_pool;
     std::vector<std::unique_ptr<DVMPrototypeProvider>> prototypes_pool;
     std::vector<std::unique_ptr<DVMPrototype>> dvm_prototype_pool;
+    std::vector<FieldID> fields_;
+    std::vector<MethodID> methods_;
     
     bool parse_string_pool(io::ShurikenStream& stream,
                                         std::uint32_t strings_offset,
@@ -42,11 +46,33 @@ private:
     bool parse_protos(io::ShurikenStream& stream,
                       std::uint32_t protos_offset,
                       std::uint32_t n_of_protos);
+
+    bool parse_fields(io::ShurikenStream& stream,
+                      std::uint32_t fields_offset,
+                      std::uint32_t n_of_fields);
+
+    bool parse_methods(io::ShurikenStream& stream,
+                       std::uint32_t methods_offset,
+                       std::uint32_t methods_size);
 public:
     Parser() = default;
     ~Parser() = default;
 
     error::VoidResult parse(io::ShurikenStream& stream);
+
+    std::vector<std::unique_ptr<DVMTypeProvider>> & get_types_pool();
+
+    std::vector<std::unique_ptr<DVMType>> & get_dvm_types_pool();
+
+    std::vector<std::unique_ptr<DVMPrototypeProvider>> & get_prototypes_pool();
+
+    std::vector<std::unique_ptr<DVMPrototype>> & get_dvm_prototype_pool();
+
+    std::vector<FieldID> & get_fields_ids();
+
+    std::vector<MethodID> & get_methods_ids();
+
+
 };
 }
 }

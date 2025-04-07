@@ -21,6 +21,14 @@ shuriken::error::VoidResult Parser::parse(io::ShurikenStream &stream) {
         return error::make_error(error::ErrorCode::ParseError, "Error reading the dex protos");
     }
 
+    if (!parse_fields(stream, header_.get_field_ids_off(), header_.get_field_ids_size())) {
+        return error::make_error(error::ErrorCode::ParseError, "Error reading the dex fields");
+    }
+
+    if (!parse_methods(stream, header_.get_method_ids_off(), header_.get_method_ids_size())) {
+        return error::make_error(error::ErrorCode::ParseError, "Error reading the dex methods");
+    }
+
     return error::make_success();
 }
 
@@ -171,4 +179,77 @@ Parser::parse_protos(shuriken::io::ShurikenStream &stream, std::uint32_t protos_
 
     stream.seek(current_offset);
     return stream.good();
+}
+
+bool Parser::parse_fields(shuriken::io::ShurikenStream &stream, std::uint32_t fields_offset, std::uint32_t n_of_fields) {
+    auto current_offset = stream.position();
+    std::uint16_t class_idx, type_idx;
+    std::uint32_t name_idx;
+
+    stream.seek(fields_offset);
+
+    for (size_t I = 0; I < n_of_fields; ++I) {
+        class_idx = stream.read<std::uint16_t>();
+        type_idx  = stream.read<std::uint16_t>();
+        name_idx  = stream.read<std::uint32_t>();
+
+        DVMType& class_ = *(dvm_types_pool[class_idx].get());
+        DVMType& type_ = *(dvm_types_pool[type_idx].get());
+        std::string_view name_ = string_pool[name_idx];
+        fields_.emplace_back(class_, type_, name_);
+    }
+
+
+    stream.seek(current_offset);
+    return stream.good();
+}
+
+bool
+Parser::parse_methods(shuriken::io::ShurikenStream &stream, std::uint32_t methods_offset, std::uint32_t methods_size) {
+    auto current_offset = stream.position();
+    std::uint16_t class_idx;
+    std::uint16_t proto_idx;
+    std::uint32_t name_idx;
+
+    stream.seek(methods_offset);
+
+    for (size_t I = 0; I < methods_size; ++I) {
+        class_idx = stream.read<std::uint16_t>();
+        proto_idx = stream.read<std::uint16_t>();
+        name_idx = stream.read<std::uint32_t>();
+
+        DVMType& class_ = *(dvm_types_pool[class_idx].get());
+        DVMPrototype& proto_ = *(dvm_prototype_pool[proto_idx].get());
+        std::string_view name = string_pool[name_idx];
+
+        methods_.emplace_back(class_, proto_, name);
+    }
+
+
+    stream.seek(current_offset);
+    return stream.good();
+}
+
+std::vector<std::unique_ptr<DVMTypeProvider>> &Parser::get_types_pool() {
+    return types_pool;
+}
+
+std::vector<std::unique_ptr<DVMType>> &Parser::get_dvm_types_pool() {
+    return dvm_types_pool;
+}
+
+std::vector<std::unique_ptr<DVMPrototypeProvider>> &Parser::get_prototypes_pool() {
+    return prototypes_pool;
+}
+
+std::vector<std::unique_ptr<DVMPrototype>> &Parser::get_dvm_prototype_pool() {
+    return dvm_prototype_pool;
+}
+
+std::vector<FieldID> &Parser::get_fields_ids() {
+    return fields_;
+}
+
+std::vector<MethodID> &Parser::get_methods_ids() {
+    return methods_;
 }

@@ -45,6 +45,13 @@ shuriken::dex::Dex::Dex(std::string_view dex_path) : pimpl(new Dex::Impl()) {
 
     // Simply create the engine - don't use try/catch
     pimpl->dex_engine = std::make_unique<DexEngine>(std::move(stream_result.value()), dex_path, *this);
+    auto result = pimpl->dex_engine->parse();
+    if (!result) {
+        pimpl->initialized = false;
+        pimpl->last_error = result.error();
+        return;
+    }
+
     pimpl->initialized = true;
 }
 
