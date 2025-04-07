@@ -1,9 +1,9 @@
-//--------------------------------------------------------------------*- C++ -*-
-// Shuriken-Analyzer: library for bytecode analysis.
-// @author Farenain <kunai.static.analysis@gmail.com>
-//
-// @file header.h
-// @brief MachoHeader of a MACHO file represented by a structure
+///--------------------------------------------------------------------*- C++ -*-
+/// Shuriken-Analyzer: library for bytecode analysis.
+/// @author JorgeRodrigoLeclercq <jorgerodrigoleclercq@gmail.com>
+///
+/// @file header.h
+/// @brief MachoHeader of a Mach-O file represented by a structure
 
 #ifndef SHURIKENLIB_MACHO_HEADER_H
 #define SHURIKENLIB_MACHO_HEADER_H
@@ -13,9 +13,9 @@
 namespace shuriken::parser::macho {
     class MachoHeader {
     public:
-        /// @brief Structure with the definition of the MACHO header
+        /// @brief Structure with the definition of the Mach-O header
         /// all these values are later used for parsing the header
-        /// from MACHO
+        /// from Mach-O
         struct machoheader_t {
             std::uint32_t magic;        //! mach magic number identifier
             std::uint32_t cputype;      //! cpu specifier
@@ -27,8 +27,8 @@ namespace shuriken::parser::macho {
             std::uint32_t reserved;     //! reserved
         };
     private:
-        /// @brief struct with the header from the macho
-        struct machoheader_t machoheader;
+        /// @brief struct with the header from the Mach-O
+        struct machoheader_t machoheader_;
 
     public:
         /// @brief Constructor for the header, default one
@@ -41,7 +41,7 @@ namespace shuriken::parser::macho {
         /// @param stream ShurikenStream where to read the header.
         void parse_header(common::ShurikenStream &stream);
 
-        /// @brief Obtain a reference of the macho header struct
+        /// @brief Obtain a reference of the Mach-O header struct
         /// if not value will be modified, use this function
         /// @return const reference to header structure
         const machoheader_t &get_macho_header_const() const;

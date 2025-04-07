@@ -56,8 +56,8 @@ option(DEX "Disable the DEX analysis from the library (enable by default)" ON)
 option(DEX_TESTS "Compile all the tests for DEX files" OFF)
 option(SANITIZE "Enable sanitizers for the project" OFF)
 option(MJOLNIR "Enable the compilation of MjolnIR, it needs LLVM and MLIR on the system" OFF)
-option(MACHO "Enable the MACHO analysis from the library" OFF)
-option(MACHO_TESTS "Compile all the tests for Macho files" OFF)
+option(MACHO "Enable the Mach-O analysis from the library" OFF)
+option(MACHO_TESTS "Compile all the tests for Mach-O files" OFF)
 
 ##############################################################
 
@@ -133,9 +133,9 @@ if(DEX)
         )
 endif()
 
-# Compile the object files for MACHO
+# Compile the object files for Mach-O
 if (MACHO)
-    message(STATUS "Generating Shuriken MACHO object files")
+    message(STATUS "Generating Shuriken Mach-O object files")
 
     add_library(macho-obj
             OBJECT
@@ -146,8 +146,10 @@ if (MACHO)
             POSITION_INDEPENDENT_CODE 1
     )
 
-    # Macho files
+    # Mach-O files
     add_subdirectory(lib/parser/Macho)
+    # IPA files
+    add_subdirectory(lib/parser/Ipa)
 
     target_link_libraries(macho-obj PRIVATE spdlog::spdlog)
     target_link_libraries(macho-obj PRIVATE zip)
@@ -201,12 +203,14 @@ endif()
 message(STATUS "Path to DEX Folder: ${DEX_FILES_FOLDER}")
 
 if (MACHO_TESTS)
-    message(STATUS "Using precompiled MACHO")
+    message(STATUS "Using precompiled Mach-O")
     set(MACHO_FILES_FOLDER
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled-macho/")
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/macho_files/")
+    set(IPA_FILES_FOLDER 
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/compiled/ipa_files/")
 endif ()
 
-message(STATUS "Path to MACHO Folder: ${MACHO_FILES_FOLDER}")
+message(STATUS "Path to Mach-O Folder: ${MACHO_FILES_FOLDER}")
 
 add_subdirectory(tests)
 

@@ -14,3 +14,6 @@ add_subdirectory(apk)
 
 # Mach-O tests
 add_subdirectory(macho/parser)
+
+# IPA tests
+add_subdirectory(ipa)
