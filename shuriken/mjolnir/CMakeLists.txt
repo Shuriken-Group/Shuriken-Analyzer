@@ -38,6 +38,7 @@ target_link_libraries(shuriken-opt
     MjolnIRLifterLib
     MjolnIRLowerLib
     MjolnIRPasses
+    MjolnIRRegAllocLib
 )
 add_dependencies(shuriken-opt ShurikenTblGen)
 target_include_directories(shuriken-opt PUBLIC ${PROJECT_SOURCE_DIR}/include/)
