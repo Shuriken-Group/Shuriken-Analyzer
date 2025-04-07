@@ -7,7 +7,7 @@
 
 using namespace shuriken::dex;
 
-DVMPrototypeProvider::DVMPrototypeProvider(const std::string &shorty_idx, DVMType &return_type,
+DVMPrototypeProvider::DVMPrototypeProvider(std::string_view shorty_idx, DVMType &return_type,
                                            std::vector<dvmtype_t> &parameter_types) :
         shorty_idx(shorty_idx), return_type(return_type),
         parameter_types(std::move(parameter_types)) {

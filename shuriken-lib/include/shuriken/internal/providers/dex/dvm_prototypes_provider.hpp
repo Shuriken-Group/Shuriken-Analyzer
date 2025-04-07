@@ -22,7 +22,7 @@ private:
     std::string descriptor;
 
 public:
-    DVMPrototypeProvider(const std::string& shorty_idx, DVMType& return_type, std::vector<dvmtype_t>& parameter_types);
+    DVMPrototypeProvider(std::string_view shorty_idx, DVMType& return_type, std::vector<dvmtype_t>& parameter_types);
     ~DVMPrototypeProvider() = default;
 
     /**

@@ -41,11 +41,8 @@ protected:
 
     // Helpers to get references to our stored types
     DVMType &get_int_type() { return *type_storage[0]; }
-
     DVMType &get_void_type() { return *type_storage[1]; }
-
     DVMType &get_bool_type() { return *type_storage[2]; }
-
     DVMType &get_string_type() { return *type_storage[3]; }
 };
 
@@ -157,9 +154,17 @@ TEST_F(DVMPrototypeTest, ObjectReturnAndParams) {
 
 // Test a method with array parameters
 TEST_F(DVMPrototypeTest, ArrayParameters) {
-    // Create an array type
-    DVMArrayProvider array_provider{"[I", 1, get_int_type()};
-    DVMType& int_array_type = create_and_store_type(array_provider);
+    // Create a new provider for the array to own - using new
+    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
+                                                            "I", fundamental_e::INT);
+
+    // Create the array provider with the raw pointer
+    DVMArrayProvider array_provider{"[I", 1, int_provider_ptr};
+
+    // Create and store the array type
+    auto array_type_ptr = std::make_unique<DVMType>(array_provider);
+    DVMType& int_array_type = *array_type_ptr;
+    type_storage.push_back(std::move(array_type_ptr));
 
     // Create the prototype: void methodName(int[], String)
     std::string shorty = "V[L";
@@ -228,12 +233,20 @@ TEST_F(DVMPrototypeTest, ModifyPrototype) {
 
 // Test the deref_iterator_range functionality with prototype parameters
 TEST_F(DVMPrototypeTest, DerefIteratorRange) {
+    // Create array type for testing - using new for the provider
+    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
+                                                            "I", fundamental_e::INT);
+
+    // Create the array provider with the raw pointer
+    DVMArrayProvider array_provider{"[I", 1, int_provider_ptr};
+
+    // Create and store the array type
+    auto array_type_ptr = std::make_unique<DVMType>(array_provider);
+    DVMType& int_array_type = *array_type_ptr;
+    type_storage.push_back(std::move(array_type_ptr));
+
     // Create a prototype with multiple parameters
     std::string shorty = "VIZL[I";
-
-    // Create array type for testing
-    DVMArrayProvider array_provider{"[I", 1, get_int_type()};
-    DVMType& int_array_type = create_and_store_type(array_provider);
 
     // Set up parameters: boolean, int, String, int[]
     std::vector<dvmtype_t> params;

@@ -4,9 +4,11 @@
 
 #pragma once
 
-
+#include <memory>
+#include <shuriken/sdk/dex/dvm_types.hpp>
 #include <shuriken/sdk/dex/constants.hpp>
 #include <shuriken/sdk/dex/custom_types.hpp>
+#include <shuriken/internal/providers/dex/custom_types.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -21,7 +23,7 @@ private:
     const types::fundamental_e fundamental_type;
 
 public:
-    DVMFundamentalProvider(const std::string& dalvik_format, types::fundamental_e fundamental_type);
+    DVMFundamentalProvider(std::string_view dalvik_format, types::fundamental_e fundamental_type);
     ~DVMFundamentalProvider() = default;
 
     /**
@@ -77,7 +79,7 @@ public:
      * @brief Constructs a class provider from a Dalvik format string
      * @param dalvik_format The Dalvik format of the class (e.g. "Ljava/lang/String;")
      */
-    DVMClassProvider(const std::string& dalvik_format);
+    DVMClassProvider(std::string_view dalvik_format);
     ~DVMClassProvider() = default;
 
     /**
@@ -123,8 +125,10 @@ private:
     std::string canonical_name;
     // @brief depth of the array
     const size_t array_depth;
+    // @brief keep a unique_ptr of the type
+    std::unique_ptr<DVMTypeProvider> base_type_provider;
     // @brief base type of the array
-    std::reference_wrapper<DVMType> base_type;
+    std::unique_ptr<DVMType> base_type;
 public:
     /**
      * @brief Constructs an array provider from its components
@@ -132,7 +136,7 @@ public:
      * @param array_depth The nesting depth of the array
      * @param base_type Pointer to the base type of the array elements
      */
-    DVMArrayProvider(const std::string& dalvik_format, const size_t array_depth, DVMType & base_type);
+    DVMArrayProvider(std::string_view dalvik_format, size_t array_depth, DVMTypeProvider* base_type_provider);
     ~DVMArrayProvider() = default;
 
     /**
@@ -181,6 +185,42 @@ public:
      */
     const DVMType& get_base_type() const;
 };
+
+/**
+ * @param type type to obtain its main type_e
+ * @return type_e of provided object
+ */
+types::type_e get_type(const DVMTypeProvider & type);
+
+/**
+ * @param type type to obtain its name in dalvik format
+ * @return dalvik format of type as string_view
+ */
+std::string_view get_dalvik_format_string(const DVMTypeProvider& type);
+
+/**
+ * @param type type to obtain its name in dalvik format
+ * @return dalvik format of type as string
+ */
+std::string get_dalvik_format(const DVMTypeProvider& type);
+
+/**
+ * @param type type to obtain its name in canonical format
+ * @return canonical format of type as string
+ */
+std::string_view get_canonical_name(const DVMTypeProvider& type);
+
+/**
+ * @param type type to obtain its name in canonical format
+ * @return canonical format of type as string
+ */
+std::string get_canonical_name_string(const DVMTypeProvider& type);
+
+DVMFundamentalProvider * as_fundamental(DVMTypeProvider& type);
+
+DVMClassProvider * as_class(DVMTypeProvider& type);
+
+DVMArrayProvider * as_array(DVMTypeProvider& type);
 
 } // namespace dex
 } // namespace shuriken
