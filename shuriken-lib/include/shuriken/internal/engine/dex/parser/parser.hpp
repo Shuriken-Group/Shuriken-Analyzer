@@ -7,6 +7,7 @@
 #include <shuriken/internal/engine/dex/parser/dex_header.hpp>
 #include <shuriken/internal/engine/dex/parser/field_id.hpp>
 #include <shuriken/internal/engine/dex/parser/method_id.hpp>
+#include <shuriken/internal/engine/dex/parser/class_def.hpp>
 
 
 #include <shuriken/internal/io/shurikenstream.hpp>
@@ -29,6 +30,7 @@ private:
     std::vector<std::unique_ptr<DVMPrototype>> dvm_prototype_pool;
     std::vector<FieldID> fields_;
     std::vector<MethodID> methods_;
+    std::vector<ClassDef> classes_;
     
     bool parse_string_pool(io::ShurikenStream& stream,
                                         std::uint32_t strings_offset,
@@ -54,6 +56,10 @@ private:
     bool parse_methods(io::ShurikenStream& stream,
                        std::uint32_t methods_offset,
                        std::uint32_t methods_size);
+
+    bool parse_classes(io::ShurikenStream& stream,
+                       std::uint32_t classes_offset,
+                       std::uint32_t classes_size);
 public:
     Parser() = default;
     ~Parser() = default;
@@ -72,7 +78,7 @@ public:
 
     std::vector<MethodID> & get_methods_ids();
 
-
+    std::vector<ClassDef> & get_classes();
 };
 }
 }

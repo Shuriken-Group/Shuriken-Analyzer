@@ -29,6 +29,10 @@ shuriken::error::VoidResult Parser::parse(io::ShurikenStream &stream) {
         return error::make_error(error::ErrorCode::ParseError, "Error reading the dex methods");
     }
 
+    if (!parse_classes(stream, header_.get_class_defs_off(), header_.get_class_defs_size())) {
+        return error::make_error(error::ErrorCode::ParseError, "Error reading the dex classes");
+    }
+
     return error::make_success();
 }
 
@@ -181,7 +185,8 @@ Parser::parse_protos(shuriken::io::ShurikenStream &stream, std::uint32_t protos_
     return stream.good();
 }
 
-bool Parser::parse_fields(shuriken::io::ShurikenStream &stream, std::uint32_t fields_offset, std::uint32_t n_of_fields) {
+bool
+Parser::parse_fields(shuriken::io::ShurikenStream &stream, std::uint32_t fields_offset, std::uint32_t n_of_fields) {
     auto current_offset = stream.position();
     std::uint16_t class_idx, type_idx;
     std::uint32_t name_idx;
@@ -190,11 +195,11 @@ bool Parser::parse_fields(shuriken::io::ShurikenStream &stream, std::uint32_t fi
 
     for (size_t I = 0; I < n_of_fields; ++I) {
         class_idx = stream.read<std::uint16_t>();
-        type_idx  = stream.read<std::uint16_t>();
-        name_idx  = stream.read<std::uint32_t>();
+        type_idx = stream.read<std::uint16_t>();
+        name_idx = stream.read<std::uint32_t>();
 
-        DVMType& class_ = *(dvm_types_pool[class_idx].get());
-        DVMType& type_ = *(dvm_types_pool[type_idx].get());
+        DVMType &class_ = *(dvm_types_pool[class_idx].get());
+        DVMType &type_ = *(dvm_types_pool[type_idx].get());
         std::string_view name_ = string_pool[name_idx];
         fields_.emplace_back(class_, type_, name_);
     }
@@ -218,13 +223,34 @@ Parser::parse_methods(shuriken::io::ShurikenStream &stream, std::uint32_t method
         proto_idx = stream.read<std::uint16_t>();
         name_idx = stream.read<std::uint32_t>();
 
-        DVMType& class_ = *(dvm_types_pool[class_idx].get());
-        DVMPrototype& proto_ = *(dvm_prototype_pool[proto_idx].get());
+        DVMType &class_ = *(dvm_types_pool[class_idx].get());
+        DVMPrototype &proto_ = *(dvm_prototype_pool[proto_idx].get());
         std::string_view name = string_pool[name_idx];
 
         methods_.emplace_back(class_, proto_, name);
     }
 
+
+    stream.seek(current_offset);
+    return stream.good();
+}
+
+bool
+Parser::parse_classes(io::ShurikenStream &stream,
+                      std::uint32_t classes_offset,
+                      std::uint32_t classes_size) {
+    auto current_offset = stream.position();
+    stream.seek(classes_offset);
+
+    for (size_t I = 0; I < classes_size; I++) {
+        classes_.emplace_back();
+        if (!classes_.back().parse_class_def(stream,
+                                             string_pool,
+                                             dvm_types_pool,
+                                             fields_,
+                                             methods_))
+            return false;
+    }
 
     stream.seek(current_offset);
     return stream.good();
@@ -252,4 +278,8 @@ std::vector<FieldID> &Parser::get_fields_ids() {
 
 std::vector<MethodID> &Parser::get_methods_ids() {
     return methods_;
+}
+
+std::vector<ClassDef> &Parser::get_classes() {
+    return classes_;
 }
