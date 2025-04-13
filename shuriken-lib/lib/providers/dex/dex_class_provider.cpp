@@ -29,12 +29,12 @@ namespace {
     }
 }
 
-DexClassProvider::DexClassProvider(std::string_view name, std::string_view package_name,
-                                   std::string_view extended_class, std::vector<std::string>& implemented_classes) :
-        name(name), package_name(package_name), extended_class(extended_class),
-        implemented_classes(std::move(implemented_classes))  {
-    dalvik_format = this->package_name + "->" + this->name;
-    canonical_format = ::dalvik_to_canonical(this->package_name) + "." + this->name;
+DexClassProvider::DexClassProvider(std::string_view name, std::string_view package_name, std::string_view dalvik_format,
+                                   std::string_view canonical_name,
+                                   std::string_view extended_class, std::vector<std::string> &implemented_classes) :
+        name(name), package_name(package_name), dalvik_format(dalvik_format), canonical_format(canonical_name),
+        extended_class(extended_class),
+        implemented_classes(std::move(implemented_classes)) {
 }
 
 std::string_view DexClassProvider::get_name() const {
@@ -105,7 +105,7 @@ method_deref_iterator_t DexClassProvider::get_methods() {
 
 const Method *
 DexClassProvider::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
-    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t& m) {
+    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t &m) {
         return m.get().get_name() == name && m.get().get_method_prototype().get_descriptor() == prototype;
     });
 
@@ -116,7 +116,7 @@ DexClassProvider::get_method_by_name_prototype(std::string_view name, std::strin
 }
 
 Method *DexClassProvider::get_method_by_name_prototype(std::string_view name, std::string_view prototype) {
-    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t& m) {
+    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t &m) {
         return m.get().get_name() == name && m.get().get_method_prototype().get_descriptor() == prototype;
     });
 
@@ -127,7 +127,7 @@ Method *DexClassProvider::get_method_by_name_prototype(std::string_view name, st
 }
 
 const Method *DexClassProvider::get_method_by_descriptor(std::string_view descriptor) const {
-    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t& m) {
+    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t &m) {
         return m.get().get_descriptor() == descriptor;
     });
 
@@ -138,7 +138,7 @@ const Method *DexClassProvider::get_method_by_descriptor(std::string_view descri
 }
 
 Method *DexClassProvider::get_method_by_descriptor(std::string_view descriptor) {
-    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t& m) {
+    auto it = std::find_if(methods.begin(), methods.end(), [&](const method_t &m) {
         return m.get().get_descriptor() == descriptor;
     });
 
@@ -158,7 +158,7 @@ fields_deref_iterator_t DexClassProvider::get_fields() {
 }
 
 const Field *DexClassProvider::get_field_by_name(std::string_view name) const {
-    auto it = std::find_if(fields.begin(), fields.end(), [&](const field_t& f) {
+    auto it = std::find_if(fields.begin(), fields.end(), [&](const field_t &f) {
         return f.get().get_name() == name;
     });
 
@@ -168,7 +168,7 @@ const Field *DexClassProvider::get_field_by_name(std::string_view name) const {
 }
 
 Field *DexClassProvider::get_field_by_name(std::string_view name) {
-    auto it = std::find_if(fields.begin(), fields.end(), [&](const field_t& f) {
+    auto it = std::find_if(fields.begin(), fields.end(), [&](const field_t &f) {
         return f.get().get_name() == name;
     });
 
@@ -178,10 +178,10 @@ Field *DexClassProvider::get_field_by_name(std::string_view name) {
 }
 
 std::vector<Method *> DexClassProvider::found_method_by_regex(std::string_view descriptor_regex) {
-    std::vector<Method*> matching_methods;
+    std::vector<Method *> matching_methods;
     std::regex pattern(descriptor_regex.data());
 
-    for (const auto& method : methods) {
+    for (const auto &method: methods) {
         std::string descriptor = method.get().get_descriptor_string();
         if (std::regex_match(descriptor, pattern)) {
             matching_methods.emplace_back(&(method.get()));
@@ -192,10 +192,10 @@ std::vector<Method *> DexClassProvider::found_method_by_regex(std::string_view d
 }
 
 std::vector<Field *> DexClassProvider::found_field_by_regex(std::string_view descriptor_regex) {
-    std::vector<Field*> matching_fields;
+    std::vector<Field *> matching_fields;
     std::regex pattern(descriptor_regex.data());
 
-    for (const auto & field : fields) {
+    for (const auto &field: fields) {
         std::string descriptor = field.get().get_descriptor_string();
         if (std::regex_match(descriptor, pattern)) {
             matching_fields.emplace_back(&(field.get()));

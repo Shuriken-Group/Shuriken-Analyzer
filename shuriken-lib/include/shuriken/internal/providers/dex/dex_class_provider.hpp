@@ -32,8 +32,9 @@ private:
     // @brief fields from the class
     std::vector<field_t> fields;
 public:
-    DexClassProvider(std::string_view name, std::string_view package_name,
-                     std::string_view extended_class, std::vector<std::string>& implemented_classes);
+    DexClassProvider(std::string_view name, std::string_view package_name, std::string_view dalvik_format,
+                     std::string_view canonical_name, std::string_view extended_class,
+                     std::vector<std::string>& implemented_classes);
     ~DexClassProvider() = default;
 
     /***

@@ -28,10 +28,34 @@
 
 using namespace shuriken::dex;
 
+
+namespace {
+    std::tuple<std::string, std::string> split_class_descriptor(std::string_view descriptor) {
+        // Check if the descriptor is valid (starts with 'L' and ends with ';')
+        if (descriptor.empty() || descriptor[0] != 'L' || descriptor.back() != ';') {
+            return {"", ""}; // Return empty strings for invalid descriptor
+        }
+
+        // Remove the 'L' prefix and ';' suffix
+        std::string_view type_name = descriptor.substr(1, descriptor.size() - 2);
+
+        // Find the last '/' to separate package from class name
+        size_t last_slash = type_name.rfind('/');
+
+        if (last_slash == std::string_view::npos) {
+            // No package, just a class name
+            return {"", std::string(type_name)};
+        } else {
+            // Extract package and class name
+            std::string package(type_name.substr(0, last_slash));
+            std::string class_name(type_name.substr(last_slash + 1));
+            return {package, class_name};
+        }
+    }
+}
+
 class DexEngine::Impl {
 public:
-    Parser parser;
-
     std::reference_wrapper<Dex> owner_dex;
 
     std::string dex_path;
@@ -68,16 +92,18 @@ public:
     std::vector<std::reference_wrapper<DVMType>> ref_sdk_dvmtypes;
     std::vector<std::reference_wrapper<DVMTypeProvider>> ref_dex_type_providers;
 
-    Impl(Dex& owner_dex) : owner_dex(owner_dex) {}
+    Impl(Dex &owner_dex) : owner_dex(owner_dex) {}
+
     ~Impl() = default;
 };
 
-DexEngine::DexEngine(shuriken::io::ShurikenStream stream, Dex& owner_dex) : shuriken_stream(std::move(stream)),
-            pimpl(new DexEngine::Impl(owner_dex)) {
+DexEngine::DexEngine(shuriken::io::ShurikenStream stream, Dex &owner_dex) : shuriken_stream(std::move(stream)),
+                                                                            pimpl(new DexEngine::Impl(owner_dex)) {
 }
 
-shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex& owner_dex) : shuriken_stream(std::move(stream)),
-                                                                                                      pimpl(new DexEngine::Impl(owner_dex)) {
+shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex &owner_dex)
+        : shuriken_stream(std::move(stream)),
+          pimpl(new DexEngine::Impl(owner_dex)) {
     this->pimpl->dex_path = dex_path;
     if (!dex_path.empty())
         this->pimpl->dex_name = std::filesystem::path(dex_path).filename();
@@ -88,18 +114,44 @@ shuriken::dex::DexEngine::~DexEngine() {
 }
 
 shuriken::error::VoidResult DexEngine::parse() {
-    auto result = pimpl->parser.parse(shuriken_stream);
+    Parser parser;
+    auto result = parser.parse(shuriken_stream);
     if (!result) {
         return result;
     }
 
     // fill the data with the information from the header
-    pimpl->dex_type_providers = std::move(pimpl->parser.get_types_pool());
-    pimpl->sdk_dvmtypes = std::move(pimpl->parser.get_dvm_types_pool());
-    pimpl->dex_prototypes_providers = std::move(pimpl->parser.get_prototypes_pool());
-    pimpl->sdk_prototypes = std::move(pimpl->parser.get_dvm_prototype_pool());
+    pimpl->dex_type_providers = std::move(parser.get_types_pool());
+    pimpl->sdk_dvmtypes = std::move(parser.get_dvm_types_pool());
+    pimpl->dex_prototypes_providers = std::move(parser.get_prototypes_pool());
+    pimpl->sdk_prototypes = std::move(parser.get_dvm_prototype_pool());
 
-    // do not use parser after this line!!!
+    for (const auto &class_def: parser.get_classes()) {
+        // Create the classes
+        const DVMClass *class_id = ::as_class(*class_def->get_class_type());
+        const DVMClass *parent_id = ::as_class(*class_def->get_superclass_type());
+        std::vector<std::string> interfaces;
+        for (const auto &interface: class_def->get_interfaces()) {
+            const DVMClass *interface_type = ::as_class(*interface);
+            interfaces.push_back(interface_type->get_dalvik_format_string());
+        }
+        auto [package, class_name] = split_class_descriptor(class_id->get_dalvik_format());
+
+        auto new_class = std::make_unique<DexClassProvider>(
+                class_name,
+                package,
+                class_id->get_dalvik_format(),
+                class_id->get_canonical_name(),
+                parent_id->get_dalvik_format(),
+                interfaces
+        );
+        auto new_sdk_class = std::make_unique<Class>(*new_class);
+        pimpl->dex_class_providers.push_back(std::move(new_class));
+        pimpl->ref_dex_class_providers.push_back(std::ref(*pimpl->dex_class_providers.back().get()));
+        pimpl->sdk_classes.push_back(std::move(new_sdk_class));
+        pimpl->ref_sdk_classes.push_back(std::ref(*pimpl->sdk_classes.back().get()));
+    }
+
 
     return error::make_success();
 }
@@ -129,10 +181,10 @@ const Class *shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::s
                                                                           std::string_view name) const {
     auto it = std::find_if(this->pimpl->sdk_classes.begin(),
                            this->pimpl->sdk_classes.end(),
-                           [&](auto & c)-> bool {
-                       // Dereference the unique_ptr first using the * operator
-                       return c->get_package_name() == package_name && c->get_name() == name;
-    });
+                           [&](auto &c) -> bool {
+                               // Dereference the unique_ptr first using the * operator
+                               return c->get_package_name() == package_name && c->get_name() == name;
+                           });
 
     if (it != this->pimpl->sdk_classes.end()) {
         // Return a pointer to the Class object inside the unique_ptr
@@ -142,10 +194,11 @@ const Class *shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::s
     return nullptr;
 }
 
-Class *shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::string_view package_name, std::string_view name) {
+Class *
+shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::string_view package_name, std::string_view name) {
     auto it = std::find_if(this->pimpl->sdk_classes.begin(),
                            this->pimpl->sdk_classes.end(),
-                           [&](auto & c)-> bool {
+                           [&](auto &c) -> bool {
                                // Dereference the unique_ptr first using the * operator
                                return c->get_package_name() == package_name && c->get_name() == name;
                            });
@@ -161,9 +214,9 @@ Class *shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::string_
 const Class *shuriken::dex::DexEngine::get_class_by_descriptor(std::string_view descriptor) const {
     auto it = std::find_if(this->pimpl->sdk_classes.begin(),
                            this->pimpl->sdk_classes.end(),
-                           [&](auto & c) -> bool {
-        return c->get_dalvik_name() == descriptor;
-    });
+                           [&](auto &c) -> bool {
+                               return c->get_dalvik_name() == descriptor;
+                           });
 
     if (it != this->pimpl->sdk_classes.end()) {
         // Return a pointer to the Class object inside the unique_ptr
@@ -176,7 +229,7 @@ const Class *shuriken::dex::DexEngine::get_class_by_descriptor(std::string_view 
 Class *shuriken::dex::DexEngine::get_class_by_descriptor(std::string_view descriptor) {
     auto it = std::find_if(this->pimpl->sdk_classes.begin(),
                            this->pimpl->sdk_classes.end(),
-                           [&](auto & c) -> bool {
+                           [&](auto &c) -> bool {
                                return c->get_dalvik_name() == descriptor;
                            });
 
@@ -192,7 +245,7 @@ std::vector<Class *> shuriken::dex::DexEngine::find_classes_by_regex(std::string
     std::vector<Class *> matching_classes;
     std::regex pattern(descriptor_regex.data());
 
-    for (const auto & cls : this->pimpl->sdk_classes) {
+    for (const auto &cls: this->pimpl->sdk_classes) {
         std::string descriptor = cls->get_dalvik_name_string();
         if (std::regex_match(descriptor, pattern)) {
             matching_classes.emplace_back(cls.get());
@@ -209,7 +262,7 @@ method_deref_iterator_t shuriken::dex::DexEngine::get_methods() const {
 
 const Method *
 shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
-    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto& m) {
+    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
         return m->get_name() == name && m->get_method_prototype().get_descriptor() == prototype;
     });
 
@@ -220,7 +273,7 @@ shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view name, st
 }
 
 Method *shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view name, std::string_view prototype) {
-    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto& m) {
+    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
         return m->get_name() == name && m->get_method_prototype().get_descriptor() == prototype;
     });
 
@@ -231,7 +284,7 @@ Method *shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view 
 }
 
 const Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_view descriptor) const {
-    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto& m) {
+    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
         return m->get_descriptor() == descriptor;
     });
 
@@ -242,7 +295,7 @@ const Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_vie
 }
 
 Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_view descriptor) {
-    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto& m) {
+    auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
         return m->get_descriptor() == descriptor;
     });
 
@@ -258,9 +311,10 @@ fields_deref_iterator_t shuriken::dex::DexEngine::get_fields() const {
 }
 
 const Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) const {
-    auto it = std::find_if(this->pimpl->sdk_fields.begin(), this->pimpl->sdk_fields.end(), [&](const auto& field) -> bool{
-        return field->get_name() == name;
-    });
+    auto it = std::find_if(this->pimpl->sdk_fields.begin(), this->pimpl->sdk_fields.end(),
+                           [&](const auto &field) -> bool {
+                               return field->get_name() == name;
+                           });
 
     if (it == this->pimpl->sdk_fields.end()) return nullptr;
 
@@ -268,9 +322,10 @@ const Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) 
 }
 
 Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) {
-    auto it = std::find_if(this->pimpl->sdk_fields.begin(), this->pimpl->sdk_fields.end(), [&](const auto& field) -> bool{
-        return field->get_name() == name;
-    });
+    auto it = std::find_if(this->pimpl->sdk_fields.begin(), this->pimpl->sdk_fields.end(),
+                           [&](const auto &field) -> bool {
+                               return field->get_name() == name;
+                           });
 
     if (it == this->pimpl->sdk_fields.end()) return nullptr;
 
@@ -278,10 +333,10 @@ Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) {
 }
 
 std::vector<Method *> shuriken::dex::DexEngine::found_method_by_regex(std::string_view descriptor_regex) {
-    std::vector<Method*> matching_methods;
+    std::vector<Method *> matching_methods;
     std::regex pattern(descriptor_regex.data());
 
-    for (const auto& method : this->pimpl->sdk_methods) {
+    for (const auto &method: this->pimpl->sdk_methods) {
         std::string descriptor = method->get_descriptor_string();
         if (std::regex_match(descriptor, pattern)) {
             matching_methods.emplace_back(method.get());
@@ -292,10 +347,10 @@ std::vector<Method *> shuriken::dex::DexEngine::found_method_by_regex(std::strin
 }
 
 std::vector<Field *> shuriken::dex::DexEngine::found_field_by_regex(std::string_view descriptor_regex) {
-    std::vector<Field*> matching_fields;
+    std::vector<Field *> matching_fields;
     std::regex pattern(descriptor_regex.data());
 
-    for (const auto& field : this->pimpl->sdk_fields) {
+    for (const auto &field: this->pimpl->sdk_fields) {
         std::string descriptor = field->get_descriptor_string();
         if (std::regex_match(descriptor, pattern)) {
             matching_fields.emplace_back(field.get());

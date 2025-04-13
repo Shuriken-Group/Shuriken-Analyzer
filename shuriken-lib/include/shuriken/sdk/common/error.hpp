@@ -24,6 +24,7 @@ enum class ErrorCode {
     UnknownError,
     // Add more specific error codes as needed
     ParsingError,
+    InvalidType,
 };
 
 // Error class to hold error information
@@ -52,7 +53,6 @@ public:
 template <typename T>
 using Result =third_party::expected<T, Error>;
 
-// Helper for creating success results
 template <typename T>
 Result<T> make_success(T value) {
     return Result<T>(std::move(value));

@@ -243,13 +243,14 @@ Parser::parse_classes(io::ShurikenStream &stream,
     stream.seek(classes_offset);
 
     for (size_t I = 0; I < classes_size; I++) {
-        classes_.emplace_back();
-        if (!classes_.back().parse_class_def(stream,
+        auto class_def = std::make_unique<ClassDef>();
+        if (!class_def->parse_class_def(stream,
                                              string_pool,
                                              dvm_types_pool,
                                              fields_,
                                              methods_))
             return false;
+        classes_.emplace_back(std::move(class_def));
     }
 
     stream.seek(current_offset);
@@ -280,6 +281,6 @@ std::vector<MethodID> &Parser::get_methods_ids() {
     return methods_;
 }
 
-std::vector<ClassDef> &Parser::get_classes() {
+std::vector<std::unique_ptr<ClassDef>> & Parser::get_classes() {
     return classes_;
 }

@@ -9,12 +9,13 @@
 #include <string>
 
 #include <shuriken/internal/io/shurikenstream.hpp>
-#include <shuriken/sdk/dex/custom_types.hpp>
-#include <shuriken/sdk/dex/dvm_types.hpp>
 #include <shuriken/internal/engine/dex/parser/field_id.hpp>
 #include <shuriken/internal/engine/dex/parser/method_id.hpp>
-#include <shuriken/sdk/common/iterator_range.hpp>
+#include <shuriken/internal/engine/dex/parser/class_data_item.hpp>
 
+#include <shuriken/sdk/common/iterator_range.hpp>
+#include <shuriken/sdk/dex/custom_types.hpp>
+#include <shuriken/sdk/dex/dvm_types.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -49,6 +50,11 @@ private:
     std::string source_file;
 
     interfaces_list_t interfaces;
+
+    /// @brief ClassDataItem value fo the current class
+    ClassDataItem class_data_item;
+    /// @brief Array of initial values for static fields.
+    EncodedArray static_values;
 public:
     ClassDef();
     ~ClassDef() = default;

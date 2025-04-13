@@ -30,7 +30,7 @@ private:
     std::vector<std::unique_ptr<DVMPrototype>> dvm_prototype_pool;
     std::vector<FieldID> fields_;
     std::vector<MethodID> methods_;
-    std::vector<ClassDef> classes_;
+    std::vector<std::unique_ptr<ClassDef>> classes_;
     
     bool parse_string_pool(io::ShurikenStream& stream,
                                         std::uint32_t strings_offset,
@@ -78,7 +78,7 @@ public:
 
     std::vector<MethodID> & get_methods_ids();
 
-    std::vector<ClassDef> & get_classes();
+    std::vector<std::unique_ptr<ClassDef>> & get_classes();
 };
 }
 }

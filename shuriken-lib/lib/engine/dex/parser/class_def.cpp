@@ -43,6 +43,12 @@ bool ClassDef::parse_class_def(shuriken::io::ShurikenStream &stream, const std::
         }
     }
 
+    if (class_data_off) {
+        stream.seek(class_data_off);
+        class_data_item.parse_class_data_item(stream, types_pool, fields, methods);
+    }
+
+
     stream.seek(current_offset);
     return stream.good();
 }
