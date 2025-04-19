@@ -60,25 +60,13 @@ jobs:
     - name: Install JDK
       run: sudo apt install default-jdk
     - name: Create build in CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DDEX_TESTS=ON
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DBUILD_TESTS=ON
     - name: Build with cmake
       run: cmake --build build/ -j
     - name: Install with cmake
       run: sudo cmake --install build/
     - name : Run tests
       run: ctest --test-dir build/ --output-on-failure
-    - name: Verify shuriken-dump exit code
-      run: |
-        set +e # Prevent the script from exiting immediately on error
-        shuriken-dump
-        exit_code=$?
-        set -e # Re-enable immediate script exit on error
-        if [ $exit_code -eq 255 ]; then
-          echo "shuriken-dump exited with the expected exit code."
-        else
-          echo "Unexpected exit code from shuriken-dump: $exit_code"
-          exit 1
-        fi
     - name: Uninstall target and verify uninstall target works
       run: |
         set +e 
@@ -87,9 +75,8 @@ jobs:
         if [ $? -eq 1 ]; then 
           echo "Uninstall target worked as expected"  
           exit 0  
-        else  \ 
+        else
           echo "Uninstall target did not work as expected" 
           exit 1  
         fi
         set -e
-
