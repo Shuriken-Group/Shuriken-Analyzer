@@ -113,7 +113,7 @@ public:
     /**
      * @return return the bytecode that belongs to the method
      */
-    std::span<std::uint8_t> get_bytecode() const;
+    std::span<const std::uint8_t> get_bytecode() const;
 
 
     // Disassembler information

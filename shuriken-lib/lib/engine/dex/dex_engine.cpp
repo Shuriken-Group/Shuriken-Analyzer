@@ -160,7 +160,9 @@ shuriken::error::VoidResult DexEngine::parse() {
                         types::method_type_e::DIRECT_METHOD,
                         pimpl->ref_sdk_classes.back(),
                         pimpl->owner_dex,
-                        *this
+                        *this,
+                        encoded_method.get_code_items()->get_registers_size(),
+                        encoded_method.get_code_items()->get_bytecode()
                     );
             auto method_sdk = std::make_unique<Method>(*method_provider.get());
             pimpl->dex_methods_providers.push_back(std::move(method_provider));
@@ -179,7 +181,9 @@ shuriken::error::VoidResult DexEngine::parse() {
                     types::method_type_e::VIRTUAL_METHOD,
                     pimpl->ref_sdk_classes.back(),
                     pimpl->owner_dex,
-                    *this
+                    *this,
+                    encoded_method.get_code_items()->get_registers_size(),
+                    encoded_method.get_code_items()->get_bytecode()
             );
             auto method_sdk = std::make_unique<Method>(*method_provider.get());
             pimpl->dex_methods_providers.push_back(std::move(method_provider));

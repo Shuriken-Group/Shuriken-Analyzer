@@ -15,12 +15,16 @@ shuriken::dex::DexMethodProvider::DexMethodProvider(std::string_view name,
                                                     types::method_type_e method_type,
                                                     Class &owner_class,
                                                     Dex &owner_dex,
-                                                    DexEngine &dex_engine)
+                                                    DexEngine &dex_engine,
+                                                    std::size_t number_of_registers,
+                                                    std::vector<std::uint8_t>& bytecode)
         : method_name(name),
           method_access_flags(access_flags), method_prototype(method_prototype),
           method_type(method_type),
           owner_class(owner_class), owner_dex(owner_dex),
-          dex_engine(dex_engine) {
+          dex_engine(dex_engine),
+          number_of_registers(number_of_registers),
+          bytecode(std::move(bytecode)) {
     method_descriptor = owner_class.get_name_string() + "->"
                         + std::string(name) + method_prototype.get_descriptor_string();
 }

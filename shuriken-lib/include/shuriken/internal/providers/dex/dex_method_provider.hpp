@@ -65,7 +65,9 @@ public:
                       types::method_type_e method_type,
                       Class & owner_class,
                       Dex & owner_dex,
-                      DexEngine& dex_engine);
+                      DexEngine& dex_engine,
+                      std::size_t number_of_registers,
+                      std::vector<std::uint8_t>& bytecode);
     ~DexMethodProvider() = default;
 
     DexMethodProvider(const DexMethodProvider&) = delete;

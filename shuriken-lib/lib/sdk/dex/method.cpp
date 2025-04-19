@@ -56,11 +56,11 @@ std::string Method::get_descriptor_string() const {
 }
 
 std::uint16_t Method::registers_size() const {
-    return 0;
+    return dex_method_provider.get().registers_size();
 }
 
-std::span<std::uint8_t> Method::get_bytecode() const {
-    return std::span<std::uint8_t>();
+std::span<const std::uint8_t> Method::get_bytecode() const {
+    return dex_method_provider.get().get_bytecode();
 }
 
 size_t Method::get_number_of_instructions() const {
