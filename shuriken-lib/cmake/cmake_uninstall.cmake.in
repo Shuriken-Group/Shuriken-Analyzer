@@ -1,10 +1,11 @@
-# cmake_uninstall.cmake.in
 if(NOT EXISTS "@CMAKE_BINARY_DIR@/install_manifest.txt")
   message(FATAL_ERROR "Cannot find install manifest: @CMAKE_BINARY_DIR@/install_manifest.txt")
 endif()
 
 file(READ "@CMAKE_BINARY_DIR@/install_manifest.txt" files)
 string(REGEX REPLACE "\n" ";" files "${files}")
+
+# First, remove all files
 foreach(file ${files})
   message(STATUS "Uninstalling: ${file}")
   if(EXISTS "${file}")
@@ -17,5 +18,36 @@ foreach(file ${files})
     endif()
   else()
     message(STATUS "File ${file} does not exist.")
+  endif()
+endforeach()
+
+# Then, collect directories to remove
+set(dir_list "")
+foreach(file ${files})
+  get_filename_component(dir "${file}" DIRECTORY)
+  list(APPEND dir_list "${dir}")
+endforeach()
+
+# Remove duplicates
+list(REMOVE_DUPLICATES dir_list)
+
+# Sort in descending order to remove innermost directories first
+list(SORT dir_list ORDER DESCENDING)
+
+# Remove empty directories
+foreach(dir ${dir_list})
+  if(EXISTS "${dir}")
+    file(GLOB entries "${dir}/*")
+    list(LENGTH entries count)
+    if(count EQUAL 0)
+      message(STATUS "Removing empty directory: ${dir}")
+      execute_process(
+        COMMAND @CMAKE_COMMAND@ -E remove_directory "${dir}"
+        RESULT_VARIABLE rm_retval
+      )
+      if(NOT "${rm_retval}" STREQUAL 0)
+        message(FATAL_ERROR "Problem when removing ${dir}")
+      endif()
+    endif()
   endif()
 endforeach()
