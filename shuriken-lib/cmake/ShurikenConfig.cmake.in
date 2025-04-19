@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/ShurikenTargets.cmake")
+
+# Define the Shuriken library as an imported target
+set_and_check(SHURIKEN_INCLUDE_DIR "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+set_and_check(SHURIKEN_LIBRARY_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
+
+check_required_components(shuriken)
