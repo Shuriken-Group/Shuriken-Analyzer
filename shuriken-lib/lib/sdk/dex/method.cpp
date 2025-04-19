@@ -27,6 +27,10 @@ DVMPrototype &Method::get_method_prototype() {
     return dex_method_provider.get().get_method_prototype();
 }
 
+types::method_type_e Method::get_method_type() const {
+    return dex_method_provider.get().get_method_type();
+}
+
 const Class &Method::get_owner_class() const {
     return dex_method_provider.get().get_owner_class();
 }

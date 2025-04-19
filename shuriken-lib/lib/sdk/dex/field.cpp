@@ -19,6 +19,10 @@ types::access_flags Field::get_field_access_flags() const {
     return dex_field_provider.get().get_field_access_flags();
 }
 
+types::field_type_e Field::get_type() const {
+    return dex_field_provider.get().get_type();
+}
+
 const DVMType & Field::get_field_type() const {
     return dex_field_provider.get().get_field_type();
 }

@@ -25,6 +25,8 @@ private:
     std::string descriptor;
     // @brief access flags from the field
     types::access_flags access_flags;
+    // @brief type of the field from the generation
+    types::field_type_e type;
     // @brief DVMType object that represent the type of the field
     std::reference_wrapper<DVMType> field_type;
     // @brief Pointer to owner class (it can be nullptr)
@@ -33,8 +35,9 @@ private:
     std::reference_wrapper<Dex> owner_dex;
 public:
     DexFieldProvider(const std::string& name,
-                     DVMType & type,
+                     DVMType & field_type,
                      types::access_flags access_flags,
+                     types::field_type_e type,
                      Class& owner_class,
                      Dex& owner_dex,
                      DexEngine& dex_engine);
@@ -57,6 +60,11 @@ public:
      * @return access flags from the field
      */
     types::access_flags get_field_access_flags() const;
+
+    /***
+     * @return get the type from the field `static` or `instance`.
+     */
+    types::field_type_e get_type() const;
 
     /***
     * @return const type pointer of the current field

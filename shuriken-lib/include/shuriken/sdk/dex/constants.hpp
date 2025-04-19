@@ -102,6 +102,16 @@ namespace types {
         VOID
     };
 
+    enum class method_type_e {
+        DIRECT_METHOD,
+        VIRTUAL_METHOD
+    };
+
+    enum class field_type_e {
+        STATIC_FIELD,
+        INSTANCE_FIELD,
+    };
+
     const std::unordered_map<fundamental_e, std::string> fundamental_s =
             {
                 {fundamental_e::BOOLEAN, "boolean"},

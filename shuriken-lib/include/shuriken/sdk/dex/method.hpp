@@ -63,6 +63,11 @@ public:
     DVMPrototype& get_method_prototype();
 
     /***
+     * @return get the type of the method.
+     */
+    types::method_type_e get_method_type() const;
+
+    /***
      * @return constant pointer to owner class for this method
      * it can be `nullptr`
      */

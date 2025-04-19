@@ -93,25 +93,22 @@ public:
     std::vector<std::reference_wrapper<DVMTypeProvider>> ref_dex_type_providers;
 
     Impl(Dex &owner_dex) : owner_dex(owner_dex) {}
-
     ~Impl() = default;
 };
 
 DexEngine::DexEngine(shuriken::io::ShurikenStream stream, Dex &owner_dex) : shuriken_stream(std::move(stream)),
-                                                                            pimpl(new DexEngine::Impl(owner_dex)) {
+                                                                            pimpl(std::make_unique<DexEngine::Impl>(owner_dex)) {
 }
 
-shuriken::dex::DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex &owner_dex)
+DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex &owner_dex)
         : shuriken_stream(std::move(stream)),
-          pimpl(new DexEngine::Impl(owner_dex)) {
+          pimpl(std::make_unique<DexEngine::Impl>(owner_dex)) {
     this->pimpl->dex_path = dex_path;
     if (!dex_path.empty())
         this->pimpl->dex_name = std::filesystem::path(dex_path).filename();
 }
 
-shuriken::dex::DexEngine::~DexEngine() {
-    delete pimpl;
-}
+DexEngine::~DexEngine() = default;
 
 shuriken::error::VoidResult DexEngine::parse() {
     Parser parser;
@@ -150,6 +147,85 @@ shuriken::error::VoidResult DexEngine::parse() {
         pimpl->ref_dex_class_providers.push_back(std::ref(*pimpl->dex_class_providers.back().get()));
         pimpl->sdk_classes.push_back(std::move(new_sdk_class));
         pimpl->ref_sdk_classes.push_back(std::ref(*pimpl->sdk_classes.back().get()));
+
+        auto & class_data_item = class_def->get_class_data_item();
+
+        // generate the methods
+        for (auto & encoded_method : class_data_item.get_direct_methods()) {
+            MethodID & method_id = const_cast<MethodID&>(encoded_method.get_method_id());
+            auto method_provider = std::make_unique<DexMethodProvider>(
+                        method_id.get_name(),
+                        encoded_method.get_access_flags(),
+                        method_id.get_prototype(),
+                        types::method_type_e::DIRECT_METHOD,
+                        pimpl->ref_sdk_classes.back(),
+                        pimpl->owner_dex,
+                        *this
+                    );
+            auto method_sdk = std::make_unique<Method>(*method_provider.get());
+            pimpl->dex_methods_providers.push_back(std::move(method_provider));
+            pimpl->ref_dex_methods_providers.push_back(*pimpl->dex_methods_providers.back());
+            pimpl->sdk_methods.push_back(std::move(method_sdk));
+            pimpl->ref_sdk_methods.push_back(*pimpl->sdk_methods.back());
+            pimpl->dex_class_providers.back()->add_method(pimpl->ref_sdk_methods.back());
+        }
+
+        for (auto & encoded_method : class_data_item.get_virtual_methods()) {
+            MethodID & method_id = const_cast<MethodID&>(encoded_method.get_method_id());
+            auto method_provider = std::make_unique<DexMethodProvider>(
+                    method_id.get_name(),
+                    encoded_method.get_access_flags(),
+                    method_id.get_prototype(),
+                    types::method_type_e::VIRTUAL_METHOD,
+                    pimpl->ref_sdk_classes.back(),
+                    pimpl->owner_dex,
+                    *this
+            );
+            auto method_sdk = std::make_unique<Method>(*method_provider.get());
+            pimpl->dex_methods_providers.push_back(std::move(method_provider));
+            pimpl->ref_dex_methods_providers.push_back(*pimpl->dex_methods_providers.back());
+            pimpl->sdk_methods.push_back(std::move(method_sdk));
+            pimpl->ref_sdk_methods.push_back(*pimpl->sdk_methods.back());
+            pimpl->dex_class_providers.back()->add_method(pimpl->ref_sdk_methods.back());
+        }
+
+        for (auto & encoded_field : class_data_item.get_instance_fields()) {
+            FieldID & field_id = const_cast<FieldID&>(encoded_field.get_field());
+            auto field_provider = std::make_unique<DexFieldProvider>(
+                    field_id.get_name_string(),
+                    field_id.get_type(),
+                    encoded_field.get_flags(),
+                    types::field_type_e::INSTANCE_FIELD,
+                    pimpl->ref_sdk_classes.back(),
+                    pimpl->owner_dex,
+                    *this
+                    );
+            auto field_sdk = std::make_unique<Field>(*field_provider.get());
+            pimpl->dex_fields_providers.push_back(std::move(field_provider));
+            pimpl->ref_dex_fields_providers.push_back(*pimpl->dex_fields_providers.back());
+            pimpl->sdk_fields.push_back(std::move(field_sdk));
+            pimpl->ref_sdk_fields.push_back(*pimpl->sdk_fields.back());
+            pimpl->dex_class_providers.back()->add_field(pimpl->ref_sdk_fields.back());
+        }
+
+        for (auto & encoded_field : class_data_item.get_static_fields()) {
+            FieldID & field_id = const_cast<FieldID&>(encoded_field.get_field());
+            auto field_provider = std::make_unique<DexFieldProvider>(
+                    field_id.get_name_string(),
+                    field_id.get_type(),
+                    encoded_field.get_flags(),
+                    types::field_type_e::STATIC_FIELD,
+                    pimpl->ref_sdk_classes.back(),
+                    pimpl->owner_dex,
+                    *this
+            );
+            auto field_sdk = std::make_unique<Field>(*field_provider.get());
+            pimpl->dex_fields_providers.push_back(std::move(field_provider));
+            pimpl->ref_dex_fields_providers.push_back(*pimpl->dex_fields_providers.back());
+            pimpl->sdk_fields.push_back(std::move(field_sdk));
+            pimpl->ref_sdk_fields.push_back(*pimpl->sdk_fields.back());
+            pimpl->dex_class_providers.back()->add_field(pimpl->ref_sdk_fields.back());
+        }
     }
 
 

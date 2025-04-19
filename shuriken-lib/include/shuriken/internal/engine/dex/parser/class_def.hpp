@@ -90,6 +90,8 @@ public:
     std::string get_source_file_string();
 
     it_interfaces_list get_interfaces();
+
+    ClassDataItem & get_class_data_item();
 };
 
 }

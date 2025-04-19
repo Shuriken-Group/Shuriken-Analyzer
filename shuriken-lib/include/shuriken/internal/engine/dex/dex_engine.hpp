@@ -27,7 +27,7 @@ class DVMPrototypeProvider;
 class DexEngine {
 private:
     class Impl; // Forward declaration of implementation class
-    Impl * pimpl; // The pointer to implementation
+    std::unique_ptr<Impl> pimpl; // The pointer to implementation
     io::ShurikenStream shuriken_stream;
 public:
     // Constructor/destructor

@@ -9,18 +9,20 @@
 
 using namespace shuriken::dex;
 
-shuriken::dex::DexMethodProvider::DexMethodProvider(const std::string &name,
+shuriken::dex::DexMethodProvider::DexMethodProvider(std::string_view name,
                                                     types::access_flags access_flags,
                                                     DVMPrototype &method_prototype,
+                                                    types::method_type_e method_type,
                                                     Class &owner_class,
                                                     Dex &owner_dex,
                                                     DexEngine &dex_engine)
         : method_name(name),
           method_access_flags(access_flags), method_prototype(method_prototype),
+          method_type(method_type),
           owner_class(owner_class), owner_dex(owner_dex),
           dex_engine(dex_engine) {
     method_descriptor = owner_class.get_name_string() + "->"
-                        + name + method_prototype.get_descriptor_string();
+                        + std::string(name) + method_prototype.get_descriptor_string();
 }
 
 
@@ -46,6 +48,10 @@ const shuriken::dex::DVMPrototype &shuriken::dex::DexMethodProvider::get_method_
 
 shuriken::dex::DVMPrototype &shuriken::dex::DexMethodProvider::get_method_prototype() {
     return method_prototype;
+}
+
+types::method_type_e shuriken::dex::DexMethodProvider::get_method_type() const {
+    return method_type;
 }
 
 

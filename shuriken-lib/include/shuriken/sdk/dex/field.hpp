@@ -52,6 +52,11 @@ public:
     types::access_flags get_field_access_flags() const;
 
     /***
+     * @return get the type from the field `static` or `instance`.
+     */
+    types::field_type_e get_type() const;
+
+    /***
      * @return const type pointer of the current field
      */
     const DVMType & get_field_type() const;

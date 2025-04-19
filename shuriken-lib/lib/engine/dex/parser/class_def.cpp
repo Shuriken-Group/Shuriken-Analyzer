@@ -105,3 +105,7 @@ std::string ClassDef::get_source_file_string() {
 ClassDef::it_interfaces_list ClassDef::get_interfaces() {
     return make_range(interfaces.begin(), interfaces.end());
 }
+
+ClassDataItem &ClassDef::get_class_data_item() {
+    return class_data_item;
+}

@@ -28,6 +28,8 @@ private:
     std::string method_name;
     // @brief access flags from the method
     types::access_flags method_access_flags;
+    // @brief method type taken from the generation of the class
+    types::method_type_e method_type;
     // @brief pointer to the prototype of the method
     std::reference_wrapper<DVMPrototype> method_prototype;
     // @brief Pointer to owner class (it can be nullptr)
@@ -57,9 +59,10 @@ private:
 
 public:
     // constructors & destructors
-    DexMethodProvider(const std::string& name,
+    DexMethodProvider(std::string_view name,
                       types::access_flags access_flags,
                       DVMPrototype & method_prototype,
+                      types::method_type_e method_type,
                       Class & owner_class,
                       Dex & owner_dex,
                       DexEngine& dex_engine);
@@ -94,6 +97,11 @@ public:
     * method. It may return nullptr
     */
     DVMPrototype& get_method_prototype();
+
+    /***
+     * @return get the type of the method.
+     */
+    types::method_type_e get_method_type() const;
 
     /***
      * @return constant pointer to owner class for this method
