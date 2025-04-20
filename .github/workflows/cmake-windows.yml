@@ -18,21 +18,24 @@ jobs:
         build_type: [Debug, Release]
 
     name: windows-msvc-${{ matrix.build_type }}
-            
+
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Setup Developer Command Prompt
-      uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Display compiler version
-      run: cl.exe
+      - name: Display compiler version
+        run: cl.exe
 
-    - name: Configure CMake
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DDEX_TESTS=ON
+      - name: Configure CMake
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DGITHUB_ACTION=ON -DBUILD_TESTS=ON -Dgtest_force_shared_crt=ON
 
-    - name: Build
-      run: cmake --build build/ --config ${{ matrix.build_type }}
+      - name: Build
+        run: cmake --build build/ --config ${{ matrix.build_type }}
 
-    - name: Install
-      run: cmake --install build/ --config ${{ matrix.build_type }}
+      - name: Install
+        run: cmake --install build/ --config ${{ matrix.build_type }}
+
+      - name: Run tests
+        run: ctest --test-dir build/ --build-config ${{ matrix.build_type }} --output-on-failure
