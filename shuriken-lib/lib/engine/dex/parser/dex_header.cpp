@@ -1,5 +1,6 @@
 
 #include <shuriken/internal/engine/dex/parser/dex_header.hpp>
+#include <array>
 
 using namespace shuriken::dex;
 
@@ -48,7 +49,7 @@ bool DexHeader::parse(io::ShurikenStream &stream) {
     // Check magic bytes
     static const std::array<std::uint8_t, MAGIC_SIZE> DEX_MAGIC = {'d', 'e', 'x', '\n', '0', '3', '5', '\0'};
     for (auto i = 0; i < MAGIC_SIZE; i++) {
-        if (magic[i] != DEX_MAGIC[i])
+        if (magic[i] != DEX_MAGIC.at(i))
             return false;
     }
 

@@ -39,7 +39,7 @@ private:
     // @brief descriptor of the method
     std::string method_descriptor;
     // @brief number of registers used in the bytecode
-    std::size_t number_of_registers;
+    std::uint16_t number_of_registers;
     // @brief span that points to the bytecode
     std::vector<std::uint8_t> bytecode;
 
@@ -66,7 +66,7 @@ public:
                       Class & owner_class,
                       Dex & owner_dex,
                       DexEngine& dex_engine,
-                      std::size_t number_of_registers,
+                      std::uint16_t number_of_registers,
                       std::vector<std::uint8_t>& bytecode);
     ~DexMethodProvider() = default;
 

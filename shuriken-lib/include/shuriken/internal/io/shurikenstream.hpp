@@ -8,6 +8,8 @@
 #include <string>
 #include <string_view>
 #include <cstdint>
+#include <ios>
+#include <istream>
 
 #include <shuriken/sdk/common/error.hpp>
 

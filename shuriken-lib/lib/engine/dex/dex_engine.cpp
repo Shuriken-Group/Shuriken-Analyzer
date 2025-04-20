@@ -105,7 +105,7 @@ DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_p
           pimpl(std::make_unique<DexEngine::Impl>(owner_dex)) {
     this->pimpl->dex_path = dex_path;
     if (!dex_path.empty())
-        this->pimpl->dex_name = std::filesystem::path(dex_path).filename();
+        this->pimpl->dex_name = std::filesystem::path(dex_path).filename().generic_string();
 }
 
 DexEngine::~DexEngine() = default;

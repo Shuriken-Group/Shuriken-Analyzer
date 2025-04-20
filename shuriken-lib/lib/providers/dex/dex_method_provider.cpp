@@ -16,7 +16,7 @@ shuriken::dex::DexMethodProvider::DexMethodProvider(std::string_view name,
                                                     Class &owner_class,
                                                     Dex &owner_dex,
                                                     DexEngine &dex_engine,
-                                                    std::size_t number_of_registers,
+                                                    std::uint16_t number_of_registers,
                                                     std::vector<std::uint8_t>& bytecode)
         : method_name(name),
           method_access_flags(access_flags), method_prototype(method_prototype),
