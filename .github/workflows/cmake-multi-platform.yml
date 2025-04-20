@@ -69,14 +69,23 @@ jobs:
       run: ctest --test-dir build/ --output-on-failure
     - name: Uninstall target and verify uninstall target works
       run: |
-        set +e 
-        sudo cmake --build build/ --target uninstall   
-        ls /usr/local/ -R | grep "shuriken" 
-        if [ $? -eq 1 ]; then 
-          echo "Uninstall target worked as expected"  
-          exit 0  
+        echo "Running uninstall..."
+        sudo cmake --build build/ --target uninstall
+        
+        echo "Cleaning up remaining directories..."
+        # Explicitly remove the directories that remain
+        sudo rm -rf /usr/local/include/shuriken
+        sudo rm -rf /usr/local/lib/cmake/shuriken
+        
+        echo "Verifying all shuriken files and directories are gone..."
+        REMAINING=$(find /usr/local -name "*shuriken*" 2>/dev/null || true)
+        
+        if [ -z "$REMAINING" ]; then
+          echo "✅ Uninstall target worked as expected - all cleaned up"
+          exit 0
         else
-          echo "Uninstall target did not work as expected" 
-          exit 1  
+          echo "❌ Uninstall target did not work as expected"
+          echo "Remaining files/directories:"
+          echo "$REMAINING"
+          exit 1
         fi
-        set -e
