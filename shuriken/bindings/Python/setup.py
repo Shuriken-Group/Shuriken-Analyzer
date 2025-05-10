@@ -35,6 +35,98 @@ def change_directory(path: Path):
     finally:
         os.chdir(current_dir)
 
+def check_dependencies():
+    """Check if required build dependencies are installed."""
+    missing_deps = {}
+    found_deps = {}
+    
+    # Check for CMake
+    try:
+        cmake_result = subprocess.run(
+            ["cmake", "--version"], 
+            check=True, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        found_deps["CMake"] = cmake_result.stdout.strip().split('\n')[0] if cmake_result.stdout else "Found"
+    except (subprocess.SubprocessError, FileNotFoundError):
+        missing_deps["CMake"] = "https://cmake.org/download/"
+    
+    # Check for compilers based on platform
+    compilers_found = False
+    
+    if platform.system() == "Windows":
+        # Check multiple Windows compilers
+        compiler_checks = [
+            {"name": "MSVC", "cmd": ["cl"], "link": "https://visualstudio.microsoft.com/downloads/"},
+            {"name": "GCC", "cmd": ["g++", "--version"], "link": "https://www.mingw-w64.org/downloads/"},
+            {"name": "Clang", "cmd": ["clang", "--version"], "link": "https://releases.llvm.org/download.html"}
+        ]
+        
+        for compiler in compiler_checks:
+            try:
+                result = subprocess.run(
+                    compiler["cmd"], 
+                    check=True, 
+                    stdout=subprocess.PIPE, 
+                    stderr=subprocess.PIPE,
+                    text=True
+                )
+                found_deps[compiler["name"]] = result.stdout.strip().split('\n')[0] if result.stdout else "Found"
+                compilers_found = True
+            except (subprocess.SubprocessError, FileNotFoundError):
+                # Just note it was checked but not found
+                pass
+        
+        if not compilers_found:
+            missing_deps["C++ Compiler"] = {
+                "MSVC": "https://visualstudio.microsoft.com/downloads/",
+                "GCC (MinGW)": "https://www.mingw-w64.org/downloads/",
+                "Clang": "https://releases.llvm.org/download.html"
+            }
+    else:
+        # Unix-like systems (Linux, macOS)
+        compiler_checks = [
+            {"name": "GCC", "cmd": ["g++", "--version"], "link": "Install via your package manager (apt-get install g++)"},
+            {"name": "Clang", "cmd": ["clang++", "--version"], "link": "Install via your package manager (apt-get install clang)"}
+        ]
+        
+        for compiler in compiler_checks:
+            try:
+                result = subprocess.run(
+                    compiler["cmd"], 
+                    check=True, 
+                    stdout=subprocess.PIPE, 
+                    stderr=subprocess.PIPE,
+                    text=True
+                )
+                found_deps[compiler["name"]] = result.stdout.strip().split('\n')[0] if result.stdout else "Found"
+                compilers_found = True
+            except (subprocess.SubprocessError, FileNotFoundError):
+                # Just note it was checked but not found
+                pass
+        
+        if not compilers_found:
+            missing_deps["C++ Compiler"] = {
+                "GCC": "Install via your package manager (apt-get install g++)",
+                "Clang": "Install via your package manager (apt-get install clang)"
+            }
+    
+    # Check for Git if needed
+    try:
+        git_result = subprocess.run(
+            ["git", "--version"], 
+            check=True, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        found_deps["Git"] = git_result.stdout.strip() if git_result.stdout else "Found"
+    except (subprocess.SubprocessError, FileNotFoundError):
+        missing_deps["Git"] = "https://git-scm.com/downloads"
+    
+    return missing_deps, found_deps
 
 def build_libraries(user_install: bool = False):
     """
@@ -42,6 +134,29 @@ def build_libraries(user_install: bool = False):
 
     :param user_install: If True, install for current user only
     """
+
+    # Check dependencies first
+    missing_deps, found_deps = check_dependencies()
+
+    # Log what we found
+    if found_deps:
+        logger.info("Found build dependencies:")
+        for dep, version in found_deps.items():
+            logger.info(f"  - {dep}: {version}")
+    
+    if missing_deps:
+        error_msg = ["Missing required build dependencies:"]
+        
+        for dep, info in missing_deps.items():
+            if dep == "C++ Compiler":
+                error_msg.append(f"\n- {dep}: No compatible C++ compiler found. Please install one of the following:")
+                for compiler, link in info.items():
+                    error_msg.append(f"  * {compiler}: {link}")
+            else:
+                error_msg.append(f"\n- {dep}: {info}")
+        
+        error_msg.append("\nInstallation cannot continue until these dependencies are resolved.")
+        raise RuntimeError("\n".join(error_msg))
 
     # Clear and recreate build directory to avoid cache problems
     if BUILD_FOLDER.exists():
@@ -135,9 +250,30 @@ class CustomBuildExt(_build_ext):
         super().finalize_options()
 
     def run(self):
+        logger.info("Checking build dependencies...")
+        missing_deps, found_deps = check_dependencies()
+        
+        if missing_deps:
+            self._show_missing_deps_error(missing_deps)
+        
         logger.info("Building C extensions...")
         build_libraries(user_install=self.user_install)
         super().run()
+    
+    def _show_missing_deps_error(self, missing_deps):
+        """Format and raise an error for missing dependencies"""
+        error_msg = ["Required build dependencies are missing:"]
+        
+        for dep, info in missing_deps.items():
+            if dep == "C++ Compiler":
+                error_msg.append(f"\n- {dep}: No compatible C++ compiler found. Please install one of the following:")
+                for compiler, link in info.items():
+                    error_msg.append(f"  * {compiler}: {link}")
+            else:
+                error_msg.append(f"\n- {dep}: {info}")
+        
+        error_msg.append("\nInstallation cannot continue until these dependencies are resolved.")
+        raise RuntimeError("\n".join(error_msg))
 
 
 cmdclass = {
