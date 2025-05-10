@@ -10,16 +10,16 @@ namespace shuriken {
 namespace dex {
 class DexInstructionProvider;
 
-class Instruction {
+class InstructionProvider {
 private:
     std::reference_wrapper<DexInstructionProvider> dex_instruction_provider;
 public:
     // constructors & destructors
-    Instruction(DexInstructionProvider&);
-    ~Instruction() = default;
+    InstructionProvider(DexInstructionProvider&);
+    ~InstructionProvider() = default;
 
-    Instruction(const Instruction&) = delete;
-    Instruction& operator=(const Instruction&) = delete;
+    InstructionProvider(const InstructionProvider&) = delete;
+    InstructionProvider& operator=(const InstructionProvider&) = delete;
 };
 }
 }

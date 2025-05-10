@@ -20,7 +20,7 @@ class DexMethodProvider;
 class Dex;
 class Class;
 class DVMPrototype;
-class Instruction;
+class InstructionProvider;
 
 class Method {
 private:
@@ -137,7 +137,7 @@ public:
      * @param idx index of the instruction to retrieve
      * @return pointer to instruction in an specific idx, may return null
      */
-     Instruction * get_instruction_at(std::uint64_t idx);
+     InstructionProvider * get_instruction_at(std::uint64_t idx);
 
 
      // xrefs information

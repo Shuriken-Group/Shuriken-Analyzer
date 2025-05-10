@@ -24,7 +24,7 @@ class Method;
 class ExternalMethod;
 class Field;
 class ExternalField;
-class Instruction;
+class InstructionProvider;
 class DVMFundamental;
 class DVMClass;
 class DVMArray;
@@ -33,7 +33,7 @@ class DVMArray;
 using class_t = std::reference_wrapper<Class>;
 using method_t = std::reference_wrapper<Method>;
 using field_t = std::reference_wrapper<Field>;
-using instruction_t = std::reference_wrapper<Instruction>;
+using instruction_t = std::reference_wrapper<InstructionProvider>;
 
 using externalclass_t = std::reference_wrapper<ExternalClass>;
 using externalmethod_t = std::reference_wrapper<ExternalMethod>;

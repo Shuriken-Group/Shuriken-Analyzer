@@ -76,7 +76,7 @@ const instruction_list_t Method::get_instructions_container() const {
     return shuriken::dex::instruction_list_t();
 }
 
-Instruction *Method::get_instruction_at(std::uint64_t idx) {
+InstructionProvider *Method::get_instruction_at(std::uint64_t idx) {
     return nullptr;
 }
 
