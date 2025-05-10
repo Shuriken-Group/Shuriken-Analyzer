@@ -159,6 +159,27 @@ jobs:
     - name: Display compiler version
       run: cl.exe
       
+    - name: Install vcpkg dependencies
+      run: |
+        # Install vcpkg if not installed
+        if (!(Test-Path -Path "C:\vcpkg\vcpkg.exe")) {
+          Write-Output "Installing vcpkg..."
+          git clone https://github.com/microsoft/vcpkg.git "C:\vcpkg"
+          Push-Location "C:\vcpkg"
+          .\bootstrap-vcpkg.bat
+          Pop-Location
+        }
+        
+        # Install required packages
+        Write-Output "Installing required dependencies..."
+        C:\vcpkg\vcpkg install zlib:x64-windows
+        C:\vcpkg\vcpkg install liblzma:x64-windows
+        C:\vcpkg\vcpkg install bzip2:x64-windows
+        C:\vcpkg\vcpkg install zstd:x64-windows
+        
+        # Integrate vcpkg with CMake
+        C:\vcpkg\vcpkg integrate install
+      
     - name: Set Release Version
       shell: bash
       run: |
@@ -171,7 +192,7 @@ jobs:
         
     - name: Configure CMake
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX=ON -DMACHO=ON -DCMAKE_INSTALL_PREFIX=./shuriken-install
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX=ON -DMACHO=ON -DCMAKE_INSTALL_PREFIX=./shuriken-install -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
         
     - name: Build
       run: cmake --build build/ --config Release
@@ -208,6 +229,27 @@ jobs:
           Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
         }
         
+        # Copy required dependency DLLs from vcpkg
+        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps" -ItemType Directory -Force
+        
+        # Find and copy vcpkg dependencies
+        $vcpkgBinDir = "C:/vcpkg/installed/x64-windows/bin"
+        $depDlls = @(
+          "zlib1.dll",
+          "liblzma.dll",
+          "bz2.dll",
+          "zstd.dll"
+        )
+        
+        foreach ($dll in $depDlls) {
+          if (Test-Path -Path "$vcpkgBinDir/$dll") {
+            Copy-Item -Path "$vcpkgBinDir/$dll" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/" -Force
+            Write-Output "Copied dependency: $dll"
+          } else {
+            Write-Output "Warning: Dependency $dll not found in vcpkg"
+          }
+        }
+        
         # Add license and readme
         if (Test-Path -Path "LICENSE") {
           Copy-Item -Path "LICENSE" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/"
@@ -220,6 +262,22 @@ jobs:
         Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Shuriken Analyzer version $env:RELEASE_VERSION"
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Built with MSVC"
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Build date: $(Get-Date)"
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Included dependencies:"
+        foreach ($dll in $depDlls) {
+          if (Test-Path -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/$dll") {
+            Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "- $dll"
+          }
+        }
+        
+        # Create a README for dependencies
+        Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/README.txt" -Value "This directory contains third-party dependencies required by Shuriken Analyzer."
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/README.txt" -Value "These DLLs should be in the same directory as the Shuriken DLLs or in your system PATH."
+        
+        # Create a batch file to add deps to PATH
+        Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "@echo off"
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "echo Setting up Shuriken environment..."
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "set PATH=%~dp0;%~dp0deps;%PATH%"
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "echo Shuriken environment ready!"
         
         # Show the final package structure
         Write-Output "Final package contents:"
@@ -244,7 +302,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
-        token: ${{ secrets.GITHUB_TOKEN }}
 
   # This job is only needed for manual workflow runs, tag pushes upload directly
   create-release-for-manual:
