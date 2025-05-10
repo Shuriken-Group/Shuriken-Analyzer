@@ -55,8 +55,8 @@ jobs:
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
           echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
         else
-          # Extract version from tag (remove 'v' prefix)
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          # Extract version from tag name directly, preserving the v prefix
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         fi
         
     - name: Configure CMake
@@ -84,7 +84,7 @@ jobs:
         # Create the release package directory with the correct name
         mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}
         
-        # Copy ONLY the installed files - this is the key fix
+        # Copy ONLY the installed files
         if [ -d "./shuriken-install/lib" ]; then
           mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/lib
           cp -r ./shuriken-install/lib/* shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/lib/
@@ -117,16 +117,24 @@ jobs:
         # Package everything into a tarball
         tar -czf shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}
         
-        # List the contents of the current directory to verify the tarball exists
-        echo "Contents of current directory:"
-        ls -la
+        echo "Created release archive:"
+        ls -la shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
         
-    - name: Upload artifacts
+    - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}
+        name: build-artifact-linux-${{ matrix.compiler }}
         path: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
         retention-days: 5
+        
+    # Upload directly to the release if it's a tag push
+    - name: Upload Release Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-release:
     runs-on: windows-latest
@@ -148,8 +156,8 @@ jobs:
         if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
           echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
         else
-          # Extract version from tag (remove 'v' prefix)
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+          # Extract version from tag name directly, preserving the v prefix
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         fi
         
     - name: Configure CMake
@@ -175,7 +183,7 @@ jobs:
         # Create the release package directory
         New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -ItemType Directory -Force
         
-        # Copy ONLY the installed files - this is the key fix
+        # Copy ONLY the installed files
         if (Test-Path -Path "./shuriken-install/bin") {
           New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin" -ItemType Directory -Force
           Copy-Item -Path "./shuriken-install/bin/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/" -Recurse -Force
@@ -209,63 +217,73 @@ jobs:
         Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -Recurse | Select-Object FullName
         
         # Package everything into a zip file
-        Compress-Archive -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -DestinationPath "shuriken-$env:RELEASE_VERSION-windows-msvc.zip"
+        Compress-Archive -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -DestinationPath "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" -Force
         
-        # List the contents of the current directory to verify the zip exists
-        Get-ChildItem -Path .
+        Write-Output "Created release archive:"
+        Get-Item "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" | Select-Object FullName, Length
         
-    - name: Upload artifacts
+    - name: Upload Build Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc
+        name: build-artifact-windows-msvc
         path: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
         retention-days: 5
+        
+    # Upload directly to the release if it's a tag push
+    - name: Upload Release Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  create-release:
+  # This job is only needed for manual workflow runs, tag pushes upload directly
+  create-release-for-manual:
     needs: [build-linux-release, build-windows-release]
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
     
     steps:
     - name: Set Release Version
       run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
-        else
-          # Extract version from tag (remove 'v' prefix)
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        fi
+        echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
         
     - name: Download Linux GCC artifact
       uses: actions/download-artifact@v4
       with:
-        name: shuriken-${{ env.RELEASE_VERSION }}-linux-gcc
-        path: ./downloads
+        name: build-artifact-linux-gcc
+        path: ./artifacts
     
     - name: Download Linux Clang artifact
       uses: actions/download-artifact@v4
       with:
-        name: shuriken-${{ env.RELEASE_VERSION }}-linux-clang
-        path: ./downloads
+        name: build-artifact-linux-clang
+        path: ./artifacts
     
     - name: Download Windows MSVC artifact
       uses: actions/download-artifact@v4
       with:
-        name: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc
-        path: ./downloads
-    
+        name: build-artifact-windows-msvc
+        path: ./artifacts
+        
     - name: Display downloaded files
       run: |
         echo "Downloaded files:"
-        find ./downloads -type f | sort
+        find ./artifacts -type f
         
-        # Move all files to the root directory for easier attaching to release
+    - name: Prepare release files
+      run: |
+        # Rename files to include the version for the manual release
         mkdir -p release-files
-        find ./downloads -type f -name "*.tar.gz" -o -name "*.zip" -exec cp {} ./release-files/ \;
         
-        echo "Files for release:"
+        for file in $(find ./artifacts -type f -name "*.tar.gz" -o -name "*.zip"); do
+          cp "$file" ./release-files/
+        done
+        
+        echo "Files ready for release:"
         ls -la ./release-files/
       
     - name: Create Release
@@ -273,7 +291,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         name: ShurikenAnalyzer ${{ env.RELEASE_VERSION }}
-        tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', github.event.inputs.version) }}
+        tag_name: v${{ env.RELEASE_VERSION }}
         draft: false
         prerelease: false
         generate_release_notes: true
