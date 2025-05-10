@@ -11,9 +11,16 @@ on:
     tags:
       - 'v*'  # Run when tag is pushed matching v*, e.g. v0.1.0
 
+# Add permissions at the top level
+permissions:
+  contents: write
+
 jobs:
   build-linux-release:
     runs-on: ubuntu-24.04
+    # Explicitly add permissions to this job
+    permissions:
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -133,11 +140,13 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   build-windows-release:
     runs-on: windows-latest
+    # Explicitly add permissions to this job
+    permissions:
+      contents: write
     
     name: Windows-msvc-Release
     
@@ -235,8 +244,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   # This job is only needed for manual workflow runs, tag pushes upload directly
   create-release-for-manual:
@@ -296,3 +304,4 @@ jobs:
         prerelease: false
         generate_release_notes: true
         files: ./release-files/*
+        token: ${{ secrets.GITHUB_TOKEN }}
