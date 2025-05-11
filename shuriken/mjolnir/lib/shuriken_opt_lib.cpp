@@ -19,7 +19,7 @@ bool acquire_input(std::vector<std::string> &args, std::map<std::string, std::st
             if (i + 1 < args.size()) {
                 it->second = args[i + 1];
             } else {
-                fmt::print(fg(fmt::color::red),
+                fmt::print(fg(fmt::terminal_color::red),
                            "ERROR: Provide input for {}\n", it->first);
                 error = true;
             }
@@ -27,5 +27,3 @@ bool acquire_input(std::vector<std::string> &args, std::map<std::string, std::st
     }
     return error;
 }
-
-
