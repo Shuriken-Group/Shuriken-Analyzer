@@ -159,27 +159,6 @@ jobs:
     - name: Display compiler version
       run: cl.exe
       
-    - name: Install vcpkg dependencies
-      run: |
-        # Install vcpkg if not installed
-        if (!(Test-Path -Path "C:\vcpkg\vcpkg.exe")) {
-          Write-Output "Installing vcpkg..."
-          git clone https://github.com/microsoft/vcpkg.git "C:\vcpkg"
-          Push-Location "C:\vcpkg"
-          .\bootstrap-vcpkg.bat
-          Pop-Location
-        }
-        
-        # Install required packages
-        Write-Output "Installing required dependencies..."
-        C:\vcpkg\vcpkg install zlib:x64-windows
-        C:\vcpkg\vcpkg install liblzma:x64-windows
-        C:\vcpkg\vcpkg install bzip2:x64-windows
-        C:\vcpkg\vcpkg install zstd:x64-windows
-        
-        # Integrate vcpkg with CMake
-        C:\vcpkg\vcpkg integrate install
-      
     - name: Set Release Version
       shell: bash
       run: |
@@ -189,73 +168,11 @@ jobs:
           # Extract version from tag name directly, preserving the v prefix
           echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         fi
-    
-    - name: Create Custom FindNettle.cmake
-      shell: pwsh
-      run: |
-        # Create a directory for our custom CMake modules
-        New-Item -Path ".\cmake_modules" -ItemType Directory -Force
-        
-        # Create a simplified FindNettle.cmake that doesn't use pkg_check_modules
-        Set-Content -Path ".\cmake_modules\FindNettle.cmake" -Value @"
-        # Simplified FindNettle.cmake
-        # This is a stub implementation to avoid pkg_check_modules errors on Windows
-        
-        set(NETTLE_FOUND FALSE)
-        set(NETTLE_INCLUDE_DIRS "")
-        set(NETTLE_LIBRARIES "")
-        set(NETTLE_LDFLAGS "")
-        
-        include(FindPackageHandleStandardArgs)
-        find_package_handle_standard_args(Nettle DEFAULT_MSG NETTLE_FOUND)
-        
-        mark_as_advanced(NETTLE_INCLUDE_DIRS NETTLE_LIBRARIES NETTLE_LDFLAGS)
-        "@
-        
-        # Create a simplified FindPkgConfig.cmake
-        Set-Content -Path ".\cmake_modules\FindPkgConfig.cmake" -Value @"
-        # Simplified FindPkgConfig.cmake that provides a no-op pkg_check_modules function
-        
-        function(pkg_check_modules _prefix _module)
-          set(${_prefix}_FOUND FALSE PARENT_SCOPE)
-          set(${_prefix}_INCLUDE_DIRS "" PARENT_SCOPE)
-          set(${_prefix}_LIBRARIES "" PARENT_SCOPE)
-          set(${_prefix}_LDFLAGS "" PARENT_SCOPE)
-        endfunction()
-        "@
-        
-        # Show the created files
-        Write-Output "Created custom CMake module files:"
-        Get-ChildItem -Path ".\cmake_modules" -Recurse | Select-Object FullName
         
     - name: Configure CMake
-      shell: pwsh
+      # Using the same simple configuration that works in CI
       run: |
-        # Convert to forward slashes for CMake path
-        $modulesPath = (Resolve-Path ".\cmake_modules").Path -replace '\\', '/'
-        
-        Write-Output "CMAKE_MODULE_PATH: $modulesPath"
-        
-        cmake -S . -B build `
-          -DCMAKE_BUILD_TYPE=Release `
-          -DGITHUB_ACTION=ON `
-          -DDEX=ON `
-          -DMACHO=ON `
-          -DCMAKE_INSTALL_PREFIX=./shuriken-install `
-          -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DCMAKE_MODULE_PATH="$modulesPath" `
-          -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON `
-          -DCMAKE_DISABLE_FIND_PACKAGE_Nettle=ON `
-          -DENABLE_NETTLE=OFF `
-          -DENABLE_GNUTLS=OFF `
-          -DENABLE_OPENSSL=OFF `
-          -DENABLE_MBEDTLS=OFF `
-          -DENABLE_WINDOWS_CRYPTO=ON `
-          -DBUILD_TOOLS=ON `
-          -DBUILD_REGRESS=OFF `
-          -DBUILD_EXAMPLES=OFF `
-          -DBUILD_DOC=OFF `
-          -DBUILD_SHARED_LIBS=ON
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX_TESTS=ON
         
     - name: Build
       run: cmake --build build/ --config Release
@@ -292,27 +209,6 @@ jobs:
           Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
         }
         
-        # Copy required dependency DLLs from vcpkg
-        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps" -ItemType Directory -Force
-        
-        # Find and copy vcpkg dependencies
-        $vcpkgBinDir = "C:/vcpkg/installed/x64-windows/bin"
-        $depDlls = @(
-          "zlib1.dll",
-          "liblzma.dll",
-          "bz2.dll",
-          "zstd.dll"
-        )
-        
-        foreach ($dll in $depDlls) {
-          if (Test-Path -Path "$vcpkgBinDir/$dll") {
-            Copy-Item -Path "$vcpkgBinDir/$dll" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/" -Force
-            Write-Output "Copied dependency: $dll"
-          } else {
-            Write-Output "Warning: Dependency $dll not found in vcpkg"
-          }
-        }
-        
         # Add license and readme
         if (Test-Path -Path "LICENSE") {
           Copy-Item -Path "LICENSE" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/"
@@ -325,22 +221,6 @@ jobs:
         Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Shuriken Analyzer version $env:RELEASE_VERSION"
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Built with MSVC"
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Build date: $(Get-Date)"
-        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Included dependencies:"
-        foreach ($dll in $depDlls) {
-          if (Test-Path -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/$dll") {
-            Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "- $dll"
-          }
-        }
-        
-        # Create a README for dependencies
-        Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/README.txt" -Value "This directory contains third-party dependencies required by Shuriken Analyzer."
-        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/deps/README.txt" -Value "These DLLs should be in the same directory as the Shuriken DLLs or in your system PATH."
-        
-        # Create a batch file to add deps to PATH
-        Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "@echo off"
-        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "echo Setting up Shuriken environment..."
-        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "set PATH=%~dp0;%~dp0deps;%PATH%"
-        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/setup_env.bat" -Value "echo Shuriken environment ready!"
         
         # Show the final package structure
         Write-Output "Final package contents:"
