@@ -192,7 +192,19 @@ jobs:
         
     - name: Configure CMake
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX=ON -DMACHO=ON -DCMAKE_INSTALL_PREFIX=./shuriken-install -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+        cmake -S . -B build `
+          -DCMAKE_BUILD_TYPE=Release `
+          -DGITHUB_ACTION=ON `
+          -DDEX=ON `
+          -DMACHO=ON `
+          -DCMAKE_INSTALL_PREFIX=./shuriken-install `
+          -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
+          -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON `
+          -DBUILD_TOOLS=ON `
+          -DBUILD_REGRESS=OFF `
+          -DBUILD_EXAMPLES=OFF `
+          -DBUILD_DOC=OFF `
+          -DBUILD_SHARED_LIBS=ON
         
     - name: Build
       run: cmake --build build/ --config Release
