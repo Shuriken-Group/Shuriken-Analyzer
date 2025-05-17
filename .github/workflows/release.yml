@@ -194,10 +194,10 @@ jobs:
       shell: pwsh
       run: |
         # Create a directory for our custom CMake modules
-        New-Item -Path "cmake_modules" -ItemType Directory -Force
+        New-Item -Path ".\cmake_modules" -ItemType Directory -Force
         
         # Create a simplified FindNettle.cmake that doesn't use pkg_check_modules
-        Set-Content -Path "cmake_modules/FindNettle.cmake" -Value @"
+        Set-Content -Path ".\cmake_modules\FindNettle.cmake" -Value @"
         # Simplified FindNettle.cmake
         # This is a stub implementation to avoid pkg_check_modules errors on Windows
         
@@ -213,7 +213,7 @@ jobs:
         "@
         
         # Create a simplified FindPkgConfig.cmake
-        Set-Content -Path "cmake_modules/FindPkgConfig.cmake" -Value @"
+        Set-Content -Path ".\cmake_modules\FindPkgConfig.cmake" -Value @"
         # Simplified FindPkgConfig.cmake that provides a no-op pkg_check_modules function
         
         function(pkg_check_modules _prefix _module)
@@ -224,8 +224,18 @@ jobs:
         endfunction()
         "@
         
+        # Show the created files
+        Write-Output "Created custom CMake module files:"
+        Get-ChildItem -Path ".\cmake_modules" -Recurse | Select-Object FullName
+        
     - name: Configure CMake
+      shell: pwsh
       run: |
+        # Convert to forward slashes for CMake path
+        $modulesPath = (Resolve-Path ".\cmake_modules").Path -replace '\\', '/'
+        
+        Write-Output "CMAKE_MODULE_PATH: $modulesPath"
+        
         cmake -S . -B build `
           -DCMAKE_BUILD_TYPE=Release `
           -DGITHUB_ACTION=ON `
@@ -233,7 +243,7 @@ jobs:
           -DMACHO=ON `
           -DCMAKE_INSTALL_PREFIX=./shuriken-install `
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
-          -DCMAKE_MODULE_PATH="$PWD/cmake_modules" `
+          -DCMAKE_MODULE_PATH="$modulesPath" `
           -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON `
           -DCMAKE_DISABLE_FIND_PACKAGE_Nettle=ON `
           -DENABLE_NETTLE=OFF `
