@@ -189,6 +189,40 @@ jobs:
           # Extract version from tag name directly, preserving the v prefix
           echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         fi
+    
+    - name: Create Custom FindNettle.cmake
+      shell: pwsh
+      run: |
+        # Create a directory for our custom CMake modules
+        New-Item -Path "cmake_modules" -ItemType Directory -Force
+        
+        # Create a simplified FindNettle.cmake that doesn't use pkg_check_modules
+        Set-Content -Path "cmake_modules/FindNettle.cmake" -Value @"
+        # Simplified FindNettle.cmake
+        # This is a stub implementation to avoid pkg_check_modules errors on Windows
+        
+        set(NETTLE_FOUND FALSE)
+        set(NETTLE_INCLUDE_DIRS "")
+        set(NETTLE_LIBRARIES "")
+        set(NETTLE_LDFLAGS "")
+        
+        include(FindPackageHandleStandardArgs)
+        find_package_handle_standard_args(Nettle DEFAULT_MSG NETTLE_FOUND)
+        
+        mark_as_advanced(NETTLE_INCLUDE_DIRS NETTLE_LIBRARIES NETTLE_LDFLAGS)
+        "@
+        
+        # Create a simplified FindPkgConfig.cmake
+        Set-Content -Path "cmake_modules/FindPkgConfig.cmake" -Value @"
+        # Simplified FindPkgConfig.cmake that provides a no-op pkg_check_modules function
+        
+        function(pkg_check_modules _prefix _module)
+          set(${_prefix}_FOUND FALSE PARENT_SCOPE)
+          set(${_prefix}_INCLUDE_DIRS "" PARENT_SCOPE)
+          set(${_prefix}_LIBRARIES "" PARENT_SCOPE)
+          set(${_prefix}_LDFLAGS "" PARENT_SCOPE)
+        endfunction()
+        "@
         
     - name: Configure CMake
       run: |
@@ -199,7 +233,14 @@ jobs:
           -DMACHO=ON `
           -DCMAKE_INSTALL_PREFIX=./shuriken-install `
           -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake `
+          -DCMAKE_MODULE_PATH="$PWD/cmake_modules" `
           -DCMAKE_DISABLE_FIND_PACKAGE_PkgConfig=ON `
+          -DCMAKE_DISABLE_FIND_PACKAGE_Nettle=ON `
+          -DENABLE_NETTLE=OFF `
+          -DENABLE_GNUTLS=OFF `
+          -DENABLE_OPENSSL=OFF `
+          -DENABLE_MBEDTLS=OFF `
+          -DENABLE_WINDOWS_CRYPTO=ON `
           -DBUILD_TOOLS=ON `
           -DBUILD_REGRESS=OFF `
           -DBUILD_EXAMPLES=OFF `
