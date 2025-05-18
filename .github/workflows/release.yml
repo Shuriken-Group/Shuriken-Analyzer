@@ -1,3 +1,4 @@
+
 name: Build Release Package
 
 on:
@@ -170,9 +171,9 @@ jobs:
         fi
         
     - name: Configure CMake
-      # Using the same simple configuration that works in CI
+      # Using the same configuration approach as Linux but for Windows
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX=ON -DMACHO=ON -DCMAKE_INSTALL_PREFIX=./shuriken-install
         
     - name: Build
       run: cmake --build build/ --config Release
@@ -187,53 +188,97 @@ jobs:
         Write-Output "Files installed by CMake:"
         Get-ChildItem -Path ./shuriken-install -Recurse | Select-Object FullName
       
-    - name: Collect Header Files
+    - name: Create release package structure
       shell: pwsh
       run: |
-        Write-Output "Collecting header files..."
-        
-        # Create directories for the package
+        # Create the release package directory
         New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -ItemType Directory -Force
-        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
         
-        # Copy headers from the source
-        # First, find all .h and .def files in the source tree, excluding build directories
-        $headerFiles = Get-ChildItem -Path . -Recurse -Include "*.h", "*.def" | 
-                      Where-Object { 
-                        $_.FullName -notlike "*build*" -and
-                        $_.FullName -notlike "*_deps*" -and
-                        $_.FullName -notlike "*shuriken-install*" -and
-                        $_.FullName -notlike "*externals*" -and
-                        $_.Directory.Name -ne "obj" 
-                      }
-        
-        Write-Output "Found $($headerFiles.Count) header files"
-        
-        # Copy each header file maintaining the directory structure
-        foreach ($file in $headerFiles) {
-            # Get the relative path from the repo root
-            $relPath = $file.FullName.Substring($pwd.Path.Length + 1)
-            $targetPath = Join-Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" $relPath
-            
-            # Create the target directory
-            $targetDir = Split-Path -Path $targetPath -Parent
-            if (!(Test-Path $targetDir)) {
-                New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
-            }
-            
-            # Copy the file
-            Copy-Item -Path $file.FullName -Destination $targetPath -Force
+        # Copy ONLY the installed files - similar to the Linux approach
+        if (Test-Path -Path "./shuriken-install/lib") {
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/lib" -ItemType Directory -Force
+          Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
         }
         
-        # Also copy the installed files
+        if (Test-Path -Path "./shuriken-install/include") {
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
+          Copy-Item -Path "./shuriken-install/include/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/include/" -Recurse -Force
+          Write-Output "Copied headers from install directory"
+        }
+        else {
+          Write-Output "No include directory found in install, will copy headers from source"
+        }
+        
         if (Test-Path -Path "./shuriken-install/bin") {
           New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin" -ItemType Directory -Force
           Copy-Item -Path "./shuriken-install/bin/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/" -Recurse -Force
         }
         
-        if (Test-Path -Path "./shuriken-install/lib") {
-          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/lib" -ItemType Directory -Force
-          Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
+        # If include directory doesn't exist in the install or is empty, copy headers from source
+        $includeDir = "shuriken-$env:RELEASE_VERSION-windows-msvc/include"
+        $headerCount = (Get-ChildItem -Path $includeDir -Recurse -Include "*.h", "*.def" -File -ErrorAction SilentlyContinue | Measure-Object).Count
+        
+        if ($headerCount -eq 0) {
+          Write-Output "No headers found in installed files. Copying headers from source and build directories..."
+          
+          # Create the necessary include directories
+          New-Item -Path "$includeDir" -ItemType Directory -Force | Out-Null
+          
+          # Copy headers from the source tree (focusing on shuriken directory)
+          $shurikenHeaders = Get-ChildItem -Path "./shuriken" -Recurse -Include "*.h", "*.def" -File | 
+                              Where-Object { 
+                                $_.FullName -notlike "*CMakeFiles*" -and 
+                                $_.FullName -notlike "*build*" 
+                              }
+                              
+          foreach ($file in $shurikenHeaders) {
+            # Get relative path from the shuriken directory
+            $relPath = "shuriken/" + $file.FullName.Substring($file.FullName.IndexOf("shuriken") + 9)
+            $targetPath = Join-Path $includeDir $relPath
+            
+            # Create target directory if it doesn't exist
+            $targetDir = Split-Path -Path $targetPath -Parent
+            if (!(Test-Path $targetDir)) {
+              New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+            }
+            
+            # Copy file
+            Copy-Item -Path $file.FullName -Destination $targetPath -Force
+            Write-Output "Copied shuriken header: $relPath"
+          }
+          
+          # Copy third-party headers from the build directory
+          $thirdPartyHeaders = @("zlib.h", "zip.h", "zconf.h", "zipconf.h")
+          foreach ($header in $thirdPartyHeaders) {
+            $sourceFiles = Get-ChildItem -Path "./build" -Recurse -Include $header -File
+            
+            if ($sourceFiles.Count -gt 0) {
+              $sourceFile = $sourceFiles[0]  # Take the first match
+              $targetPath = Join-Path $includeDir $header
+              
+              Copy-Item -Path $sourceFile.FullName -Destination $targetPath -Force
+              Write-Output "Copied third-party header: $header"
+            }
+            else {
+              Write-Output "Warning: Could not find third-party header: $header"
+            }
+          }
+          
+          # Copy fmt headers from the build directory
+          $fmtDir = Join-Path $includeDir "fmt"
+          New-Item -Path $fmtDir -ItemType Directory -Force | Out-Null
+          
+          $fmtHeaders = Get-ChildItem -Path "./build" -Recurse -Include "*.h" -File | 
+                         Where-Object { $_.FullName -like "*fmt*" -and $_.FullName -like "*include*" }
+                         
+          foreach ($file in $fmtHeaders) {
+            # Extract just the filename
+            $filename = Split-Path -Path $file.FullName -Leaf
+            $targetPath = Join-Path $fmtDir $filename
+            
+            Copy-Item -Path $file.FullName -Destination $targetPath -Force
+            Write-Output "Copied fmt header: $filename"
+          }
         }
         
         # Add license and readme
@@ -250,8 +295,13 @@ jobs:
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Build date: $(Get-Date)"
         
         # Count header files
-        $headerCount = (Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -Recurse -Include "*.h", "*.def" -File).Count
-        Write-Output "Included $headerCount header files in the package"
+        $finalHeaderCount = (Get-ChildItem -Path $includeDir -Recurse -Include "*.h", "*.def" -File -ErrorAction SilentlyContinue | Measure-Object).Count
+        Write-Output "Total header files (.h and .def) included: $finalHeaderCount"
+        
+        # Show all headers
+        Write-Output "Header files included in the package:"
+        Get-ChildItem -Path $includeDir -Recurse -Include "*.h", "*.def" -File -ErrorAction SilentlyContinue | 
+            Select-Object -ExpandProperty FullName | ForEach-Object { $_.Substring($_.IndexOf("include") + 8) }
         
         # Package everything into a zip file
         Compress-Archive -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -DestinationPath "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" -Force
