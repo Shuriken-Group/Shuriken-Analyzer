@@ -168,11 +168,11 @@ jobs:
           # Extract version from tag name directly, preserving the v prefix
           echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
         fi
-    
+        
     - name: Configure CMake
-      # Using the same simple configuration that works in CI, but with INSTALL_PREFIX
+      # Using the same simple configuration that works in CI
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX_TESTS=ON -DCMAKE_INSTALL_PREFIX=./shuriken-install
+        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON
         
     - name: Build
       run: cmake --build build/ --config Release
@@ -187,56 +187,53 @@ jobs:
         Write-Output "Files installed by CMake:"
         Get-ChildItem -Path ./shuriken-install -Recurse | Select-Object FullName
       
-    - name: Create release package structure
+    - name: Collect Header Files
       shell: pwsh
       run: |
-        # Create the release package directory
-        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -ItemType Directory -Force
+        Write-Output "Collecting header files..."
         
-        # Copy files from the installation directory
+        # Create directories for the package
+        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -ItemType Directory -Force
+        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
+        
+        # Copy headers from the source
+        # First, find all .h and .def files in the source tree, excluding build directories
+        $headerFiles = Get-ChildItem -Path . -Recurse -Include "*.h", "*.def" | 
+                      Where-Object { 
+                        $_.FullName -notlike "*build*" -and
+                        $_.FullName -notlike "*_deps*" -and
+                        $_.FullName -notlike "*shuriken-install*" -and
+                        $_.FullName -notlike "*externals*" -and
+                        $_.Directory.Name -ne "obj" 
+                      }
+        
+        Write-Output "Found $($headerFiles.Count) header files"
+        
+        # Copy each header file maintaining the directory structure
+        foreach ($file in $headerFiles) {
+            # Get the relative path from the repo root
+            $relPath = $file.FullName.Substring($pwd.Path.Length + 1)
+            $targetPath = Join-Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" $relPath
+            
+            # Create the target directory
+            $targetDir = Split-Path -Path $targetPath -Parent
+            if (!(Test-Path $targetDir)) {
+                New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+            }
+            
+            # Copy the file
+            Copy-Item -Path $file.FullName -Destination $targetPath -Force
+        }
+        
+        # Also copy the installed files
         if (Test-Path -Path "./shuriken-install/bin") {
           New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin" -ItemType Directory -Force
           Copy-Item -Path "./shuriken-install/bin/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/" -Recurse -Force
         }
         
-        if (Test-Path -Path "./shuriken-install/include") {
-          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
-          Copy-Item -Path "./shuriken-install/include/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/include/" -Recurse -Force
-        }
-        
         if (Test-Path -Path "./shuriken-install/lib") {
           New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/lib" -ItemType Directory -Force
           Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
-        }
-        
-        # If the install didn't properly include headers, manually copy them
-        if (-not (Test-Path -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include") -or 
-            (Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -Recurse -File).Count -eq 0) {
-          
-          Write-Output "No headers found in the installed files. Manually copying headers from source..."
-          
-          # Create include directory
-          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
-          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include/shuriken" -ItemType Directory -Force
-          
-          # Find and copy all .h and .def files from the source tree to the include directory
-          $headerFiles = Get-ChildItem -Path "." -Recurse -Include "*.h", "*.def" | 
-                         Where-Object { $_.FullName -notlike "*build*" -and $_.FullName -notlike "*shuriken-install*" }
-          
-          foreach ($file in $headerFiles) {
-              # Extract relative path
-              $relativePath = $file.FullName.Substring($PWD.Path.Length + 1)
-              
-              # Create target directory if it doesn't exist
-              $targetDir = [System.IO.Path]::GetDirectoryName("shuriken-$env:RELEASE_VERSION-windows-msvc/include/$relativePath")
-              if (-not (Test-Path $targetDir)) {
-                  New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
-              }
-              
-              # Copy the file
-              Copy-Item -Path $file.FullName -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/include/$relativePath" -Force
-              Write-Output "Copied header: $relativePath"
-          }
         }
         
         # Add license and readme
@@ -252,17 +249,9 @@ jobs:
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Built with MSVC"
         Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Build date: $(Get-Date)"
         
-        # Show the final package structure and header count
+        # Count header files
         $headerCount = (Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -Recurse -Include "*.h", "*.def" -File).Count
-        Write-Output "Total header files (.h and .def) included: $headerCount"
-        
-        # Show a summary of directories
-        Write-Output "Package directory structure:"
-        Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -Directory | ForEach-Object {
-            $dirName = $_.Name
-            $fileCount = (Get-ChildItem -Path $_.FullName -Recurse -File).Count
-            Write-Output "  $dirName - $fileCount files"
-        }
+        Write-Output "Included $headerCount header files in the package"
         
         # Package everything into a zip file
         Compress-Archive -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -DestinationPath "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" -Force
