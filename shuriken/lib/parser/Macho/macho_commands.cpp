@@ -31,7 +31,7 @@ void MachoCommands::parse_commands(common::ShurikenStream &stream,
 
         // parsing of the segment commands
         if (loadcommand.cmd == LC_SEGMENT) {
-            stream.seekg(-sizeof(loadcommand), std::ios::cur);
+            stream.seekg(-static_cast<std::streamoff>(sizeof(loadcommand)), std::ios::cur);
         
             segmentcommand_t segmentcommand;
             stream.read_data<segmentcommand_t>(segmentcommand, sizeof(segmentcommand));

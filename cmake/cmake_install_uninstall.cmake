@@ -1,4 +1,3 @@
-
 #------------------------------------------------------------- Installation Flags
 # Default paths for installation
 # Set CMake MacOS runtime path to find .so files on mac
@@ -26,8 +25,11 @@ elseif(UNIX AND NOT APPLE) # Explicitly differentiate UNIX from APPLE
     # Define default include and library paths based on CMAKE_INSTALL_PREFIX
     set(include_install_path "${CMAKE_INSTALL_PREFIX}/include") # Default path
     set(library_install_path "${CMAKE_INSTALL_PREFIX}/lib") # Default path
+elseif(WIN32)
+    # Windows specific paths - use relative paths to work with install-time prefix
+    set(include_install_path "include")
+    set(library_install_path "lib")
 endif()
-
 
 #------------------------------------------------------ Uninstallation Flags
 # Define the uninstall target

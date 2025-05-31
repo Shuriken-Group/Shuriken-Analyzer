@@ -1,0 +1,362 @@
+name: Build Release Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        default: '0.0.1'
+  push:
+    tags:
+      - 'v*'  # Run when tag is pushed matching v*, e.g. v0.1.0
+
+# Add permissions at the top level
+permissions:
+  contents: write
+
+jobs:
+  build-linux-release:
+    runs-on: ubuntu-24.04
+    # Explicitly add permissions to this job
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc, clang]
+    
+    name: Linux-${{ matrix.compiler }}-Release
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup compiler on Linux
+      run: |
+        sudo apt-get update
+        if [ "${{ matrix.compiler }}" = "gcc" ]; then
+          sudo apt-get install -y gcc-13 g++-13
+          echo "CC=gcc-13" >> $GITHUB_ENV
+          echo "CXX=g++-13" >> $GITHUB_ENV
+          echo "COMPILER_NAME=gcc-13" >> $GITHUB_ENV
+        else
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          sudo add-apt-repository "deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main"
+          sudo apt-get update
+          sudo apt-get install -y clang-18
+          echo "CC=clang-18" >> $GITHUB_ENV
+          echo "CXX=clang++-18" >> $GITHUB_ENV
+          echo "COMPILER_NAME=clang-18" >> $GITHUB_ENV
+        fi
+      shell: bash
+      
+    - name: Display compiler version
+      run: $CC --version
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get install -y cmake git default-jdk
+        
+    - name: Set Release Version
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        else
+          # Extract version from tag name directly, preserving the v prefix
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        fi
+        
+    - name: Configure CMake
+      run: |
+        cmake -S . -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DGITHUB_ACTION=ON \
+          -DDEX=ON \
+          -DMACHO=ON \
+          -DCMAKE_INSTALL_PREFIX=./shuriken-install
+          
+    - name: Build
+      run: cmake --build build/ -j
+      
+    - name: Install to local directory
+      run: |
+        cmake --install build/ --prefix ./shuriken-install
+        
+        # List installed files to verify the installation
+        echo "Files installed by CMake:"
+        find ./shuriken-install -type f | sort
+      
+    - name: Create release package structure
+      run: |
+        # Create the release package directory with the correct name
+        mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}
+        
+        # Copy ONLY the installed files
+        if [ -d "./shuriken-install/lib" ]; then
+          mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/lib
+          cp -r ./shuriken-install/lib/* shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/lib/
+        fi
+        
+        if [ -d "./shuriken-install/include" ]; then
+          mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/include
+          cp -r ./shuriken-install/include/* shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/include/
+        fi
+        
+        if [ -d "./shuriken-install/bin" ]; then
+          mkdir -p shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/bin
+          cp -r ./shuriken-install/bin/* shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/bin/
+        fi
+        
+        # Add license and readme
+        cp LICENSE shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/ || echo "No LICENSE file found"
+        cp README.md shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/ || echo "No README.md file found"
+        
+        # Create a package info file with build information
+        echo "Shuriken Analyzer version ${{ env.RELEASE_VERSION }}" > shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/BUILD_INFO.txt
+        echo "Built with ${{ env.COMPILER_NAME }}" >> shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/BUILD_INFO.txt
+        echo "Build date: $(date)" >> shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/BUILD_INFO.txt
+        $CC --version >> shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}/BUILD_INFO.txt
+        
+        # Show the final package structure
+        echo "Final package contents:"
+        find shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }} -type f | sort
+        
+        # Package everything into a tarball
+        tar -czf shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}
+        
+        echo "Created release archive:"
+        ls -la shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
+        
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifact-linux-${{ matrix.compiler }}
+        path: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
+        retention-days: 5
+        
+    # Upload directly to the release if it's a tag push
+    - name: Upload Release Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: shuriken-${{ env.RELEASE_VERSION }}-linux-${{ matrix.compiler }}.tar.gz
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-windows-release:
+    runs-on: windows-latest
+    # Explicitly add permissions to this job
+    permissions:
+      contents: write
+    
+    name: Windows-msvc-Release
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1
+      
+    - name: Display compiler version
+      run: cl.exe
+      
+    - name: Set Release Version
+      shell: bash
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        else
+          # Extract version from tag name directly, preserving the v prefix
+          echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        fi
+        
+    - name: Configure CMake
+      # EXACT SAME as the working CI configuration
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON -DDEX=ON -DMACHO=ON
+        
+    - name: Build
+      run: cmake --build build/ --config Release
+      
+    - name: Install to local directory
+      run: |
+        cmake --install build/ --config Release --prefix ./shuriken-install
+      
+    - name: List installed files
+      shell: pwsh
+      run: |
+        Write-Output "Files installed by CMake:"
+        Get-ChildItem -Path ./shuriken-install -Recurse | Select-Object FullName
+      
+    - name: Create release package structure
+      shell: pwsh
+      run: |
+        # Create the release package directory
+        New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -ItemType Directory -Force
+        
+        # Copy installed files
+        if (Test-Path -Path "./shuriken-install/bin") {
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/bin" -ItemType Directory -Force
+          Copy-Item -Path "./shuriken-install/bin/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/bin/" -Recurse -Force
+        }
+        
+        if (Test-Path -Path "./shuriken-install/lib") {
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/lib" -ItemType Directory -Force
+          Copy-Item -Path "./shuriken-install/lib/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/lib/" -Recurse -Force
+        }
+        
+        # Check if headers were installed
+        if (Test-Path -Path "./shuriken-install/include") {
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
+          Copy-Item -Path "./shuriken-install/include/*" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/include/" -Recurse -Force
+          Write-Output "Headers copied from install directory"
+        }
+        else {
+          Write-Output "No headers found in install directory, will collect manually"
+          
+          # Create include directory
+          New-Item -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -ItemType Directory -Force
+          
+          # Find all .h and .def files in source and build directories
+          Write-Output "Searching for header files..."
+          
+          # Search for shuriken headers in source
+          $shurikenHeaders = Get-ChildItem -Path "./shuriken" -Recurse -Include "*.h", "*.def" -File | 
+                             Where-Object { $_.FullName -notlike "*CMakeFiles*" }
+          
+          Write-Output "Found $($shurikenHeaders.Count) shuriken headers"
+          
+          foreach ($file in $shurikenHeaders) {
+            # Get relative path from shuriken directory
+            $relPath = $file.FullName.Substring($file.FullName.IndexOf("shuriken"))
+            $targetPath = "shuriken-$env:RELEASE_VERSION-windows-msvc/include/$relPath"
+            
+            # Create target directory
+            $targetDir = Split-Path -Path $targetPath -Parent
+            if (!(Test-Path $targetDir)) {
+              New-Item -Path $targetDir -ItemType Directory -Force | Out-Null
+            }
+            
+            # Copy file
+            Copy-Item -Path $file.FullName -Destination $targetPath -Force
+          }
+          
+          # Search for third-party headers in build directory
+          $buildHeaders = Get-ChildItem -Path "./build" -Recurse -Include "*.h" -File | 
+                          Where-Object { 
+                            $_.Name -in @("zlib.h", "zip.h", "zconf.h", "zipconf.h") -or
+                            $_.FullName -like "*fmt*include*"
+                          }
+          
+          Write-Output "Found $($buildHeaders.Count) third-party headers"
+          
+          foreach ($file in $buildHeaders) {
+            if ($file.Name -in @("zlib.h", "zip.h", "zconf.h", "zipconf.h")) {
+              # Copy to root of include
+              Copy-Item -Path $file.FullName -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/include/$($file.Name)" -Force
+            }
+            elseif ($file.FullName -like "*fmt*include*") {
+              # Create fmt directory and copy
+              $fmtDir = "shuriken-$env:RELEASE_VERSION-windows-msvc/include/fmt"
+              if (!(Test-Path $fmtDir)) {
+                New-Item -Path $fmtDir -ItemType Directory -Force | Out-Null
+              }
+              Copy-Item -Path $file.FullName -Destination "$fmtDir/$($file.Name)" -Force
+            }
+          }
+        }
+        
+        # Count final headers
+        $headerCount = (Get-ChildItem -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/include" -Recurse -Include "*.h", "*.def" -File).Count
+        Write-Output "Total headers included: $headerCount"
+        
+        # Add license and readme
+        if (Test-Path -Path "LICENSE") {
+          Copy-Item -Path "LICENSE" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/"
+        }
+        if (Test-Path -Path "README.md") {
+          Copy-Item -Path "README.md" -Destination "shuriken-$env:RELEASE_VERSION-windows-msvc/"
+        }
+        
+        # Create a package info file with build information
+        Set-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Shuriken Analyzer version $env:RELEASE_VERSION"
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Built with MSVC"
+        Add-Content -Path "shuriken-$env:RELEASE_VERSION-windows-msvc/BUILD_INFO.txt" -Value "Build date: $(Get-Date)"
+        
+        # Package everything into a zip file
+        Compress-Archive -Path "shuriken-$env:RELEASE_VERSION-windows-msvc" -DestinationPath "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" -Force
+        
+        Write-Output "Created release archive:"
+        Get-Item "shuriken-$env:RELEASE_VERSION-windows-msvc.zip" | Select-Object FullName, Length
+        
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifact-windows-msvc
+        path: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
+        retention-days: 5
+        
+    # Upload directly to the release if it's a tag push
+    - name: Upload Release Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: shuriken-${{ env.RELEASE_VERSION }}-windows-msvc.zip
+
+  # This job is only needed for manual workflow runs, tag pushes upload directly
+  create-release-for-manual:
+    needs: [build-linux-release, build-windows-release]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Set Release Version
+      run: |
+        echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+        
+    - name: Download Linux GCC artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifact-linux-gcc
+        path: ./artifacts
+    
+    - name: Download Linux Clang artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifact-linux-clang
+        path: ./artifacts
+    
+    - name: Download Windows MSVC artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifact-windows-msvc
+        path: ./artifacts
+        
+    - name: Display downloaded files
+      run: |
+        echo "Downloaded files:"
+        find ./artifacts -type f
+        
+    - name: Prepare release files
+      run: |
+        # Rename files to include the version for the manual release
+        mkdir -p release-files
+        
+        for file in $(find ./artifacts -type f -name "*.tar.gz" -o -name "*.zip"); do
+          cp "$file" ./release-files/
+        done
+        
+        echo "Files ready for release:"
+        ls -la ./release-files/
+      
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ShurikenAnalyzer ${{ env.RELEASE_VERSION }}
+        tag_name: v${{ env.RELEASE_VERSION }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        files: ./release-files/*
+        token: ${{ secrets.GITHUB_TOKEN }}
