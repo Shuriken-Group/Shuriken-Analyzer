@@ -26,13 +26,9 @@ elseif(UNIX AND NOT APPLE) # Explicitly differentiate UNIX from APPLE
     set(include_install_path "${CMAKE_INSTALL_PREFIX}/include") # Default path
     set(library_install_path "${CMAKE_INSTALL_PREFIX}/lib") # Default path
 elseif(WIN32)
-    # Windows specific paths
-    if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-        set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "Default installation directory" FORCE)
-    endif()
-    # Define default include and library paths based on CMAKE_INSTALL_PREFIX
-    set(include_install_path "${CMAKE_INSTALL_PREFIX}/include")
-    set(library_install_path "${CMAKE_INSTALL_PREFIX}/lib")
+    # Windows specific paths - use relative paths to work with install-time prefix
+    set(include_install_path "include")
+    set(library_install_path "lib")
 endif()
 
 #------------------------------------------------------ Uninstallation Flags
