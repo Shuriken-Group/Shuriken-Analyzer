@@ -172,7 +172,12 @@ jobs:
     - name: Configure CMake
       # EXACT SAME as the working CI configuration
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DGITHUB_ACTION=ON
+        cmake -S . -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DGITHUB_ACTION=ON \
+          -DDEX=ON \
+          -DMACHO=ON \
+          -DCMAKE_INSTALL_PREFIX=./shuriken-install
         
     - name: Build
       run: cmake --build build/ --config Release
