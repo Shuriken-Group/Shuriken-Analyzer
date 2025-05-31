@@ -228,12 +228,10 @@ install(TARGETS shuriken
         LIBRARY DESTINATION ${library_install_path}
 )
 
-if (NOT WIN32)
-        # Install the Shuriken library's header files and def files
-        install(DIRECTORY ${SHURIKEN_INCLUDE_PATH}/
-                DESTINATION ${include_install_path}
-                FILES_MATCHING 
-                PATTERN "*.h*"
-                PATTERN "*.def"
-        )
-endif()
+# Install the Shuriken library's header files and def files
+install(DIRECTORY ${SHURIKEN_INCLUDE_PATH}/
+        DESTINATION ${include_install_path}
+        FILES_MATCHING 
+        PATTERN "*.h*"
+        PATTERN "*.def"
+)
