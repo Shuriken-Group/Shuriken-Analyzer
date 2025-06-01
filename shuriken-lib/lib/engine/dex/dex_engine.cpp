@@ -60,6 +60,10 @@ public:
 
     std::string dex_path;
     std::string dex_name;
+
+    // pool of strings in the DEX
+    std::vector<std::string> strings_pool;
+
     // ownership of classes
     std::vector<std::unique_ptr<Class>> sdk_classes;
     std::vector<std::unique_ptr<DexClassProvider>> dex_class_providers;
@@ -118,6 +122,7 @@ shuriken::error::VoidResult DexEngine::parse() {
     }
 
     // fill the data with the information from the header
+    pimpl->strings_pool = std::move(parser.get_strings_pool());
     pimpl->dex_type_providers = std::move(parser.get_types_pool());
     pimpl->sdk_dvmtypes = std::move(parser.get_dvm_types_pool());
     pimpl->dex_prototypes_providers = std::move(parser.get_prototypes_pool());
@@ -252,10 +257,41 @@ std::string shuriken::dex::DexEngine::get_dex_name_string() const {
     return this->pimpl->dex_name;
 }
 
+std::string_view shuriken::dex::DexEngine::get_string_by_id(size_t id) {
+    if (id >= this->pimpl->strings_pool.size())
+        return {};
+    return this->pimpl->strings_pool[id];
+}
+
+DVMPrototype * shuriken::dex::DexEngine::get_prototype_by_id(size_t id) {
+    if (id >= this->pimpl->ref_sdk_prototypes.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_prototypes[id].get();
+}
+
+DVMType * shuriken::dex::DexEngine::get_type_by_id(size_t id) {
+    if (id >= this->pimpl->ref_sdk_dvmtypes.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_dvmtypes[id].get();
+}
+
 classes_deref_iterator_t shuriken::dex::DexEngine::get_classes() const {
     static classes_ref_t classes{this->pimpl->ref_sdk_classes};
     return classes;
 }
+
+Class * shuriken::dex::DexEngine::get_class_by_id(size_t id) {
+    if (id >= this->pimpl->ref_sdk_classes.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_classes[id].get();
+}
+
+const Class * shuriken::dex::DexEngine::get_class_by_id(size_t id) const {
+    if (id >= this->pimpl->ref_sdk_classes.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_classes[id].get();
+}
+
 
 const Class *shuriken::dex::DexEngine::get_class_by_package_name_and_name(std::string_view package_name,
                                                                           std::string_view name) const {
@@ -340,6 +376,19 @@ method_deref_iterator_t shuriken::dex::DexEngine::get_methods() const {
     return methods;
 }
 
+
+Method * shuriken::dex::DexEngine::get_method_by_id(size_t id) {
+    if (id >= this->pimpl->ref_sdk_methods.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_methods[id].get();
+}
+
+const Method * shuriken::dex::DexEngine::get_method_by_id(size_t id) const {
+    if (id >= this->pimpl->ref_sdk_methods.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_methods[id].get();
+}
+
 const Method *
 shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
     auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
@@ -388,6 +437,18 @@ Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_view desc
 fields_deref_iterator_t shuriken::dex::DexEngine::get_fields() const {
     static fields_ref_t fields{this->pimpl->ref_sdk_fields};
     return fields;
+}
+
+Field * shuriken::dex::DexEngine::get_field_by_id(size_t id) {
+    if (id >= this->pimpl->ref_sdk_fields.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_fields[id].get();
+}
+
+const Field * shuriken::dex::DexEngine::get_field_by_id(size_t id) const {
+    if (id >= this->pimpl->ref_sdk_fields.size())
+        return nullptr;
+    return &this->pimpl->ref_sdk_fields[id].get();
 }
 
 const Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) const {

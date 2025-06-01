@@ -18,6 +18,7 @@ class DexEngine;
 class Class;
 class Method;
 class Field;
+class DVMPrototype;
 
 class Dex {
 private:
@@ -59,6 +60,11 @@ public:
      */
     std::string get_dex_name_string() const;
 
+    std::string_view get_string_by_id(size_t id);
+
+    DVMPrototype * get_prototype_by_id(size_t id);
+
+    DVMType  * get_type_by_id(size_t id);
     // for classes
 
     /**
@@ -66,6 +72,10 @@ public:
      * @return A reference iterator to all the classes from the DEX file
      */
     classes_deref_iterator_t get_classes() const;
+
+    Class * get_class_by_id(size_t id);
+
+    const Class * get_class_by_id(size_t id) const;
 
     /**
      * @brief Find a class by its package name and class name
@@ -110,6 +120,10 @@ public:
      */
     method_deref_iterator_t get_methods() const;
 
+    Method * get_method_by_id(size_t id);
+
+    const Method * get_method_by_id(size_t id) const;
+
     /**
     * Find a method by its name and prototype
     * @param name The method name
@@ -144,6 +158,10 @@ public:
      * @return a reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
+
+    Field * get_field_by_id(size_t id);
+
+    const Field * get_field_by_id(size_t id) const;
 
     /**
    * Find a field by its name

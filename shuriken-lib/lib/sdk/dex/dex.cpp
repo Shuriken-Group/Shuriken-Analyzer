@@ -83,8 +83,28 @@ std::string shuriken::dex::Dex::get_dex_name_string() const {
     return pimpl->dex_engine->get_dex_name_string();
 }
 
+std::string_view shuriken::dex::Dex::get_string_by_id(size_t id) {
+    return pimpl->dex_engine->get_string_by_id(id);
+}
+
+DVMPrototype * shuriken::dex::Dex::get_prototype_by_id(size_t id) {
+    return pimpl->dex_engine->get_prototype_by_id(id);
+}
+
+DVMType  * shuriken::dex::Dex::get_type_by_id(size_t id) {
+    return pimpl->dex_engine->get_type_by_id(id);
+}
+
 classes_deref_iterator_t shuriken::dex::Dex::get_classes() const {
     return pimpl->dex_engine->get_classes();
+}
+
+Class * shuriken::dex::Dex::get_class_by_id(size_t id) {
+    return pimpl->dex_engine->get_class_by_id(id);
+}
+
+const Class * shuriken::dex::Dex::get_class_by_id(size_t id) const {
+    return pimpl->dex_engine->get_class_by_id(id);
 }
 
 const Class *
@@ -112,6 +132,14 @@ method_deref_iterator_t shuriken::dex::Dex::get_methods() const {
     return pimpl->dex_engine->get_methods();
 }
 
+Method * shuriken::dex::Dex::get_method_by_id(size_t id) {
+    return pimpl->dex_engine->get_method_by_id(id);
+}
+
+const Method * shuriken::dex::Dex::get_method_by_id(size_t id) const {
+    return pimpl->dex_engine->get_method_by_id(id);
+}
+
 const Method *
 shuriken::dex::Dex::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
     return pimpl->dex_engine->get_method_by_name_prototype(name, prototype);
@@ -131,6 +159,14 @@ Method *shuriken::dex::Dex::get_method_by_descriptor(std::string_view descriptor
 
 fields_deref_iterator_t shuriken::dex::Dex::get_fields() const {
     return pimpl->dex_engine->get_fields();
+}
+
+Field * shuriken::dex::Dex::get_field_by_id(size_t id) {
+    return pimpl->dex_engine->get_field_by_id(id);
+}
+
+const Field * shuriken::dex::Dex::get_field_by_id(size_t id) const {
+    return pimpl->dex_engine->get_field_by_id(id);
 }
 
 const Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) const {

@@ -68,6 +68,8 @@ public:
 
     error::VoidResult parse(io::ShurikenStream& stream);
 
+    std::vector<std::string> & get_strings_pool();
+
     std::vector<std::unique_ptr<DVMTypeProvider>> & get_types_pool();
 
     std::vector<std::unique_ptr<DVMType>> & get_dvm_types_pool();

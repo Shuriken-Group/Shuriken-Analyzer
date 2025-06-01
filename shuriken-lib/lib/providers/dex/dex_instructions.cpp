@@ -3,6 +3,7 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include <shuriken/internal/providers/dex/dex_instructions.hpp>
+#include <shuriken/sdk/dex/method.hpp>
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
@@ -149,6 +150,36 @@ namespace {
             disassembler::opcodes::OP_DIV_INT_LIT8,
             disassembler::opcodes::OP_REM_INT_LIT8,
     };
+
+    std::string get_kind_type_as_string(const kind_type_t &source_id, std::uint16_t iBBBB) {
+        std::stringstream instruction_str;
+
+        if (std::holds_alternative<std::monostate>(source_id)) {
+            instruction_str << " // UNKNOWN@" << iBBBB;
+        } else if (std::holds_alternative<DVMType *>(source_id)) {
+            auto *type = std::get<DVMType *>(source_id);
+            instruction_str << shuriken::dex::get_dalvik_format(*type);
+            instruction_str << " // type@" << iBBBB;
+        } else if (std::holds_alternative<Field *>(source_id)) {
+            auto *field = std::get<Field *>(source_id);
+            instruction_str << field->get_descriptor();
+            instruction_str << " // field@" << iBBBB;
+        } else if (std::holds_alternative<Method *>(source_id)) {
+            auto *method = std::get<Method *>(source_id);
+            instruction_str << method->get_descriptor();
+            instruction_str << " // method@" << iBBBB;
+        } else if (std::holds_alternative<DVMPrototype *>(source_id)) {
+            auto *proto = std::get<DVMPrototype *>(source_id);
+            instruction_str << proto->get_shorty_idx();
+            instruction_str << " // proto@" << iBBBB;
+        } else if (std::holds_alternative<std::string_view>(source_id)) {
+            auto str = std::get<std::string_view>(source_id);
+            instruction_str << "\"" << str << "\"";
+            instruction_str << " // string@" << iBBBB;
+        }
+
+        return instruction_str.str();
+    }
 }
 
 
@@ -650,5 +681,710 @@ std::string Instruction22xProvider::print_instruction_string() {
     }
     return instruction;
 }
+
+
+Instruction21tProvider::Instruction21tProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21T, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+}
+
+Instruction21tProvider::Instruction21tProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21T, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+}
+
+std::uint8_t Instruction21tProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction21tProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int16_t Instruction21tProvider::getNBBBB() const {
+    return nBBBB;
+}
+
+disassembler::operand_type Instruction21tProvider::get_nBBBB_type() const {
+    return disassembler::OFFSET;
+}
+
+std::string_view Instruction21tProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+std::string Instruction21tProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+
+Instruction21sProvider::Instruction21sProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+}
+
+Instruction21sProvider::Instruction21sProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+}
+
+std::uint8_t Instruction21sProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction21sProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int16_t Instruction21sProvider::getNBBBB() const {
+    return nBBBB;
+}
+
+disassembler::operand_type Instruction21sProvider::get_nBBBB_type() const {
+    return disassembler::OFFSET;
+}
+
+std::string_view Instruction21sProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+std::string Instruction21sProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+Instruction21hProvider::Instruction21hProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+    switch (opcode) {
+        case disassembler::opcodes::OP_CONST_HIGH16:
+            nBBBB = nBBBB << 16;
+            break;
+        case disassembler::opcodes::OP_CONST_WIDE_HIGH16:
+            nBBBB = nBBBB << 48;
+            break;
+        default:
+            break;
+    }
+}
+
+Instruction21hProvider::Instruction21hProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    nBBBB = *(reinterpret_cast<std::int16_t *>(&this->bytecode[2]));
+    switch (opcode) {
+        case disassembler::opcodes::OP_CONST_HIGH16:
+            nBBBB = nBBBB << 16;
+            break;
+        case disassembler::opcodes::OP_CONST_WIDE_HIGH16:
+            nBBBB = nBBBB << 48;
+            break;
+        default:
+            break;
+    }
+}
+
+std::uint8_t Instruction21hProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction21hProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int64_t Instruction21hProvider::getnBBBB() const {
+    return nBBBB;
+}
+
+disassembler::operand_type Instruction21hProvider::get_nBBBB_type() const {
+    return disassembler::LITERAL;
+}
+
+std::string_view Instruction21hProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+std::string Instruction21hProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + std::to_string(nBBBB);
+    }
+    return instruction;
+}
+
+Instruction21cProvider::Instruction21cProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21C, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    iBBBB = *(reinterpret_cast<std::uint16_t *>(&this->bytecode[2]));
+    source_id = std::monostate{};
+}
+
+Instruction21cProvider::Instruction21cProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION21C, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    iBBBB = *(reinterpret_cast<std::uint16_t *>(&this->bytecode[2]));
+    source_id = std::monostate{};
+
+    switch (get_kind()) {
+        case disassembler::kind::STRING:
+            source_id = dex.get_string_by_id(iBBBB);
+            break;
+        case disassembler::kind::TYPE:
+            source_id = dex.get_type_by_id(iBBBB);
+            break;
+        case disassembler::kind::FIELD:
+            source_id = dex.get_field_by_id(iBBBB);
+            break;
+        case disassembler::kind::METH:
+            source_id = dex.get_method_by_id(iBBBB);
+            break;
+        case disassembler::kind::PROTO:
+            source_id = dex.get_prototype_by_id(iBBBB);
+            break;
+        default:
+            break;
+    }
+}
+
+std::uint8_t Instruction21cProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction21cProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint16_t Instruction21cProvider::getIBBBB() const {
+    return iBBBB;
+}
+
+disassembler::operand_type Instruction21cProvider::get_iBBBB_type() const {
+    return disassembler::KIND;
+}
+
+kind_type_t Instruction21cProvider::get_iBBBB_kind() {
+    return source_id;
+}
+
+std::string_view Instruction21cProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + get_kind_type_as_string(source_id, iBBBB);
+    }
+    return instruction;
+}
+
+std::string Instruction21cProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", " + get_kind_type_as_string(source_id, iBBBB);
+    }
+    return instruction;
+}
+
+Instruction23xProvider::Instruction23xProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION23X, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    vBB = this->bytecode[2];
+    vCC = this->bytecode[3];
+}
+
+Instruction23xProvider::Instruction23xProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION23X, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    vBB = this->bytecode[2];
+    vCC = this->bytecode[3];
+}
+
+std::uint8_t Instruction23xProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction23xProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction23xProvider::getVBB() const {
+    return vBB;
+}
+
+disassembler::operand_type Instruction23xProvider::get_vBB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction23xProvider::getVCC() const {
+    return vCC;
+}
+
+disassembler::operand_type Instruction23xProvider::get_vCC_type() const {
+    return disassembler::REGISTER;
+}
+
+std::string_view Instruction23xProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", v" + std::to_string(vBB);
+        instruction += ", v" + std::to_string(vCC);
+    }
+    return instruction;
+}
+
+std::string Instruction23xProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", v" + std::to_string(vBB);
+        instruction += ", v" + std::to_string(vCC);
+    }
+    return instruction;
+}
+
+Instruction22bProvider::Instruction22bProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22B, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    vBB = this->bytecode[2];
+    nCC = static_cast<std::int8_t>(this->bytecode[3]);
+}
+
+Instruction22bProvider::Instruction22bProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22B, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vAA = this->bytecode[1];
+    vBB = this->bytecode[2];
+    nCC = static_cast<std::int8_t>(this->bytecode[3]);
+}
+
+std::uint8_t Instruction22bProvider::getVAA() const {
+    return vAA;
+}
+
+disassembler::operand_type Instruction22bProvider::get_vAA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction22bProvider::getVBB() const {
+    return vBB;
+}
+
+disassembler::operand_type Instruction22bProvider::get_vBB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int8_t Instruction22bProvider::getNCC() const {
+    return nCC;
+}
+
+disassembler::operand_type Instruction22bProvider::get_nCC_type() const {
+    return disassembler::LITERAL;
+}
+
+std::string_view Instruction22bProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", v" + std::to_string(vBB);
+        instruction += ", " + std::to_string(nCC);
+    }
+    return instruction;
+}
+
+std::string Instruction22bProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vAA);
+        instruction += ", v" + std::to_string(vBB);
+        instruction += ", " + std::to_string(nCC);
+    }
+    return instruction;
+}
+
+
+Instruction22tProvider::Instruction22tProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22T, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    nCCCC = static_cast<std::int16_t>(this->bytecode[2]);
+}
+
+Instruction22tProvider::Instruction22tProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22T, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    nCCCC = static_cast<std::int16_t>(this->bytecode[2]);
+}
+
+std::uint8_t Instruction22tProvider::getVA() const {
+    return vA;
+}
+
+disassembler::operand_type Instruction22tProvider::get_vA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction22tProvider::getVB() const {
+    return vB;
+}
+
+disassembler::operand_type Instruction22tProvider::get_vB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int16_t Instruction22tProvider::getNCCCC() const {
+    return nCCCC;
+}
+
+disassembler::operand_type Instruction22tProvider::get_nCCCC_type() const {
+    return disassembler::OFFSET;
+}
+
+std::string_view Instruction22tProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + std::to_string(nCCCC);
+    }
+    return instruction;
+}
+
+std::string Instruction22tProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + std::to_string(nCCCC);
+    }
+    return instruction;
+}
+
+Instruction22sProvider::Instruction22sProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    nCCCC = static_cast<std::int16_t>(this->bytecode[2]);
+}
+
+Instruction22sProvider::Instruction22sProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22S, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    nCCCC = static_cast<std::int16_t>(this->bytecode[2]);
+}
+
+std::uint8_t Instruction22sProvider::getVA() const {
+    return vA;
+}
+
+disassembler::operand_type Instruction22sProvider::get_vA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction22sProvider::getVB() const {
+    return vB;
+}
+
+disassembler::operand_type Instruction22sProvider::get_vB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::int16_t Instruction22sProvider::getNCCCC() const {
+    return nCCCC;
+}
+
+disassembler::operand_type Instruction22sProvider::get_nCCCC_type() const {
+    return disassembler::LITERAL;
+}
+
+std::string_view Instruction22sProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + std::to_string(nCCCC);
+    }
+    return instruction;
+}
+
+std::string Instruction22sProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + std::to_string(nCCCC);
+    }
+    return instruction;
+}
+
+Instruction22cProvider::Instruction22cProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22C, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    iCCCC = static_cast<std::uint16_t>(this->bytecode[2]);
+    checked_id = std::monostate{};
+}
+
+Instruction22cProvider::Instruction22cProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22C, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    iCCCC = static_cast<std::uint16_t>(this->bytecode[2]);
+    checked_id = std::monostate{};
+
+    switch (get_kind()) {
+        case disassembler::kind::TYPE:
+            checked_id = dex.get_type_by_id(iCCCC);
+            break;
+        case disassembler::kind::FIELD:
+            checked_id = dex.get_field_by_id(iCCCC);
+            break;
+        default:
+            break;
+    }
+}
+
+std::uint8_t Instruction22cProvider::getVA() const {
+    return vA;
+}
+
+disassembler::operand_type Instruction22cProvider::get_vA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction22cProvider::getVB() const {
+    return vB;
+}
+
+disassembler::operand_type Instruction22cProvider::get_vB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint16_t Instruction22cProvider::getICCCC() const {
+    return iCCCC;
+}
+
+disassembler::operand_type Instruction22cProvider::get_iCCCC_type() const {
+    return disassembler::KIND;
+}
+
+kind_type_t Instruction22cProvider::get_checked_id_as_kind() const {
+    return checked_id;
+}
+
+std::string_view Instruction22cProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + get_kind_type_as_string(checked_id, iCCCC);
+    }
+    return instruction;
+}
+
+std::string Instruction22cProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + get_kind_type_as_string(checked_id, iCCCC);
+    }
+    return instruction;
+}
+
+Instruction22csProvider::Instruction22csProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22CS, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    iCCCC = static_cast<std::uint16_t>(this->bytecode[2]);
+    field = std::monostate{};
+}
+
+Instruction22csProvider::Instruction22csProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION22CS, 4) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    vA = this->bytecode[1] & 0x0F;
+    vB = (this->bytecode[1] & 0xF0) >> 4;
+    iCCCC = static_cast<std::uint16_t>(this->bytecode[2]);
+
+    switch (get_kind()) {
+        case disassembler::kind::FIELD:
+            field = dex.get_field_by_id(iCCCC);
+            break;
+        default:
+            break;
+    }
+}
+
+std::uint8_t Instruction22csProvider::getVA() const {
+    return vA;
+}
+
+disassembler::operand_type Instruction22csProvider::get_vA_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint8_t Instruction22csProvider::getVB() const {
+    return vB;
+}
+
+disassembler::operand_type Instruction22csProvider::get_vB_type() const {
+    return disassembler::REGISTER;
+}
+
+std::uint16_t Instruction22csProvider::getICCCC() const {
+    return iCCCC;
+}
+
+disassembler::operand_type Instruction22csProvider::get_iCCCC_type() const {
+    return disassembler::KIND;
+}
+
+kind_type_t Instruction22csProvider::get_field() const {
+    return field;
+}
+
+std::string_view Instruction22csProvider::print_instruction() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + get_kind_type_as_string(field, iCCCC);
+    }
+    return instruction;
+}
+
+std::string Instruction22csProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        instruction = opcode_names.at(opcode);
+        instruction += " ";
+        instruction += "v" + std::to_string(vA);
+        instruction += ", v" + std::to_string(vB);
+        instruction += ", " + get_kind_type_as_string(field, iCCCC);
+    }
+    return instruction;
+}
+
+
+Instruction30tProvider::Instruction30tProvider(std::span<uint8_t> bytecode, std::size_t index) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION30T, 6) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    nAAAAAAAA = static_cast<std::int32_t>(this->bytecode[2]);
+}
+
+Instruction30tProvider::Instruction30tProvider(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) :
+        InstructionProvider(bytecode, index, disassembler::dexinsttype::DEX_INSTRUCTION30T, 6) {
+    opcode = static_cast<disassembler::opcodes>(this->bytecode[0]);
+    nAAAAAAAA = static_cast<std::int32_t>(this->bytecode[2]);
+}
+
+std::int32_t Instruction30tProvider::getNAAAAAAAA() const {
+    return nAAAAAAAA;
+}
+
+disassembler::operand_type Instruction30tProvider::get_nAAAAAAAA_type() const {
+    return disassembler::OFFSET;
+}
+
+std::string_view Instruction30tProvider::print_instruction() {
+    if (instruction.empty()) {
+        std::stringstream str;
+        str << opcode_names.at(opcode) << " ";
+        str << "0x" << std::hex << ((nAAAAAAAA * 2) + static_cast<std::int64_t>(address));
+        str << " // ";
+        if (nAAAAAAAA > 0)
+            str << "+";
+        else if (nAAAAAAAA < 0)
+            str << "-";
+        str << "0x" << std::hex << nAAAAAAAA;
+        instruction = str.str();
+    }
+    return instruction;
+}
+
+std::string Instruction30tProvider::print_instruction_string() {
+    if (instruction.empty()) {
+        std::stringstream str;
+        str << opcode_names.at(opcode) << " ";
+        str << "0x" << std::hex << ((nAAAAAAAA * 2) + static_cast<std::int64_t>(address));
+        str << " // ";
+        if (nAAAAAAAA > 0)
+            str << "+";
+        else if (nAAAAAAAA < 0)
+            str << "-";
+        str << "0x" << std::hex << nAAAAAAAA;
+        instruction = str.str();
+    }
+    return instruction;
+}
+
 
 

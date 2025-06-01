@@ -257,6 +257,10 @@ Parser::parse_classes(io::ShurikenStream &stream,
     return stream.good();
 }
 
+std::vector<std::string> & Parser::get_strings_pool() {
+    return string_pool;
+}
+
 std::vector<std::unique_ptr<DVMTypeProvider>> &Parser::get_types_pool() {
     return types_pool;
 }
