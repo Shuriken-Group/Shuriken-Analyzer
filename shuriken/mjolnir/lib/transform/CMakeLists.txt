@@ -74,3 +74,28 @@ target_link_libraries(MjolnIRLowerLib LLVMSupport
 add_dependencies(MjolnIRLowerLib ShurikenTblGen)
 target_include_directories(MjolnIRLowerLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
 target_include_directories(MjolnIRLowerLib PRIVATE ${PROJECT_BINARY_DIR}/include/)
+
+
+
+add_library(MjolnIRRegAllocLib
+  reg_alloc/linear_reg_alloc.cpp
+)
+target_compile_options(MjolnIRRegAllocLib PRIVATE -fno-rtti) 
+target_link_libraries(MjolnIRRegAllocLib LLVMSupport
+    MLIRControlFlowDialect
+    MLIRControlFlowInterfaces
+    MLIRSideEffectInterfaces
+    MLIRAnalysis
+    MLIRFunctionInterfaces
+    MLIRParser
+    MLIRTransforms
+    MLIRFuncDialect
+    MLIRPass
+    MLIRAnalysis
+    MLIRSupport
+    fmt::fmt
+)
+
+add_dependencies(MjolnIRRegAllocLib ShurikenTblGen)
+target_include_directories(MjolnIRRegAllocLib PRIVATE ${PROJECT_SOURCE_DIR}/include/)
+target_include_directories(MjolnIRRegAllocLib PRIVATE ${PROJECT_BINARY_DIR}/include/)
