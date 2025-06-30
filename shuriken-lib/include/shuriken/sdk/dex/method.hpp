@@ -111,7 +111,7 @@ public:
     std::uint16_t registers_size() const;
 
     /**
-     * @return return the bytecode that belongs to the method
+     * @return return the op_codes that belongs to the method
      */
     std::span<const std::uint8_t> get_bytecode() const;
 

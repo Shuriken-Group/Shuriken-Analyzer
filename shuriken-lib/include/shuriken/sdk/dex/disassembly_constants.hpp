@@ -4,8 +4,22 @@
 
 #pragma once
 
+#include "shuriken/sdk/dex/dvm_types.hpp"
+#include "shuriken/sdk/dex/dvm_prototypes.hpp"
+#include "shuriken/sdk/dex/field.hpp"
+
 namespace shuriken {
 namespace dex {
+
+/// @brief Some instructions that depending on its kind
+/// will make use of a type or another.
+using kind_type_t = std::variant<
+        std::monostate,
+        DVMType *,
+        DVMPrototype *,
+        Field*,
+        Method*,
+        std::string_view>;
 
 namespace disassembler {
 
@@ -94,6 +108,12 @@ enum kind {
     FIELD_OFFSET = 7, //! offset of a field (not reference)
     RAW_STRING = 8,   //!
     NONE_KIND = 99,   //!
+};
+
+enum type_of_switch_t {
+    NONE_SWITCH = 0,
+    PACKED_SWITCH,
+    SPARSE_SWITCH
 };
 
 } //! namespace disassembler

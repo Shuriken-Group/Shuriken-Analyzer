@@ -38,9 +38,9 @@ private:
     std::reference_wrapper<Dex> owner_dex;
     // @brief descriptor of the method
     std::string method_descriptor;
-    // @brief number of registers used in the bytecode
+    // @brief number of registers used in the op_codes
     std::uint16_t number_of_registers;
-    // @brief span that points to the bytecode
+    // @brief span that points to the op_codes
     std::vector<std::uint8_t> bytecode;
 
     // different xrefs
@@ -149,7 +149,7 @@ public:
     std::uint16_t registers_size() const;
 
     /**
-     * @return return the bytecode that belongs to the method
+     * @return return the op_codes that belongs to the method
      */
     std::span<const std::uint8_t> get_bytecode() const;
 };

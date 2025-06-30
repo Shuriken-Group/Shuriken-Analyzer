@@ -71,9 +71,16 @@ public:
 
     std::string_view get_string_by_id(size_t id);
 
+    size_t get_number_of_strings() const;
+
     DVMPrototype * get_prototype_by_id(size_t id);
 
+    size_t get_number_of_prototypes() const;
+
     DVMType * get_type_by_id(size_t id);
+
+    size_t get_number_of_types() const;
+
 
     // for classes
 
@@ -86,6 +93,8 @@ public:
     Class * get_class_by_id(size_t id);
 
     const Class * get_class_by_id(size_t id) const;
+
+    size_t get_number_of_classes() const;
 
     /**
      * @brief Find a class by its package name and class name
@@ -134,6 +143,8 @@ public:
 
     const Method * get_method_by_id(size_t id) const;
 
+    size_t get_number_of_methods() const;
+
     /**
     * Find a method by its name and prototype
     * @param name The method name
@@ -172,6 +183,8 @@ public:
     Field * get_field_by_id(size_t id);
 
     const Field * get_field_by_id(size_t id) const;
+
+    size_t get_number_of_fields() const;
 
     /**
    * Find a field by its name

@@ -263,16 +263,28 @@ std::string_view shuriken::dex::DexEngine::get_string_by_id(size_t id) {
     return this->pimpl->strings_pool[id];
 }
 
+size_t shuriken::dex::DexEngine::get_number_of_strings() const {
+    return this->pimpl->strings_pool.size();
+}
+
 DVMPrototype * shuriken::dex::DexEngine::get_prototype_by_id(size_t id) {
     if (id >= this->pimpl->ref_sdk_prototypes.size())
         return nullptr;
     return &this->pimpl->ref_sdk_prototypes[id].get();
 }
 
+size_t shuriken::dex::DexEngine::get_number_of_prototypes() const {
+    return this->pimpl->ref_sdk_prototypes.size();
+}
+
 DVMType * shuriken::dex::DexEngine::get_type_by_id(size_t id) {
     if (id >= this->pimpl->ref_sdk_dvmtypes.size())
         return nullptr;
     return &this->pimpl->ref_sdk_dvmtypes[id].get();
+}
+
+size_t shuriken::dex::DexEngine::get_number_of_types() const {
+    return this->pimpl->ref_sdk_dvmtypes.size();
 }
 
 classes_deref_iterator_t shuriken::dex::DexEngine::get_classes() const {
@@ -290,6 +302,10 @@ const Class * shuriken::dex::DexEngine::get_class_by_id(size_t id) const {
     if (id >= this->pimpl->ref_sdk_classes.size())
         return nullptr;
     return &this->pimpl->ref_sdk_classes[id].get();
+}
+
+size_t shuriken::dex::DexEngine::get_number_of_classes() const {
+    return this->pimpl->ref_sdk_classes.size();
 }
 
 
@@ -389,6 +405,10 @@ const Method * shuriken::dex::DexEngine::get_method_by_id(size_t id) const {
     return &this->pimpl->ref_sdk_methods[id].get();
 }
 
+size_t shuriken::dex::DexEngine::get_number_of_methods() const {
+    return this->pimpl->ref_sdk_methods.size();
+}
+
 const Method *
 shuriken::dex::DexEngine::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
     auto it = std::find_if(this->pimpl->sdk_methods.begin(), this->pimpl->sdk_methods.end(), [&](const auto &m) {
@@ -449,6 +469,10 @@ const Field * shuriken::dex::DexEngine::get_field_by_id(size_t id) const {
     if (id >= this->pimpl->ref_sdk_fields.size())
         return nullptr;
     return &this->pimpl->ref_sdk_fields[id].get();
+}
+
+size_t shuriken::dex::DexEngine::get_number_of_fields() const {
+    return this->pimpl->ref_sdk_fields.size();
 }
 
 const Field *shuriken::dex::DexEngine::get_field_by_name(std::string_view name) const {

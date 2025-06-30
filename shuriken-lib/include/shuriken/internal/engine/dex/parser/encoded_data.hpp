@@ -158,7 +158,7 @@ private:
     std::int64_t size;
     /// @brief vector of encoded type pair
     handler_pairs_t handlers;
-    /// @brief bytecode of the catch all-handler.
+    /// @brief op_codes of the catch all-handler.
     /// This element is only present if size is non-positive.
     std::uint64_t catch_all_addr = 0;
     /// @brief Offset where the encoded catch handler is

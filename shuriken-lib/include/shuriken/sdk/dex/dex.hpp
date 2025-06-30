@@ -36,6 +36,13 @@ public:
 
     error::Error get_last_error();
 
+    size_t get_number_of_strings() const;
+    size_t get_number_of_prototypes() const;
+    size_t get_number_of_types() const;
+    size_t get_number_of_classes() const;
+    size_t get_number_of_methods() const;
+    size_t get_number_of_fields() const;
+
     /**
      * @brief Get the path of the DEX file as a string_view
      * @return String view of the DEX file path

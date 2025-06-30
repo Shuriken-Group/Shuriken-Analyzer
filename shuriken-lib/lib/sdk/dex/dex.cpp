@@ -185,6 +185,30 @@ std::vector<Field *> shuriken::dex::Dex::found_field_by_regex(std::string_view d
     return pimpl->dex_engine->found_field_by_regex(descriptor_regex);
 }
 
+size_t shuriken::dex::Dex::get_number_of_strings() const {
+    return pimpl->dex_engine->get_number_of_strings();
+}
+
+size_t shuriken::dex::Dex::get_number_of_prototypes() const {
+    return pimpl->dex_engine->get_number_of_prototypes();
+}
+
+size_t shuriken::dex::Dex::get_number_of_types() const {
+    return pimpl->dex_engine->get_number_of_types();
+}
+
+size_t shuriken::dex::Dex::get_number_of_classes() const {
+    return pimpl->dex_engine->get_number_of_classes();
+}
+
+size_t shuriken::dex::Dex::get_number_of_methods() const {
+    return pimpl->dex_engine->get_number_of_methods();
+}
+
+size_t shuriken::dex::Dex::get_number_of_fields() const {
+    return pimpl->dex_engine->get_number_of_fields();
+}
+
 
 
 
