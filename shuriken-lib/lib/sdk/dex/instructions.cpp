@@ -536,8 +536,7 @@ disassembler::type_of_switch_t Instruction31t::get_type_of_switch() const {
 }
 
 switch_instr_t Instruction31t::get_switch() const {
-    return std::monostate{};
-    //return instruction.get().get_switch();
+    return instruction.get().get_switch_usr();
 }
 
 // Instruction31c implementation

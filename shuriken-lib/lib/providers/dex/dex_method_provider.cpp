@@ -457,7 +457,7 @@ std::span<const std::uint8_t> shuriken::dex::DexMethodProvider::get_bytecode() c
     return data;
 }
 
-std::vector<std::uint8_t> & shuriken::dex::DexMethodProvider::get_bytecode_vector() {
+std::vector<std::uint8_t> &shuriken::dex::DexMethodProvider::get_bytecode_vector() {
     return bytecode;
 }
 
@@ -467,9 +467,29 @@ EncodedMethod *shuriken::dex::DexMethodProvider::get_encoded_method() const {
 
 void DexMethodProvider::set_method_instructions(std::list<std::unique_ptr<InstructionProvider>> &instructions) {
     this->instructions = std::move(instructions);
+
+    std::unordered_map<InstructionProvider *, Instruction *> mapping_switch;
     for (const auto &instr: this->instructions) {
         instructions_usr.push_back(::create_instruction_wrapper(instr->get_instruction_opcode(), instr.get()));
         instructions_usr_r.push_back(*instructions_usr.back());
+        if (instr->get_instruction_opcode() == disassembler::opcodes::OP_PACKED_SWITCH_TABLE ||
+            instr->get_instruction_opcode() == disassembler::opcodes::OP_SPARSE_SWITCH_TABLE) {
+            mapping_switch[instr.get()] = instructions_usr.back().get();
+        }
+    }
+
+    if (!mapping_switch.empty()) {
+        for (auto &instr: this->instructions) {
+            if (instr->get_instruction_opcode() == disassembler::opcodes::OP_PACKED_SWITCH) {
+                auto *switch_instr = reinterpret_cast<Instruction31tProvider *>(instr.get());
+                InstructionProvider *i = std::get<PackedSwitchProvider *>(switch_instr->get_switch());
+                switch_instr->set_packed_switch_usr(reinterpret_cast<PackedSwitch *>(mapping_switch[i]));
+            } else if (instr->get_instruction_opcode() == disassembler::opcodes::OP_SPARSE_SWITCH) {
+                auto *switch_instr = reinterpret_cast<Instruction31tProvider *>(instr.get());
+                InstructionProvider *i = std::get<SparseSwitchProvider *>(switch_instr->get_switch());
+                switch_instr->set_sparse_switch_usr(reinterpret_cast<SparseSwitch *>(mapping_switch[i]));
+            }
+        }
     }
 }
 

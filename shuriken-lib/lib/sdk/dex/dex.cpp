@@ -87,11 +87,11 @@ std::string_view shuriken::dex::Dex::get_string_by_id(size_t id) {
     return pimpl->dex_engine->get_string_by_id(id);
 }
 
-DVMPrototype * shuriken::dex::Dex::get_prototype_by_id(size_t id) {
+DVMPrototype *shuriken::dex::Dex::get_prototype_by_id(size_t id) {
     return pimpl->dex_engine->get_prototype_by_id(id);
 }
 
-DVMType  * shuriken::dex::Dex::get_type_by_id(size_t id) {
+DVMType *shuriken::dex::Dex::get_type_by_id(size_t id) {
     return pimpl->dex_engine->get_type_by_id(id);
 }
 
@@ -142,6 +142,10 @@ Method *shuriken::dex::Dex::get_method_by_descriptor(std::string_view descriptor
     return pimpl->dex_engine->get_method_by_descriptor(descriptor);
 }
 
+MethodID *shuriken::dex::Dex::get_method_by_id(size_t id) {
+    return pimpl->dex_engine->get_method_by_id(id);
+}
+
 fields_deref_iterator_t shuriken::dex::Dex::get_fields() const {
     return pimpl->dex_engine->get_fields();
 }
@@ -152,6 +156,10 @@ const Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) const 
 
 Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) {
     return pimpl->dex_engine->get_field_by_name(name);
+}
+
+FieldID *shuriken::dex::Dex::get_field_by_id(size_t id) {
+    return pimpl->dex_engine->get_field_by_id(id);
 }
 
 std::vector<Method *> shuriken::dex::Dex::found_method_by_regex(std::string_view descriptor_regex) {

@@ -17,7 +17,9 @@ namespace dex {
 class DexEngine;
 class Class;
 class Method;
+class MethodID;
 class Field;
+class FieldID;
 class DVMPrototype;
 
 class Dex {
@@ -154,6 +156,13 @@ public:
     Method *get_method_by_descriptor(std::string_view descriptor);
 
     /**
+     * @brief Get a method ID by its index
+     * @param id ID of the MethodID to retrieve inside of the DEX file
+     * @return Pointer to a MethodID if exists, or nullptr
+     */
+    MethodID * get_method_by_id(size_t id);
+
+    /**
      * @return a reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
@@ -171,6 +180,13 @@ public:
      * @return Pointer to the field if found, nullptr otherwise
      */
     Field *get_field_by_name(std::string_view name);
+
+    /**
+     * @brief Get a field ID by its index
+     * @param id The field ID index to retrieve
+     * @return Pointer to a FieldID if exists, or nullptr
+     */
+    FieldID * get_field_by_id(size_t id);
 
     /**
      * Look for methods matching the provided descriptor.
