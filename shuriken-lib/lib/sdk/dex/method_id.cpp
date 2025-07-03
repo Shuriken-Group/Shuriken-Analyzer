@@ -2,7 +2,7 @@
 // Shuriken-Analyzer: library for bytecode analysis.
 // @author Farenain <kunai.static.analysis@gmail.com>
 
-#include <shuriken/internal/engine/dex/parser/method_id.hpp>
+#include "dex/method_id.hpp"
 
 using namespace shuriken::dex;
 

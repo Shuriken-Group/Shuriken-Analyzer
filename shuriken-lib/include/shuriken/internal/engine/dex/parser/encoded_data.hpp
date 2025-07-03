@@ -212,6 +212,8 @@ private:
     std::uint32_t debug_info_off;//! offset to debug_info_item
     std::uint32_t insns_size;    //! size of instruction list
 
+    std::uint64_t encoded_catch_handler_list_offset;
+
     std::vector<std::uint8_t> instructions_raw;
 
     try_items_t try_items;
@@ -244,6 +246,7 @@ public:
 
     encoded_catch_handlers_t &get_encoded_catch_handlers_vector();
 
+    std::uint64_t get_encoded_catch_handler_list_offset() const;
 };
 
 

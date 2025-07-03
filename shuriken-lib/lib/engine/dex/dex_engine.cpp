@@ -19,11 +19,11 @@
 #include "shuriken/internal/providers/dex/dex_class_provider.hpp"
 #include "shuriken/internal/providers/dex/dex_method_provider.hpp"
 #include "shuriken/internal/providers/dex/dex_field_provider.hpp"
-#include "shuriken/internal/providers/dex/dvm_types_provider.hpp"
 #include "shuriken/internal/providers/dex/dvm_prototypes_provider.hpp"
 #include "shuriken/internal/providers/dex/custom_types.hpp"
 
 #include "shuriken/internal/engine/dex/parser/parser.hpp"
+#include "shuriken/internal/engine/dex/disassembler/internal_disassembler.hpp"
 
 
 using namespace shuriken::dex;
@@ -56,7 +56,11 @@ namespace {
 
 class DexEngine::Impl {
 public:
+    Parser parser;
+
     std::reference_wrapper<Dex> owner_dex;
+    std::unique_ptr<InternalDisassembler> disassembler;
+
 
     std::string dex_path;
     std::string dex_name;
@@ -97,11 +101,14 @@ public:
     std::vector<std::reference_wrapper<DVMTypeProvider>> ref_dex_type_providers;
 
     Impl(Dex &owner_dex) : owner_dex(owner_dex) {}
+
     ~Impl() = default;
 };
 
 DexEngine::DexEngine(shuriken::io::ShurikenStream stream, Dex &owner_dex) : shuriken_stream(std::move(stream)),
-                                                                            pimpl(std::make_unique<DexEngine::Impl>(owner_dex)) {
+                                                                            pimpl(std::make_unique<DexEngine::Impl>(
+                                                                                    owner_dex)) {
+    pimpl->disassembler = std::make_unique<InternalDisassembler>(this);
 }
 
 DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_path, Dex &owner_dex)
@@ -110,12 +117,14 @@ DexEngine::DexEngine(shuriken::io::ShurikenStream stream, std::string_view dex_p
     this->pimpl->dex_path = dex_path;
     if (!dex_path.empty())
         this->pimpl->dex_name = std::filesystem::path(dex_path).filename().generic_string();
+    pimpl->disassembler = std::make_unique<InternalDisassembler>(this);
 }
 
 DexEngine::~DexEngine() = default;
 
 shuriken::error::VoidResult DexEngine::parse() {
-    Parser parser;
+    auto &parser = this->pimpl->parser;
+
     auto result = parser.parse(shuriken_stream);
     if (!result) {
         return result;
@@ -125,8 +134,12 @@ shuriken::error::VoidResult DexEngine::parse() {
     pimpl->strings_pool = std::move(parser.get_strings_pool());
     pimpl->dex_type_providers = std::move(parser.get_types_pool());
     pimpl->sdk_dvmtypes = std::move(parser.get_dvm_types_pool());
+    for (auto &dvm_type: pimpl->sdk_dvmtypes)
+        pimpl->ref_sdk_dvmtypes.push_back(*dvm_type);
     pimpl->dex_prototypes_providers = std::move(parser.get_prototypes_pool());
     pimpl->sdk_prototypes = std::move(parser.get_dvm_prototype_pool());
+    for (auto &sdk_prototype: pimpl->sdk_prototypes)
+        pimpl->ref_sdk_prototypes.push_back(*sdk_prototype);
 
     for (const auto &class_def: parser.get_classes()) {
         // Create the classes
@@ -153,42 +166,22 @@ shuriken::error::VoidResult DexEngine::parse() {
         pimpl->sdk_classes.push_back(std::move(new_sdk_class));
         pimpl->ref_sdk_classes.push_back(std::ref(*pimpl->sdk_classes.back().get()));
 
-        auto & class_data_item = class_def->get_class_data_item();
+        auto &class_data_item = class_def->get_class_data_item();
 
         // generate the methods
-        for (auto & encoded_method : class_data_item.get_direct_methods()) {
-            MethodID & method_id = const_cast<MethodID&>(encoded_method.get_method_id());
-            auto method_provider = std::make_unique<DexMethodProvider>(
-                        method_id.get_name(),
-                        encoded_method.get_access_flags(),
-                        method_id.get_prototype(),
-                        types::method_type_e::DIRECT_METHOD,
-                        pimpl->ref_sdk_classes.back(),
-                        pimpl->owner_dex,
-                        *this,
-                        encoded_method.get_code_items()->get_registers_size(),
-                        encoded_method.get_code_items()->get_bytecode()
-                    );
-            auto method_sdk = std::make_unique<Method>(*method_provider.get());
-            pimpl->dex_methods_providers.push_back(std::move(method_provider));
-            pimpl->ref_dex_methods_providers.push_back(*pimpl->dex_methods_providers.back());
-            pimpl->sdk_methods.push_back(std::move(method_sdk));
-            pimpl->ref_sdk_methods.push_back(*pimpl->sdk_methods.back());
-            pimpl->dex_class_providers.back()->add_method(pimpl->ref_sdk_methods.back());
-        }
-
-        for (auto & encoded_method : class_data_item.get_virtual_methods()) {
-            MethodID & method_id = const_cast<MethodID&>(encoded_method.get_method_id());
+        for (auto &encoded_method: class_data_item.get_direct_methods()) {
+            MethodID &method_id = const_cast<MethodID &>(encoded_method.get_method_id());
             auto method_provider = std::make_unique<DexMethodProvider>(
                     method_id.get_name(),
                     encoded_method.get_access_flags(),
                     method_id.get_prototype(),
-                    types::method_type_e::VIRTUAL_METHOD,
+                    types::method_type_e::DIRECT_METHOD,
                     pimpl->ref_sdk_classes.back(),
                     pimpl->owner_dex,
                     *this,
                     encoded_method.get_code_items()->get_registers_size(),
-                    encoded_method.get_code_items()->get_bytecode()
+                    encoded_method.get_code_items()->get_bytecode(),
+                    &encoded_method
             );
             auto method_sdk = std::make_unique<Method>(*method_provider.get());
             pimpl->dex_methods_providers.push_back(std::move(method_provider));
@@ -198,8 +191,30 @@ shuriken::error::VoidResult DexEngine::parse() {
             pimpl->dex_class_providers.back()->add_method(pimpl->ref_sdk_methods.back());
         }
 
-        for (auto & encoded_field : class_data_item.get_instance_fields()) {
-            FieldID & field_id = const_cast<FieldID&>(encoded_field.get_field());
+        for (auto &encoded_method: class_data_item.get_virtual_methods()) {
+            MethodID &method_id = const_cast<MethodID &>(encoded_method.get_method_id());
+            auto method_provider = std::make_unique<DexMethodProvider>(
+                    method_id.get_name(),
+                    encoded_method.get_access_flags(),
+                    method_id.get_prototype(),
+                    types::method_type_e::VIRTUAL_METHOD,
+                    pimpl->ref_sdk_classes.back(),
+                    pimpl->owner_dex,
+                    *this,
+                    encoded_method.get_code_items()->get_registers_size(),
+                    encoded_method.get_code_items()->get_bytecode(),
+                    &encoded_method
+            );
+            auto method_sdk = std::make_unique<Method>(*method_provider.get());
+            pimpl->dex_methods_providers.push_back(std::move(method_provider));
+            pimpl->ref_dex_methods_providers.push_back(*pimpl->dex_methods_providers.back());
+            pimpl->sdk_methods.push_back(std::move(method_sdk));
+            pimpl->ref_sdk_methods.push_back(*pimpl->sdk_methods.back());
+            pimpl->dex_class_providers.back()->add_method(pimpl->ref_sdk_methods.back());
+        }
+
+        for (auto &encoded_field: class_data_item.get_instance_fields()) {
+            FieldID &field_id = const_cast<FieldID &>(encoded_field.get_field());
             auto field_provider = std::make_unique<DexFieldProvider>(
                     field_id.get_name_string(),
                     field_id.get_type(),
@@ -208,7 +223,7 @@ shuriken::error::VoidResult DexEngine::parse() {
                     pimpl->ref_sdk_classes.back(),
                     pimpl->owner_dex,
                     *this
-                    );
+            );
             auto field_sdk = std::make_unique<Field>(*field_provider.get());
             pimpl->dex_fields_providers.push_back(std::move(field_provider));
             pimpl->ref_dex_fields_providers.push_back(*pimpl->dex_fields_providers.back());
@@ -217,8 +232,8 @@ shuriken::error::VoidResult DexEngine::parse() {
             pimpl->dex_class_providers.back()->add_field(pimpl->ref_sdk_fields.back());
         }
 
-        for (auto & encoded_field : class_data_item.get_static_fields()) {
-            FieldID & field_id = const_cast<FieldID&>(encoded_field.get_field());
+        for (auto &encoded_field: class_data_item.get_static_fields()) {
+            FieldID &field_id = const_cast<FieldID &>(encoded_field.get_field());
             auto field_provider = std::make_unique<DexFieldProvider>(
                     field_id.get_name_string(),
                     field_id.get_type(),
@@ -267,7 +282,7 @@ size_t shuriken::dex::DexEngine::get_number_of_strings() const {
     return this->pimpl->strings_pool.size();
 }
 
-DVMPrototype * shuriken::dex::DexEngine::get_prototype_by_id(size_t id) {
+DVMPrototype *shuriken::dex::DexEngine::get_prototype_by_id(size_t id) {
     if (id >= this->pimpl->ref_sdk_prototypes.size())
         return nullptr;
     return &this->pimpl->ref_sdk_prototypes[id].get();
@@ -277,7 +292,7 @@ size_t shuriken::dex::DexEngine::get_number_of_prototypes() const {
     return this->pimpl->ref_sdk_prototypes.size();
 }
 
-DVMType * shuriken::dex::DexEngine::get_type_by_id(size_t id) {
+DVMType *shuriken::dex::DexEngine::get_type_by_id(size_t id) {
     if (id >= this->pimpl->ref_sdk_dvmtypes.size())
         return nullptr;
     return &this->pimpl->ref_sdk_dvmtypes[id].get();
@@ -290,18 +305,6 @@ size_t shuriken::dex::DexEngine::get_number_of_types() const {
 classes_deref_iterator_t shuriken::dex::DexEngine::get_classes() const {
     static classes_ref_t classes{this->pimpl->ref_sdk_classes};
     return classes;
-}
-
-Class * shuriken::dex::DexEngine::get_class_by_id(size_t id) {
-    if (id >= this->pimpl->ref_sdk_classes.size())
-        return nullptr;
-    return &this->pimpl->ref_sdk_classes[id].get();
-}
-
-const Class * shuriken::dex::DexEngine::get_class_by_id(size_t id) const {
-    if (id >= this->pimpl->ref_sdk_classes.size())
-        return nullptr;
-    return &this->pimpl->ref_sdk_classes[id].get();
 }
 
 size_t shuriken::dex::DexEngine::get_number_of_classes() const {
@@ -393,16 +396,16 @@ method_deref_iterator_t shuriken::dex::DexEngine::get_methods() const {
 }
 
 
-Method * shuriken::dex::DexEngine::get_method_by_id(size_t id) {
-    if (id >= this->pimpl->ref_sdk_methods.size())
+MethodID *shuriken::dex::DexEngine::get_method_by_id(size_t id) {
+    if (id >= this->pimpl->parser.get_methods_ids().size())
         return nullptr;
-    return &this->pimpl->ref_sdk_methods[id].get();
+    return &this->pimpl->parser.get_methods_ids()[id];
 }
 
-const Method * shuriken::dex::DexEngine::get_method_by_id(size_t id) const {
-    if (id >= this->pimpl->ref_sdk_methods.size())
+const MethodID *shuriken::dex::DexEngine::get_method_by_id(size_t id) const {
+    if (id >= this->pimpl->parser.get_methods_ids().size())
         return nullptr;
-    return &this->pimpl->ref_sdk_methods[id].get();
+    return &this->pimpl->parser.get_methods_ids()[id];
 }
 
 size_t shuriken::dex::DexEngine::get_number_of_methods() const {
@@ -454,21 +457,31 @@ Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_view desc
     return it->get();
 }
 
+
+void shuriken::dex::DexEngine::disassemble_method(DexMethodProvider &method) {
+    auto instructions = this->pimpl->disassembler->disassemble(
+            method.get_bytecode_vector());
+    auto exceptions = this->pimpl->disassembler->determine_exception(method.get_encoded_method());
+    method.set_method_instructions(instructions);
+    method.set_exceptions(exceptions);
+}
+
+
 fields_deref_iterator_t shuriken::dex::DexEngine::get_fields() const {
     static fields_ref_t fields{this->pimpl->ref_sdk_fields};
     return fields;
 }
 
-Field * shuriken::dex::DexEngine::get_field_by_id(size_t id) {
-    if (id >= this->pimpl->ref_sdk_fields.size())
+FieldID *shuriken::dex::DexEngine::get_field_by_id(size_t id) {
+    if (id >= this->pimpl->parser.get_fields_ids().size())
         return nullptr;
-    return &this->pimpl->ref_sdk_fields[id].get();
+    return &this->pimpl->parser.get_fields_ids()[id];
 }
 
-const Field * shuriken::dex::DexEngine::get_field_by_id(size_t id) const {
-    if (id >= this->pimpl->ref_sdk_fields.size())
+const FieldID *shuriken::dex::DexEngine::get_field_by_id(size_t id) const {
+    if (id >= this->pimpl->parser.get_fields_ids().size())
         return nullptr;
-    return &this->pimpl->ref_sdk_fields[id].get();
+    return &this->pimpl->parser.get_fields_ids()[id];
 }
 
 size_t shuriken::dex::DexEngine::get_number_of_fields() const {

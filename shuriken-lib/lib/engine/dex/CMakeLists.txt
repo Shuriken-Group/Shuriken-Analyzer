@@ -3,3 +3,4 @@ target_sources(LIB_SHURIKEN PRIVATE
 )
 
 add_subdirectory(parser)
+add_subdirectory(disassembler)

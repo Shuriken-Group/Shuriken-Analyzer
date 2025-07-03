@@ -6,7 +6,9 @@
 
 #include "shuriken/sdk/dex/dvm_types.hpp"
 #include "shuriken/sdk/dex/dvm_prototypes.hpp"
-#include "shuriken/sdk/dex/field.hpp"
+#include "shuriken/sdk/dex/field_id.hpp"
+#include "shuriken/sdk/dex/method_id.hpp"
+
 
 namespace shuriken {
 namespace dex {
@@ -17,8 +19,8 @@ using kind_type_t = std::variant<
         std::monostate,
         DVMType *,
         DVMPrototype *,
-        Field*,
-        Method*,
+        FieldID*,
+        MethodID*,
         std::string_view>;
 
 namespace disassembler {
@@ -115,6 +117,23 @@ enum type_of_switch_t {
     PACKED_SWITCH,
     SPARSE_SWITCH
 };
+
+/// @brief Information for the handler
+/// of exceptions, handler type, the
+/// start address of it and basic blocks
+typedef struct _handler_data {
+    DVMType * handler_data;
+    std::uint64_t handler_start_addr;
+} handler_data_t;
+
+typedef struct _exception_data {
+    std::uint64_t try_value_start_addr;
+    std::uint64_t try_value_end_addr;
+    std::vector<handler_data_t> handler;
+} exception_data_t;
+
+using exceptions_data_t = std::vector<exception_data_t>;
+
 
 } //! namespace disassembler
 } //! namespace dex

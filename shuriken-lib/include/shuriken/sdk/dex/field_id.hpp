@@ -5,31 +5,29 @@
 #pragma once
 
 #include <functional>
-#include <shuriken/internal/io/shurikenstream.hpp>
-#include <shuriken/sdk/dex/custom_types.hpp>
-#include <shuriken/sdk/dex/dvm_types.hpp>
-#include <shuriken/sdk/dex/dvm_prototypes.hpp>
+#include "shuriken/internal/io/shurikenstream.hpp"
+#include "custom_types.hpp"
+#include "dvm_types.hpp"
 
 namespace shuriken {
 namespace dex {
 
-class MethodID {
+class FieldID {
 private:
     std::reference_wrapper<DVMType> class_;
-    std::reference_wrapper<DVMPrototype> proto_id_;
+    std::reference_wrapper<DVMType> type_;
     std::string name_;
 public:
-    MethodID(DVMType& class_, DVMPrototype& proto_id_, std::string_view name_);
-    ~MethodID() = default;
+    FieldID(DVMType& class_, DVMType& type_, std::string_view name_);
+    ~FieldID() = default;
 
     DVMType & get_class();
 
-    DVMPrototype & get_prototype();
+    DVMType & get_type();
 
     std::string_view get_name();
 
     std::string get_name_string();
 };
-
 }
 }

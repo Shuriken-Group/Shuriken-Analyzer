@@ -20,6 +20,8 @@ class Method;
 class DexMethodProvider;
 class Field;
 class DexFieldProvider;
+class FieldID;
+class MethodID;
 
 class DVMPrototype;
 class DVMPrototypeProvider;
@@ -90,10 +92,6 @@ public:
      */
     classes_deref_iterator_t get_classes() const;
 
-    Class * get_class_by_id(size_t id);
-
-    const Class * get_class_by_id(size_t id) const;
-
     size_t get_number_of_classes() const;
 
     /**
@@ -139,9 +137,9 @@ public:
      */
     method_deref_iterator_t get_methods() const;
 
-    Method * get_method_by_id(size_t id);
+    MethodID * get_method_by_id(size_t id);
 
-    const Method * get_method_by_id(size_t id) const;
+    const MethodID * get_method_by_id(size_t id) const;
 
     size_t get_number_of_methods() const;
 
@@ -175,14 +173,16 @@ public:
      */
     Method *get_method_by_descriptor(std::string_view descriptor);
 
+    void disassemble_method(DexMethodProvider& method);
+
     /**
      * @return a reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
 
-    Field * get_field_by_id(size_t id);
+    FieldID * get_field_by_id(size_t id);
 
-    const Field * get_field_by_id(size_t id) const;
+    const FieldID * get_field_by_id(size_t id) const;
 
     size_t get_number_of_fields() const;
 

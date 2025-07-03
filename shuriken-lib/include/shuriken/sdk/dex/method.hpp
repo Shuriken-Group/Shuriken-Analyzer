@@ -12,6 +12,8 @@
 #include <shuriken/sdk/common/iterator_range.hpp>
 #include <shuriken/sdk/dex/custom_types.hpp>
 #include <shuriken/sdk/dex/constants.hpp>
+#include <shuriken/sdk/dex/disassembly_constants.hpp>
+#include <shuriken/sdk/dex/instruction.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -20,7 +22,7 @@ class DexMethodProvider;
 class Dex;
 class Class;
 class DVMPrototype;
-class InstructionProvider;
+class Instruction;
 
 class Method {
 private:
@@ -117,28 +119,9 @@ public:
 
 
     // Disassembler information
+    std::list<std::reference_wrapper<Instruction>> & get_method_instructions();
 
-    /**
-     * @return number of instructions in the method
-     */
-     size_t get_number_of_instructions() const;
-
-    /**
-     * @return iterator to a list of instructions
-     */
-    instruction_list_deref_iterator_t get_instructions() const;
-
-    /**
-     * @return get a span object with all the instructions
-     */
-     const instruction_list_t get_instructions_container() const;
-
-    /**
-     * @param idx index of the instruction to retrieve
-     * @return pointer to instruction in an specific idx, may return null
-     */
-     InstructionProvider * get_instruction_at(std::uint64_t idx);
-
+    disassembler::exceptions_data_t & get_exceptions();
 
      // xrefs information
      /**

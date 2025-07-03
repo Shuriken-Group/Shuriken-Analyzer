@@ -9,10 +9,13 @@
 #include <vector>
 #include <span>
 #include <memory>
+#include <list>
 
 #include <shuriken/sdk/dex/constants.hpp>
 #include <shuriken/sdk/dex/custom_types.hpp>
-
+#include <shuriken/sdk/dex/disassembly_constants.hpp>
+#include <shuriken/sdk/dex/instruction.hpp>
+#include <shuriken/internal/providers/dex/dex_instructions.hpp>
 
 namespace shuriken {
 namespace dex {
@@ -20,6 +23,7 @@ class Dex;
 class DexEngine;
 class Class;
 class DVMPrototype;
+class EncodedMethod;
 
 class DexMethodProvider {
 private:
@@ -42,6 +46,19 @@ private:
     std::uint16_t number_of_registers;
     // @brief span that points to the op_codes
     std::vector<std::uint8_t> bytecode;
+    // @brief pointer to the EncodedMethod to extract information
+    EncodedMethod * method;
+
+    // @brief flag to know
+    bool disassembled = false;
+    // @brief List of instructions for the method
+    std::list<std::unique_ptr<InstructionProvider>> instructions;
+    std::list<std::unique_ptr<Instruction>> instructions_usr;
+    std::list<std::reference_wrapper<Instruction>> instructions_usr_r;
+
+    // @brief List of exceptions for the method
+    disassembler::exceptions_data_t exceptions;
+
 
     // different xrefs
 
@@ -67,7 +84,8 @@ public:
                       Dex & owner_dex,
                       DexEngine& dex_engine,
                       std::uint16_t number_of_registers,
-                      std::vector<std::uint8_t>& bytecode);
+                      std::vector<std::uint8_t>& bytecode,
+                      EncodedMethod * method);
     ~DexMethodProvider() = default;
 
     DexMethodProvider(const DexMethodProvider&) = delete;
@@ -152,6 +170,25 @@ public:
      * @return return the op_codes that belongs to the method
      */
     std::span<const std::uint8_t> get_bytecode() const;
+
+    /**
+     * @return return the reference to the vector with the bytecode
+     * only for internal use.
+     */
+    std::vector<std::uint8_t> & get_bytecode_vector();
+
+    /**
+     * @return return the EncodedMethod with the internal information
+     */
+     EncodedMethod * get_encoded_method() const;
+
+     void set_method_instructions(std::list<std::unique_ptr<InstructionProvider>> & instructions);
+
+     void set_exceptions(disassembler::exceptions_data_t & exceptions);
+
+     std::list<std::reference_wrapper<Instruction>> & get_method_instructions();
+
+     disassembler::exceptions_data_t & get_exceptions();
 };
 }
 }

@@ -279,6 +279,8 @@ void CodeItemStruct::parse_code_item_struct(shuriken::io::ShurikenStream &stream
             try_items.push_back(try_item);
         }
 
+        encoded_catch_handler_list_offset = static_cast<std::uint64_t>(stream.position());
+
         std::uint64_t encoded_catch_handler_size = stream.read_uleb128();
         for (I = 0; I < encoded_catch_handler_size; I++) {
             encoded_catch_handler = std::make_unique<EncodedCatchHandler>();
@@ -332,6 +334,10 @@ CodeItemStruct::it_encoded_catch_handlers CodeItemStruct::get_encoded_catch_hand
 
 CodeItemStruct::encoded_catch_handlers_t &CodeItemStruct::get_encoded_catch_handlers_vector() {
     return encoded_catch_handlers;
+}
+
+std::uint64_t CodeItemStruct::get_encoded_catch_handler_list_offset() const {
+    return encoded_catch_handler_list_offset;
 }
 
 EncodedMethod::EncodedMethod(const MethodID &method_id, types::access_flags access_flags) : method_id(method_id),

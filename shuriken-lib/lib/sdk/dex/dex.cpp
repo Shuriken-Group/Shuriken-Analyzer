@@ -99,14 +99,6 @@ classes_deref_iterator_t shuriken::dex::Dex::get_classes() const {
     return pimpl->dex_engine->get_classes();
 }
 
-Class * shuriken::dex::Dex::get_class_by_id(size_t id) {
-    return pimpl->dex_engine->get_class_by_id(id);
-}
-
-const Class * shuriken::dex::Dex::get_class_by_id(size_t id) const {
-    return pimpl->dex_engine->get_class_by_id(id);
-}
-
 const Class *
 shuriken::dex::Dex::get_class_by_package_name_and_name(std::string_view package_name, std::string_view name) const {
     return pimpl->dex_engine->get_class_by_package_name_and_name(package_name, name);
@@ -132,13 +124,6 @@ method_deref_iterator_t shuriken::dex::Dex::get_methods() const {
     return pimpl->dex_engine->get_methods();
 }
 
-Method * shuriken::dex::Dex::get_method_by_id(size_t id) {
-    return pimpl->dex_engine->get_method_by_id(id);
-}
-
-const Method * shuriken::dex::Dex::get_method_by_id(size_t id) const {
-    return pimpl->dex_engine->get_method_by_id(id);
-}
 
 const Method *
 shuriken::dex::Dex::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
@@ -159,14 +144,6 @@ Method *shuriken::dex::Dex::get_method_by_descriptor(std::string_view descriptor
 
 fields_deref_iterator_t shuriken::dex::Dex::get_fields() const {
     return pimpl->dex_engine->get_fields();
-}
-
-Field * shuriken::dex::Dex::get_field_by_id(size_t id) {
-    return pimpl->dex_engine->get_field_by_id(id);
-}
-
-const Field * shuriken::dex::Dex::get_field_by_id(size_t id) const {
-    return pimpl->dex_engine->get_field_by_id(id);
 }
 
 const Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) const {

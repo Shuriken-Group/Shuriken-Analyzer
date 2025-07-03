@@ -63,21 +63,12 @@ std::span<const std::uint8_t> Method::get_bytecode() const {
     return dex_method_provider.get().get_bytecode();
 }
 
-size_t Method::get_number_of_instructions() const {
-    return 0;
+std::list<std::reference_wrapper<Instruction>> & Method::get_method_instructions() {
+    return dex_method_provider.get().get_method_instructions();
 }
 
-instruction_list_deref_iterator_t Method::get_instructions() const {
-    instruction_list_t empty{};
-    return instruction_list_deref_iterator_t {empty};
-}
-
-const instruction_list_t Method::get_instructions_container() const {
-    return shuriken::dex::instruction_list_t();
-}
-
-InstructionProvider *Method::get_instruction_at(std::uint64_t idx) {
-    return nullptr;
+disassembler::exceptions_data_t & Method::get_exceptions() {
+    return dex_method_provider.get().get_exceptions();
 }
 
 shuriken::iterator_range<span_class_field_idx_iterator_t> Method::get_xref_read_fields_in_method() {

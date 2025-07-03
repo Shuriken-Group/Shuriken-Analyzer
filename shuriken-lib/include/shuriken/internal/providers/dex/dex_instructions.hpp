@@ -23,6 +23,14 @@ using switch_type_t = std::variant<
         PackedSwitchProvider*,
         SparseSwitchProvider*>;
 
+class PackedSwitch;
+class SparseSwitch;
+
+using switch_type_instr_t = std::variant<
+        std::monostate,
+        PackedSwitch*,
+        SparseSwitch*>;
+
 
 class InstructionProvider {
 private:
@@ -537,6 +545,7 @@ private:
     std::int32_t nBBBBBBBB;
     disassembler::type_of_switch_t type_of_switch;
     switch_type_t switch_instruction;
+    switch_type_instr_t switch_instruction_usr;
 protected:
     std::string_view format_instruction() override;
 public:
@@ -553,9 +562,15 @@ public:
 
     switch_type_t get_switch() const;
 
+    switch_type_instr_t get_switch_usr() const;
+
     void set_packed_switch(PackedSwitchProvider * packed_switch);
 
     void set_sparse_switch(SparseSwitchProvider * sparse_switch);
+
+    void set_packed_switch_usr(PackedSwitch * packed_switch);
+
+    void set_sparse_switch_usr(SparseSwitch * sparse_switch);
 
     std::string_view print_instruction() override;
     std::string print_instruction_string() override;

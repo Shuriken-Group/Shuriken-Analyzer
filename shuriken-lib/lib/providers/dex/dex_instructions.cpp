@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <sstream>
+#include <iomanip>
 
 using namespace shuriken::dex;
 
@@ -159,23 +160,26 @@ namespace {
         } else if (std::holds_alternative<DVMType *>(source_id)) {
             auto *type = std::get<DVMType *>(source_id);
             instruction_str << shuriken::dex::get_dalvik_format(*type);
-            instruction_str << " // type@" << iBBBB;
-        } else if (std::holds_alternative<Field *>(source_id)) {
-            auto *field = std::get<Field *>(source_id);
-            instruction_str << field->get_descriptor();
-            instruction_str << " // field@" << iBBBB;
-        } else if (std::holds_alternative<Method *>(source_id)) {
-            auto *method = std::get<Method *>(source_id);
-            instruction_str << method->get_descriptor();
-            instruction_str << " // method@" << iBBBB;
+            instruction_str << " // type@" << std::setfill('0') << std::setw(4) << iBBBB;
+        } else if (std::holds_alternative<FieldID *>(source_id)) {
+            auto *field = std::get<FieldID *>(source_id);
+            instruction_str << ::get_dalvik_format(field->get_class()) << "->";
+            instruction_str << field->get_name();
+            instruction_str << " // field@" << std::setfill('0') << std::setw(4) << iBBBB;
+        } else if (std::holds_alternative<MethodID *>(source_id)) {
+            auto *method = std::get<MethodID *>(source_id);
+            instruction_str << ::get_dalvik_format(method->get_class()) << "->";
+            instruction_str << method->get_name();
+            instruction_str << method->get_prototype().get_descriptor();
+            instruction_str << " // method@" << std::setfill('0') << std::setw(4) << iBBBB;
         } else if (std::holds_alternative<DVMPrototype *>(source_id)) {
             auto *proto = std::get<DVMPrototype *>(source_id);
             instruction_str << proto->get_shorty_idx();
-            instruction_str << " // proto@" << iBBBB;
+            instruction_str << " // proto@" << std::setfill('0') << std::setw(4) << iBBBB;
         } else if (std::holds_alternative<std::string_view>(source_id)) {
             auto str = std::get<std::string_view>(source_id);
             instruction_str << "\"" << str << "\"";
-            instruction_str << " // string@" << iBBBB;
+            instruction_str << " // string@" << std::setfill('0') << std::setw(4) << iBBBB;
         }
 
         return instruction_str.str();
@@ -1598,12 +1602,24 @@ switch_type_t Instruction31tProvider::get_switch() const {
     return switch_instruction;
 }
 
+switch_type_instr_t Instruction31tProvider::get_switch_usr() const {
+    return switch_instruction_usr;
+}
+
 void Instruction31tProvider::set_packed_switch(PackedSwitchProvider *packed_switch) {
     this->switch_instruction = packed_switch;
 }
 
 void Instruction31tProvider::set_sparse_switch(SparseSwitchProvider *sparse_switch) {
     this->switch_instruction = sparse_switch;
+}
+
+void Instruction31tProvider::set_packed_switch_usr(PackedSwitch *packed_switch) {
+    this->switch_instruction_usr = packed_switch;
+}
+
+void Instruction31tProvider::set_sparse_switch_usr(SparseSwitch *sparse_switch) {
+    this->switch_instruction_usr = sparse_switch;
 }
 
 std::string_view Instruction31tProvider::format_instruction() {
@@ -1783,7 +1799,7 @@ std::string_view Instruction35cProvider::format_instruction() {
         str << opcode_names.at(opcode) << " ";
         str << " {";
         for (size_t i = 0, e = registers.size(); i < e; i++) {
-            auto reg = registers[i];
+            auto reg = static_cast<std::uint16_t>(registers[i]);
             str << "v" << reg;
             if (i < registers.size() - 1)
                 str << ", ";

@@ -13,6 +13,7 @@ add_executable(shuriken_tests
         # Add other test files here
         dex/dvm_prototypes_tests.cpp
         dex/dex_loading_tests.cpp
+        dex/dex_disassembler_tests.cpp
 )
 
 # Link against the Shuriken library
