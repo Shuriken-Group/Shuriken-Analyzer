@@ -12,3 +12,4 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 enable_testing()
 add_subdirectory(shuriken-lib/)
+add_subdirectory(shuriken-dump/)
