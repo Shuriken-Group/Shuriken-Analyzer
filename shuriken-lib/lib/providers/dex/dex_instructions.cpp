@@ -539,8 +539,8 @@ disassembler::operand_type Instruction10tProvider::get_nAA_type() const {
 std::string_view Instruction10tProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
-        str << opcode_names.at(opcode);
-        str << "0x " << std::hex << ((nAA * 2) + static_cast<std::int64_t>(address));
+        str << opcode_names.at(opcode) << " ";
+        str << "0x" << std::hex << ((nAA * 2) + static_cast<std::int64_t>(address));
         str << " // ";
         if (nAA > 0)
             str << "+";
@@ -594,8 +594,8 @@ disassembler::operand_type Instruction20tProvider::get_nAAAA_type() const {
 std::string_view Instruction20tProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
-        str << opcode_names.at(opcode);
-        str << "0x " << std::hex << ((nAAAA * 2) + static_cast<std::int64_t>(address));
+        str << opcode_names.at(opcode) << " ";
+        str << "0x" << std::hex << ((nAAAA * 2) + static_cast<std::int64_t>(address));
         str << " // ";
         if (nAAAA > 0)
             str << "+";
@@ -1465,7 +1465,7 @@ std::string_view Instruction32xProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
         str << opcode_names.at(opcode) << " ";
-        str << "v" << vAAAA << ", v" << vBBBB;
+        str << "v" << std::to_string(vAAAA) << ", v" << std::to_string(vBBBB);
         instruction = str.str();
     }
     return instruction;
@@ -1523,8 +1523,8 @@ std::string_view Instruction31iProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
         str << opcode_names.at(opcode) << " ";
-        str << "v" << vAA;
-        str << ", " << getNBBBBBBBB_Float() << " // " << nBBBBBBBB;
+        str << "v" << std::to_string(vAA);
+        str << ", " << getNBBBBBBBB_Float() << " // " << std::to_string(nBBBBBBBB);
         instruction = str.str();
     }
     return instruction;
@@ -1626,8 +1626,8 @@ std::string_view Instruction31tProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
         str << opcode_names.at(opcode) << " ";
-        str << "v" << vAA;
-        str << ", " << nBBBBBBBB;
+        str << "v" << std::to_string(vAA);
+        str << ", " << std::to_string(nBBBBBBBB);
         instruction = str.str();
     }
     return instruction;
@@ -1684,8 +1684,8 @@ std::string_view Instruction31cProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream str;
         str << opcode_names.at(opcode) << " ";
-        str << "v" << vAA;
-        str << ", " << iBBBBBBBB;
+        str << "v" << std::to_string(vAA);
+        str << ", " << std::to_string(iBBBBBBBB);
         if (!pointed_string.empty()) {
             str << " // " << pointed_string;
         }
@@ -1799,8 +1799,8 @@ std::string_view Instruction35cProvider::format_instruction() {
         str << opcode_names.at(opcode) << " ";
         str << " {";
         for (size_t i = 0, e = registers.size(); i < e; i++) {
-            auto reg = static_cast<std::uint16_t>(registers[i]);
-            str << "v" << reg;
+            auto reg = registers[i];
+            str << "v" << std::to_string(reg);
             if (i < registers.size() - 1)
                 str << ", ";
         }
@@ -2237,7 +2237,7 @@ std::span<std::int32_t> PackedSwitchProvider::get_targets() {
 std::string_view PackedSwitchProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream data;
-        data << opcode_names.at(opcode) << " (size)" << size << " (first/last key)" << first_key << "[";
+        data << "packed-switch-data" << " (size) " << size << " (first/last key) " << first_key << "[";
         for (const auto target: targets)
             data << "0x" << std::hex << target << ",";
         if (size > 0)
@@ -2312,7 +2312,7 @@ std::span<std::pair<std::int32_t, std::int32_t>> SparseSwitchProvider::get_keys_
 std::string_view SparseSwitchProvider::format_instruction() {
     if (instruction.empty()) {
         std::stringstream output;
-        output << opcode_names.at(opcode) << " (size)" << size << "[";
+        output << "sparse-switch-data" << " (size) " << size << "[";
         for (const auto &key_target: keys_targets) {
             auto key = std::get<0>(key_target);
             auto target = std::get<1>(key_target);

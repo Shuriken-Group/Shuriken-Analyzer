@@ -52,6 +52,12 @@ public:
     types::access_flags get_field_access_flags() const;
 
     /***
+     * @return access flags from the field as string
+     * FLAG1|FLAG2|...
+     */
+    std::string_view get_field_access_flags_str() const;
+
+    /***
      * @return get the type from the field `static` or `instance`.
      */
     types::field_type_e get_type() const;

@@ -19,6 +19,10 @@ types::access_flags Field::get_field_access_flags() const {
     return dex_field_provider.get().get_field_access_flags();
 }
 
+std::string_view Field::get_field_access_flags_str() const {
+    return dex_field_provider.get().get_field_access_flags_str();
+}
+
 types::field_type_e Field::get_type() const {
     return dex_field_provider.get().get_type();
 }

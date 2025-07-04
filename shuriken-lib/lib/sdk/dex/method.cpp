@@ -19,6 +19,10 @@ types::access_flags Method::get_method_access_flags() const {
     return dex_method_provider.get().get_method_access_flags();
 }
 
+std::string_view Method::get_method_access_flags_str() {
+    return dex_method_provider.get().get_method_access_flags_str();
+}
+
 const DVMPrototype &Method::get_method_prototype() const {
     return dex_method_provider.get().get_method_prototype();
 }

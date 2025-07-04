@@ -115,20 +115,39 @@ void print_classes(shuriken::dex::Dex &dex) {
         fmt::println("DALVIK NAME: {}", cls.get_dalvik_name());
 
         if (methods) {
-            for (auto & method : cls.get_methods())
+            size_t i = 0;
+            for (auto & method : cls.get_methods()) {
+                fmt::println("Method[{}]:", i++);
                 print_method(method);
+            }
         }
         if (fields) {
-            for (auto & field : cls.get_fields())
+            size_t i = 0;
+            for (auto & field : cls.get_fields()) {
+                fmt::println("Field[{}]", i++);
                 print_field(field);
+            }
         }
     }
 }
 
 void print_method(shuriken::dex::Method &method) {
     fmt::println("\tMETHOD: {}", method.get_descriptor());
+    fmt::println("\tACCESS FLAGS: {}", method.get_method_access_flags_str());
+
+    if (disassembly)
+        print_code(method);
 }
 
 void print_field(shuriken::dex::Field &field) {
     fmt::println("\tFIELD: {}", field.get_descriptor());
+    fmt::println("\tACCESS FLAGS: {}", field.get_field_access_flags_str());
+}
+
+void print_code(shuriken::dex::Method &method) {
+    fmt::println("\tCODE:");
+    for (auto & instr_ref : method.get_method_instructions()) {
+        auto & instr = instr_ref.get();
+        fmt::println("\t\t{:08X}\t{}", instr.get_address(), instr.print_instruction());
+    }
 }

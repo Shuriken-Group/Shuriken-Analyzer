@@ -32,6 +32,8 @@ private:
     std::string method_name;
     // @brief access flags from the method
     types::access_flags method_access_flags;
+    // @brief string with the access flags from the method as string
+    std::string access_flags_str;
     // @brief method type taken from the generation of the class
     types::method_type_e method_type;
     // @brief pointer to the prototype of the method
@@ -105,6 +107,12 @@ public:
      * @return access flags from the field
      */
     types::access_flags get_method_access_flags() const;
+
+    /***
+     * @return a string reference with the access flags expressed as
+     * FLAG1|FLAG2|...
+     */
+     std::string_view get_method_access_flags_str();
 
     /***
      * @return constant pointer to the prototype of the

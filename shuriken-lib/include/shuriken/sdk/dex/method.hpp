@@ -53,6 +53,12 @@ public:
     types::access_flags get_method_access_flags() const;
 
     /***
+     * @return a string reference with the access flags expressed as
+     * FLAG1|FLAG2|...
+     */
+    std::string_view get_method_access_flags_str();
+
+    /***
      * @return constant pointer to the prototype of the
      * method. It may return nullptr
      */

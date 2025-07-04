@@ -25,6 +25,8 @@ private:
     std::string descriptor;
     // @brief access flags from the field
     types::access_flags access_flags;
+    // @brief access flags as string
+    std::string access_flags_str;
     // @brief type of the field from the generation
     types::field_type_e type;
     // @brief DVMType object that represent the type of the field
@@ -60,6 +62,12 @@ public:
      * @return access flags from the field
      */
     types::access_flags get_field_access_flags() const;
+
+    /***
+     * @return access flags from the field as string
+     * FLAG1|FLAG2|...
+     */
+     std::string_view get_field_access_flags_str();
 
     /***
      * @return get the type from the field `static` or `instance`.
