@@ -13,6 +13,7 @@
 #include <shuriken/sdk/dex/method.hpp>
 #include <shuriken/sdk/dex/field.hpp>
 #include <shuriken/sdk/dex/instruction.hpp>
+#include <shuriken/sdk/dex/disassembly_constants.hpp>
 
 void show_help(std::string &prog_name) {
     fmt::println("USAGE: {} [-dex <dex_file_to_analyze>] [-h] [-m] [-b] [-D]", prog_name);
@@ -90,7 +91,7 @@ int main(int argc, char **argv) {
         parse_dex(dex_file_str);
 
         if (show_classes) {
-            std::unique_ptr<shuriken::dex::Dex> & dex = dex_file.value();
+            std::unique_ptr<shuriken::dex::Dex> &dex = dex_file.value();
             print_classes(*dex);
         }
     }
@@ -100,7 +101,7 @@ void parse_dex(std::string &dex_file_str) {
     dex_file = shuriken::dex::Dex::create_from_file(dex_file_str);
 
     if (!dex_file.has_value()) {
-        const auto& error = dex_file.error();
+        const auto &error = dex_file.error();
 
         fmt::println("ERROR generating the DEX object {}", error.get_message());
 
@@ -109,21 +110,21 @@ void parse_dex(std::string &dex_file_str) {
 }
 
 void print_classes(shuriken::dex::Dex &dex) {
-    for (auto & cls : dex.get_classes()) {
+    for (auto &cls: dex.get_classes()) {
         fmt::println("CLASS: {}", cls.get_name());
         fmt::println("CANONICAL NAME: {}", cls.get_canonical_name());
         fmt::println("DALVIK NAME: {}", cls.get_dalvik_name());
 
         if (methods) {
             size_t i = 0;
-            for (auto & method : cls.get_methods()) {
+            for (auto &method: cls.get_methods()) {
                 fmt::println("Method[{}]:", i++);
                 print_method(method);
             }
         }
         if (fields) {
             size_t i = 0;
-            for (auto & field : cls.get_fields()) {
+            for (auto &field: cls.get_fields()) {
                 fmt::println("Field[{}]", i++);
                 print_field(field);
             }
@@ -133,7 +134,13 @@ void print_classes(shuriken::dex::Dex &dex) {
 
 void print_method(shuriken::dex::Method &method) {
     fmt::println("\tMETHOD: {}", method.get_descriptor());
-    fmt::println("\tACCESS FLAGS: {}", method.get_method_access_flags_str());
+    fmt::println("\tACCESS FLAGS: 0x{:04X} ({})", static_cast<std::uint16_t>(method.get_method_access_flags()),
+                 method.get_method_access_flags_str());
+    fmt::print("\tMETHOD TYPE: ");
+    if (method.get_method_type() == shuriken::dex::types::method_type_e::DIRECT_METHOD)
+        fmt::println("DIRECT");
+    else
+        fmt::println("VIRTUAL");
 
     if (disassembly)
         print_code(method);
@@ -141,13 +148,77 @@ void print_method(shuriken::dex::Method &method) {
 
 void print_field(shuriken::dex::Field &field) {
     fmt::println("\tFIELD: {}", field.get_descriptor());
-    fmt::println("\tACCESS FLAGS: {}", field.get_field_access_flags_str());
+    fmt::println("\tACCESS FLAGS: 0x{:04X} ({})", static_cast<std::uint16_t>(field.get_field_access_flags()),
+                 field.get_field_access_flags_str());
+    fmt::print("\tTYPE:");
+    if (field.get_type() == shuriken::dex::types::field_type_e::INSTANCE_FIELD)
+        fmt::println("INSTANCE");
+    else
+        fmt::println("STATIC");
+}
+
+std::string format_bytes_span(std::span<const std::uint8_t> data) {
+    constexpr size_t MAX_PAIRS = 7;  // Maximum 7 pairs (14 bytes) before "..."
+    constexpr size_t EXPECTED_LENGTH = 34;  // Length of "0001 0f00 0100 0000 7e00 0000 7600 ..."
+
+    std::string result;
+    result.reserve(EXPECTED_LENGTH);
+
+    if (data.size() >= MAX_PAIRS * 2) {
+        // We have enough bytes for all 7 pairs, show them + "..."
+        for (size_t i = 0; i < MAX_PAIRS * 2; i += 2) {
+            if (i > 0) result += " ";
+            result += fmt::format("{:02x}{:02x}", data[i], data[i + 1]);
+        }
+        result += " ...";
+    } else {
+        // We have fewer than 14 bytes, show what we have and pad with spaces
+        size_t byte_idx = 0;
+
+        // Process complete pairs
+        for (size_t pair = 0; pair < MAX_PAIRS; ++pair) {
+            if (pair > 0) result += " ";
+
+            if (byte_idx + 1 < data.size()) {
+                // Complete pair available
+                result += fmt::format("{:02x}{:02x}", data[byte_idx], data[byte_idx + 1]);
+                byte_idx += 2;
+            } else if (byte_idx < data.size()) {
+                // Only one byte left, pad with zeros
+                result += fmt::format("{:02x}00", data[byte_idx]);
+                byte_idx += 1;
+            } else {
+                // No more bytes, fill with spaces
+                result += "    ";  // 4 spaces for missing pair
+            }
+        }
+
+        // Add trailing spaces to match exact length
+        while (result.length() < EXPECTED_LENGTH - 4) {  // -4 for " ..."
+            result += " ";
+        }
+        result += "    ";  // 4 spaces instead of " ..."
+    }
+
+    return result;
 }
 
 void print_code(shuriken::dex::Method &method) {
+    fmt::println("\tNUMBER OF REGISTERS: {}", method.registers_size());
     fmt::println("\tCODE:");
-    for (auto & instr_ref : method.get_method_instructions()) {
-        auto & instr = instr_ref.get();
-        fmt::println("\t\t{:08X}\t{}", instr.get_address(), instr.print_instruction());
+    for (auto &instr_ref: method.get_method_instructions()) {
+        auto &instr = instr_ref.get();
+        fmt::println("{:08X} {} | {}", instr.get_address(),
+                     format_bytes_span(instr.get_instruction_bytecode()),
+                     instr.print_instruction());
+    }
+    for (auto &exception: method.get_exceptions()) {
+        fmt::println("\tException try-start addr: 0x{:08X}", exception.try_value_start_addr);
+        fmt::println("\tException try-end addr: 0x{:08X}", exception.try_value_end_addr);
+        for (auto &catch_info: exception.handler) {
+            fmt::println("\t\tCatch address: 0x{:08X}", catch_info.handler_start_addr);
+            if (catch_info.handler_data)
+                fmt::println("\t\tCaught exception: {}", shuriken::dex::get_canonical_name(*catch_info.handler_data));
+        }
     }
 }
