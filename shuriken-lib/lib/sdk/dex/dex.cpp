@@ -124,6 +124,9 @@ method_deref_iterator_t shuriken::dex::Dex::get_methods() const {
     return pimpl->dex_engine->get_methods();
 }
 
+external_methods_deref_iterator_t shuriken::dex::Dex::get_external_methods() const {
+    return pimpl->dex_engine->get_external_methods();
+}
 
 const Method *
 shuriken::dex::Dex::get_method_by_name_prototype(std::string_view name, std::string_view prototype) const {
@@ -148,6 +151,10 @@ MethodID *shuriken::dex::Dex::get_method_by_id(size_t id) {
 
 fields_deref_iterator_t shuriken::dex::Dex::get_fields() const {
     return pimpl->dex_engine->get_fields();
+}
+
+external_fields_deref_iterator_t  shuriken::dex::Dex::get_external_fields() const {
+    return pimpl->dex_engine->get_external_fields();
 }
 
 const Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) const {

@@ -173,6 +173,13 @@ public:
      */
     method_deref_iterator_t get_methods() const;
 
+
+    /**
+     * @brief Get all the external methods referenced by the DEX file
+     * @return A reference iterator to all the external methods from the DEX file
+     */
+    external_methods_deref_iterator_t get_external_methods() const;
+
     /**
      * @brief Get a method ID by its index
      * @param id ID of the MethodID to retrieve inside of the DEX file
@@ -235,6 +242,12 @@ public:
      * @return A reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
+
+    /**
+     * @brief Get all external fields referenced by the DEX file
+     * @return A reference iterator to all the external fields from the DEX file
+     */
+    external_fields_deref_iterator_t  get_external_fields() const;
 
     /**
      * @brief Get a field ID by its index

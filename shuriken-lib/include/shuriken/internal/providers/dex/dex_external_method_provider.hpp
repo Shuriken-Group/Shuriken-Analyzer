@@ -2,24 +2,34 @@
 // Shuriken-Analyzer: library for bytecode analysis.
 // @author Farenain <kunai.static.analysis@gmail.com>
 
-
 #pragma once
 
-#include <functional>
-#include <string_view>
-#include <string>
+#include <shuriken/sdk/dex/constants.hpp>
+#include <shuriken/sdk/dex/custom_types.hpp>
 
 namespace shuriken {
 namespace dex {
 
-class DexExternalMethodProvider;
+class DexEngine;
 
-class ExternalMethod {
+class DexExternalMethodProvider {
 private:
-    std::reference_wrapper<DexExternalMethodProvider> dex_external_method_provider;
+    std::reference_wrapper<DexEngine> dex_engine;
+    // @brief name of the method without any type, or class name
+    std::string method_name;
+    // @brief descriptor name
+    std::string descriptor;
+    // @brief class name
+    std::string class_name;
 public:
-    ExternalMethod(DexExternalMethodProvider&);
-    ~ExternalMethod() = default;
+    DexExternalMethodProvider(
+            std::string_view method_name,
+            std::string_view descriptor,
+            std::string_view class_name,
+            DexEngine& dex_engine
+    );
+
+    ~DexExternalMethodProvider() = default;
 
     /**
     * @brief Get the name of the class that owns this external method as a string_view
@@ -58,6 +68,5 @@ public:
     std::string get_descriptor_string() const;
 };
 
-
-} // namespace dex
-} // namespace shuriken
+}
+}

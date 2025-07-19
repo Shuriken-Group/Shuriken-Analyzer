@@ -3,8 +3,6 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include "shuriken/internal/providers/dex/dex_method_provider.hpp"
-#include "shuriken/sdk/dex/dvm_prototypes.hpp"
-#include "shuriken/sdk/dex/dvm_types.hpp"
 #include "shuriken/sdk/dex/class.hpp"
 
 
@@ -59,23 +57,23 @@ namespace {
         return result.empty() ? "NONE" : result;
     }
 
-// Template factory function for creating instruction wrappers
+    // Template factory function for creating instruction wrappers
     template<typename WrapperType, typename ProviderType>
     std::unique_ptr<Instruction> get_instruction(ProviderType &provider) {
         return std::make_unique<WrapperType>(provider);
     }
 
-// Type alias for the factory function
+    // Type alias for the factory function
     using instruction_factory_func = std::function<std::unique_ptr<Instruction>(void *)>;
 
-// Wrapper function to handle the void* casting
+    // Wrapper function to handle the void* casting
     template<typename WrapperType, typename ProviderType>
     std::unique_ptr<Instruction> create_wrapper(void *provider_ptr) {
         auto *typed_provider = static_cast<ProviderType *>(provider_ptr);
         return std::make_unique<WrapperType>(*typed_provider);
     }
 
-// Create the instruction wrapper mapping using the .def file
+    // Create the instruction wrapper mapping using the .def file
     inline std::unordered_map<disassembler::opcodes, instruction_factory_func> create_instruction_wrapper_mappings() {
         return {
                 // Instruction00x mappings
@@ -390,13 +388,13 @@ namespace {
         };
     }
 
-// Global accessor function (thread-safe singleton pattern)
+    // Global accessor function (thread-safe singleton pattern)
     inline const auto &get_instruction_wrapper_mappings() {
         static const auto mappings = create_instruction_wrapper_mappings();
         return mappings;
     }
 
-// Convenience function to create instruction wrapper from opcode and provider
+    // Convenience function to create instruction wrapper from opcode and provider
     inline std::unique_ptr<Instruction> create_instruction_wrapper(disassembler::opcodes opcode, void *provider_ptr) {
         const auto &mappings = get_instruction_wrapper_mappings();
         auto it = mappings.find(opcode);
@@ -406,7 +404,7 @@ namespace {
         return nullptr; // Unknown opcode
     }
 
-// Type-safe template version
+    // Type-safe template version
     template<typename ProviderType>
     std::unique_ptr<Instruction>
     create_instruction_wrapper_typed(disassembler::opcodes opcode, ProviderType &provider) {

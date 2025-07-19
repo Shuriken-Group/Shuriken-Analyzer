@@ -9,8 +9,8 @@
 #include <string>
 
 #include <shuriken/internal/io/shurikenstream.hpp>
-#include "dex/field_id.hpp"
-#include "dex/method_id.hpp"
+#include "shuriken/sdk/dex/field_id.hpp"
+#include "shuriken/sdk/dex/method_id.hpp"
 #include <shuriken/internal/engine/dex/parser/class_data_item.hpp>
 
 #include <shuriken/sdk/common/iterator_range.hpp>

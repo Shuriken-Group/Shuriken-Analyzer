@@ -3,8 +3,8 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include "shuriken/internal/engine/dex/disassembler/internal_disassembler.hpp"
-#include "shuriken/internal/engine/dex/dex_engine.hpp"
 #include "shuriken/internal/engine/dex/parser/encoded_data.hpp"
+
 #include <memory>
 
 using namespace shuriken::dex;

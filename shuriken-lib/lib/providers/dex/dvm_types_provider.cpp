@@ -3,7 +3,6 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include "shuriken/internal/providers/dex/dvm_types_provider.hpp"
-#include "shuriken/sdk/dex/dvm_types.hpp"
 
 using namespace shuriken::dex;
 

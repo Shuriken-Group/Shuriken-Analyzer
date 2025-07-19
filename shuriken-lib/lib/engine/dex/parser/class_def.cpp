@@ -3,7 +3,6 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include <shuriken/internal/engine/dex/parser/class_def.hpp>
-#include <shuriken/sdk/dex/constants.hpp>
 
 using namespace shuriken::dex;
 

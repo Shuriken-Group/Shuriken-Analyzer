@@ -126,6 +126,12 @@ public:
     method_deref_iterator_t get_methods() const;
 
     /**
+     * @brief Get all the external methods referenced by the DEX file
+     * @return A reference iterator to all the external methods from the DEX file
+     */
+    external_methods_deref_iterator_t get_external_methods() const;
+
+    /**
     * Find a method by its name and prototype
     * @param name The method name
     * @param prototype The method prototype/signature
@@ -166,6 +172,12 @@ public:
      * @return a reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
+
+    /**
+     * @brief Get all external fields referenced by the DEX file
+     * @return A reference iterator to all the external fields from the DEX file
+     */
+    external_fields_deref_iterator_t  get_external_fields() const;
 
     /**
    * Find a field by its name

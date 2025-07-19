@@ -5,8 +5,8 @@
 #pragma once
 
 #include <shuriken/internal/engine/dex/parser/encoded_data.hpp>
-#include "dex/field_id.hpp"
-#include "dex/method_id.hpp"
+#include "shuriken/sdk/dex/field_id.hpp"
+#include "shuriken/sdk/dex/method_id.hpp"
 
 namespace shuriken {
 namespace dex {

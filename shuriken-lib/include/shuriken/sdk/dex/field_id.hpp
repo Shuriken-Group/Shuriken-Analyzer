@@ -5,9 +5,8 @@
 #pragma once
 
 #include <functional>
-#include "shuriken/internal/io/shurikenstream.hpp"
-#include "custom_types.hpp"
-#include "dvm_types.hpp"
+#include "shuriken/sdk/dex/custom_types.hpp"
+#include "shuriken/sdk/dex/dvm_types.hpp"
 
 namespace shuriken {
 namespace dex {

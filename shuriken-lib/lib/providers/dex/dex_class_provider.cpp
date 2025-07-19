@@ -9,7 +9,6 @@
 #include "shuriken/internal/providers/dex/dex_class_provider.hpp"
 #include "shuriken/sdk/dex/method.hpp"
 #include "shuriken/sdk/dex/field.hpp"
-#include "shuriken/sdk/dex/dvm_prototypes.hpp"
 
 using namespace shuriken::dex;
 

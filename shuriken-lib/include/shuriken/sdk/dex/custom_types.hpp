@@ -47,18 +47,20 @@ using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
 
 using class_external_class_t = std::variant<class_t, externalclass_t, std::monostate>;
+using method_external_method_t = std::variant<method_t, externalmethod_t, std::monostate>;
+using field_external_field_t = std::variant<field_t, externalfield_t, std::monostate>;
 
 // A type which points to an instruction in a given index, from
 // a specific method, from a specific class
-using class_method_idx_t = std::tuple<class_t, method_t, std::uint64_t>;
+using class_method_idx_t = std::tuple<class_external_class_t, method_external_method_t, std::uint64_t>;
 using span_class_method_idx_t = std::span<class_method_idx_t>;
 using span_class_method_idx_iterator_t = span_class_method_idx_t::iterator;
 
-using class_field_idx_t = std::tuple<class_t, field_t, std::uint64_t>;
+using class_field_idx_t = std::tuple<class_external_class_t, field_external_field_t, std::uint64_t>;
 using span_class_field_idx_t = std::span<class_field_idx_t>;
 using span_class_field_idx_iterator_t = span_class_field_idx_t::iterator;
 
-using class_idx_t = std::tuple<class_t, std::uint64_t>;
+using class_idx_t = std::tuple<class_external_class_t, std::uint64_t>;
 using span_class_idx_t = std::span<class_idx_t>;
 using span_class_idx_iterator_t = span_class_idx_t::iterator;
 
@@ -74,21 +76,27 @@ using span_class_external_class_iterator_t = span_class_external_class_t::iterat
  *    - The method containing the reference
  *    - The offset of the instruction within the method
  */
-using classxref_t = std::unordered_map<class_t,
+using classxref_t = std::unordered_map<class_external_class_t,
         std::set<std::tuple<types::ref_type,
-                method_t,
+                method_external_method_t ,
                 std::uint64_t>>>;
 using classxref_iterator_t = classxref_t::iterator;
 
-using method_idx_t = std::pair<method_t, std::uint64_t>;
+using method_idx_t = std::pair<method_external_method_t , std::uint64_t>;
 using span_method_idx_t = std::span<method_idx_t>;
 using span_method_idx_iterator_t = span_method_idx_t::iterator;
 
 using fields_ref_t = std::span<field_t>;
 using fields_deref_iterator_t = deref_iterator_range<fields_ref_t>;
 
+using external_fields_ref_t = std::span<externalfield_t>;
+using external_fields_deref_iterator_t = deref_iterator_range<external_fields_ref_t>;
+
 using methods_ref_t = std::span<method_t>;
 using method_deref_iterator_t = deref_iterator_range<methods_ref_t>;
+
+using external_methods_ref_t = std::span<externalmethod_t>;
+using external_methods_deref_iterator_t = deref_iterator_range<external_methods_ref_t>;
 
 using classes_ref_t = std::span<class_t>;
 using classes_deref_iterator_t = deref_iterator_range<classes_ref_t>;
