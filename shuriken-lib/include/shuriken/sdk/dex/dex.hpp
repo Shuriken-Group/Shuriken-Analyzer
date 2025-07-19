@@ -22,27 +22,78 @@ class Field;
 class FieldID;
 class DVMPrototype;
 
+/**
+ * @brief Main entry point for analyzing Android DEX files
+ * 
+ * This class provides high-level access to all DEX file contents including classes,
+ * methods, fields, strings, types, and prototypes. It uses the PIMPL idiom to hide
+ * implementation details and manages the DexEngine internally.
+ */
 class Dex {
 private:
     class Impl; // Forward declaration of implementation class
     Impl * pimpl; // The pointer to implementation
 public:
-    // static methods
+    /**
+     * @brief Create a Dex object from a file path
+     * @param path Path to the DEX file to analyze
+     * @return Result containing unique_ptr to Dex object or error
+     */
     static error::Result<std::unique_ptr<Dex>> create_from_file(std::string_view path);
 
-    // Constructors & Destructors
+    /**
+     * @brief Construct a new Dex object
+     * @param dex_path Path to the DEX file
+     */
     Dex(std::string_view dex_path);
     ~Dex();
 
+    /**
+     * @brief Check if the DEX file was successfully initialized
+     * @return true if initialized successfully, false otherwise
+     */
     bool initialized();
 
+    /**
+     * @brief Get the last error that occurred during parsing
+     * @return Error object with details about the failure
+     */
     error::Error get_last_error();
 
+    /**
+     * @brief Get the total number of strings in the string pool
+     * @return Number of strings
+     */
     size_t get_number_of_strings() const;
+    
+    /**
+     * @brief Get the total number of method prototypes
+     * @return Number of prototypes
+     */
     size_t get_number_of_prototypes() const;
+    
+    /**
+     * @brief Get the total number of types
+     * @return Number of types
+     */
     size_t get_number_of_types() const;
+    
+    /**
+     * @brief Get the total number of classes in this DEX file
+     * @return Number of classes
+     */
     size_t get_number_of_classes() const;
+    
+    /**
+     * @brief Get the total number of methods in this DEX file
+     * @return Number of methods
+     */
     size_t get_number_of_methods() const;
+    
+    /**
+     * @brief Get the total number of fields in this DEX file
+     * @return Number of fields
+     */
     size_t get_number_of_fields() const;
 
     /**
@@ -69,10 +120,25 @@ public:
      */
     std::string get_dex_name_string() const;
 
+    /**
+     * @brief Get a string from the string pool by its ID
+     * @param id Index into the string pool
+     * @return String view of the requested string, empty if ID is invalid
+     */
     std::string_view get_string_by_id(size_t id);
 
+    /**
+     * @brief Get a method prototype by its ID
+     * @param id Index into the prototype pool
+     * @return Pointer to DVMPrototype if found, nullptr otherwise
+     */
     DVMPrototype * get_prototype_by_id(size_t id);
 
+    /**
+     * @brief Get a type by its ID
+     * @param id Index into the type pool
+     * @return Pointer to DVMType if found, nullptr otherwise
+     */
     DVMType  * get_type_by_id(size_t id);
     // for classes
 
@@ -169,6 +235,20 @@ public:
     MethodID * get_method_by_id(size_t id);
 
     /**
+     * @brief Get the Method object corresponding to a MethodID
+     * @param method Pointer to the MethodID to lookup
+     * @return Pointer to Method if it's an internal method, nullptr otherwise
+     */
+    Method * get_method_object_by_method_id(MethodID * method);
+
+    /**
+     * @brief Get the ExternalMethod object corresponding to a MethodID
+     * @param method Pointer to the MethodID to lookup
+     * @return Pointer to ExternalMethod if it's an external method, nullptr otherwise
+     */
+    ExternalMethod * get_external_method_object_by_method_id(MethodID * method);
+
+    /**
      * @return a reference iterator to all the fields from the DEX file
      */
     fields_deref_iterator_t get_fields() const;
@@ -199,6 +279,20 @@ public:
      * @return Pointer to a FieldID if exists, or nullptr
      */
     FieldID * get_field_by_id(size_t id);
+
+    /**
+     * @brief Get the Field object corresponding to a FieldID
+     * @param field Pointer to the FieldID to lookup
+     * @return Pointer to Field if it's an internal field, nullptr otherwise
+     */
+    Field * get_field_object_by_field_id(FieldID * field);
+
+    /**
+     * @brief Get the ExternalField object corresponding to a FieldID
+     * @param field Pointer to the FieldID to lookup
+     * @return Pointer to ExternalField if it's an external field, nullptr otherwise
+     */
+    ExternalField * get_external_field_object_by_field_id(FieldID * field);
 
     /**
      * Look for methods matching the provided descriptor.

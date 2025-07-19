@@ -14,10 +14,21 @@ namespace dex {
 
 class DexExternalMethodProvider;
 
+/**
+ * @brief Represents a method reference from another DEX file
+ * 
+ * ExternalMethod objects are created for method references that point to classes
+ * not defined in the current DEX file. They provide basic metadata but no
+ * implementation details since the actual method code is in another file.
+ */
 class ExternalMethod {
 private:
     std::reference_wrapper<DexExternalMethodProvider> dex_external_method_provider;
 public:
+    /**
+     * @brief Construct a new ExternalMethod object
+     * @param provider Reference to the external method provider containing the data
+     */
     ExternalMethod(DexExternalMethodProvider&);
     ~ExternalMethod() = default;
 

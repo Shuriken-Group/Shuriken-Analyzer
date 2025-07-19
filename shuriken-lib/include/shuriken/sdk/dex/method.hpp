@@ -24,11 +24,20 @@ class Class;
 class DVMPrototype;
 class Instruction;
 
+/**
+ * @brief Represents a method from a DEX file
+ * 
+ * This class provides access to method metadata, bytecode, instructions, and cross-references.
+ * It acts as a lightweight wrapper around DexMethodProvider containing the actual data.
+ */
 class Method {
 private:
     std::reference_wrapper<DexMethodProvider> dex_method_provider;
 public:
-    // constructors and destructors
+    /**
+     * @brief Construct a new Method object
+     * @param provider Reference to the method provider containing the actual data
+     */
     Method(DexMethodProvider&);
     ~Method() = default;
 
@@ -125,8 +134,16 @@ public:
 
 
     // Disassembler information
+    /**
+     * @brief Get the disassembled instructions for this method
+     * @return Reference to list of instruction references
+     */
     std::list<std::reference_wrapper<Instruction>> & get_method_instructions();
 
+    /**
+     * @brief Get exception handling information for this method
+     * @return Reference to exception data structure
+     */
     disassembler::exceptions_data_t & get_exceptions();
 
      // xrefs information

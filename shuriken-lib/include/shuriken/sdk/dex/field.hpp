@@ -21,11 +21,20 @@ class DexFieldProvider;
 class Dex;
 class Class;
 
+/**
+ * @brief Represents a field from a DEX file
+ * 
+ * This class provides access to field metadata, type information, and cross-references.
+ * It acts as a lightweight wrapper around DexFieldProvider containing the actual data.
+ */
 class Field {
 private:
     std::reference_wrapper<DexFieldProvider> dex_field_provider;
 public:
-    // constructors & destructors
+    /**
+     * @brief Construct a new Field object
+     * @param provider Reference to the field provider containing the actual data
+     */
     Field(DexFieldProvider &);
 
     ~Field() = default;

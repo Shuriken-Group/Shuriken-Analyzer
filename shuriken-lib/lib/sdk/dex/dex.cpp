@@ -149,11 +149,19 @@ MethodID *shuriken::dex::Dex::get_method_by_id(size_t id) {
     return pimpl->dex_engine->get_method_by_id(id);
 }
 
+Method *shuriken::dex::Dex::get_method_object_by_method_id(MethodID *method) {
+    return pimpl->dex_engine->get_method_object_by_method_id(method);
+}
+
+ExternalMethod *shuriken::dex::Dex::get_external_method_object_by_method_id(MethodID *method) {
+    return pimpl->dex_engine->get_external_method_object_by_method_id(method);
+}
+
 fields_deref_iterator_t shuriken::dex::Dex::get_fields() const {
     return pimpl->dex_engine->get_fields();
 }
 
-external_fields_deref_iterator_t  shuriken::dex::Dex::get_external_fields() const {
+external_fields_deref_iterator_t shuriken::dex::Dex::get_external_fields() const {
     return pimpl->dex_engine->get_external_fields();
 }
 
@@ -167,6 +175,14 @@ Field *shuriken::dex::Dex::get_field_by_name(std::string_view name) {
 
 FieldID *shuriken::dex::Dex::get_field_by_id(size_t id) {
     return pimpl->dex_engine->get_field_by_id(id);
+}
+
+Field *shuriken::dex::Dex::get_field_object_by_field_id(FieldID *field) {
+    return pimpl->dex_engine->get_field_object_by_field_id(field);
+}
+
+ExternalField *shuriken::dex::Dex::get_external_field_object_by_field_id(FieldID *field) {
+    return pimpl->dex_engine->get_external_field_object_by_field_id(field);
 }
 
 std::vector<Method *> shuriken::dex::Dex::found_method_by_regex(std::string_view descriptor_regex) {

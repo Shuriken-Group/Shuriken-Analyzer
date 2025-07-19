@@ -194,6 +194,9 @@ public:
      */
     const MethodID * get_method_by_id(size_t id) const;
 
+    Method * get_method_object_by_method_id(MethodID * method);
+
+    ExternalMethod * get_external_method_object_by_method_id(MethodID * method);
 
     /**
      * @brief Get the total number of methods in the DEX file
@@ -262,6 +265,10 @@ public:
      * @return Const pointer to a FieldID if exists, or nullptr
      */
     const FieldID * get_field_by_id(size_t id) const;
+
+    Field * get_field_object_by_field_id(FieldID * field);
+
+    ExternalField * get_external_field_object_by_field_id(FieldID * field);
 
     /**
      * @brief Get the total number of fields in the DEX file

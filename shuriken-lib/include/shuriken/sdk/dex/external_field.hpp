@@ -14,11 +14,21 @@ namespace dex {
 
 class DexExternalFieldProvider;
 
+/**
+ * @brief Represents a field reference from another DEX file
+ * 
+ * ExternalField objects are created for field references that point to classes
+ * not defined in the current DEX file. They provide basic metadata but no
+ * implementation details since the actual field definition is in another file.
+ */
 class ExternalField {
 private:
     std::reference_wrapper<DexExternalFieldProvider> dex_external_field_provider;
 public:
-    // constructors & destructors
+    /**
+     * @brief Construct a new ExternalField object
+     * @param external Reference to the external field provider containing the data
+     */
     ExternalField(DexExternalFieldProvider& external);
     ~ExternalField() = default;
 

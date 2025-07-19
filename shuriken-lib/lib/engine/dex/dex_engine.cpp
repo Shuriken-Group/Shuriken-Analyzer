@@ -522,11 +522,11 @@ shuriken::error::VoidResult DexEngine::parse() {
         }
     }
 
-    for (auto & method_id : parser.get_methods_ids()) {
+    for (auto &method_id: parser.get_methods_ids()) {
         pimpl->get_method_by_method_id(&method_id, *this);
     }
 
-    for (auto & field_id : parser.get_fields_ids()) {
+    for (auto &field_id: parser.get_fields_ids()) {
         pimpl->get_field_by_field_id(&field_id, *this);
     }
 
@@ -712,6 +712,16 @@ const MethodID *shuriken::dex::DexEngine::get_method_by_id(size_t id) const {
     return &this->pimpl->parser.get_methods_ids()[id];
 }
 
+Method *shuriken::dex::DexEngine::get_method_object_by_method_id(MethodID *method) {
+    auto it = this->pimpl->method_id_method.find(method);
+    return it == this->pimpl->method_id_method.end() ? nullptr : it->second;
+}
+
+ExternalMethod *shuriken::dex::DexEngine::get_external_method_object_by_method_id(MethodID *method) {
+    auto it = this->pimpl->method_id_external_method.find(method);
+    return it == this->pimpl->method_id_external_method.end() ? nullptr : it->second;
+}
+
 size_t shuriken::dex::DexEngine::get_number_of_methods() const {
     return this->pimpl->ref_sdk_methods.size();
 }
@@ -782,7 +792,7 @@ fields_deref_iterator_t shuriken::dex::DexEngine::get_fields() const {
     return fields;
 }
 
-external_fields_deref_iterator_t  shuriken::dex::DexEngine::get_external_fields() const {
+external_fields_deref_iterator_t shuriken::dex::DexEngine::get_external_fields() const {
     static external_fields_ref_t external_fields{this->pimpl->ref_sdk_externals_fields};
     return external_fields;
 }
@@ -797,6 +807,16 @@ const FieldID *shuriken::dex::DexEngine::get_field_by_id(size_t id) const {
     if (id >= this->pimpl->parser.get_fields_ids().size())
         return nullptr;
     return &this->pimpl->parser.get_fields_ids()[id];
+}
+
+Field *shuriken::dex::DexEngine::get_field_object_by_field_id(FieldID *field) {
+    auto it = this->pimpl->field_id_field.find(field);
+    return it == this->pimpl->field_id_field.end() ? nullptr : it->second;
+}
+
+ExternalField *shuriken::dex::DexEngine::get_external_field_object_by_field_id(FieldID *field) {
+    auto it = this->pimpl->field_id_external_field.find(field);
+    return it == this->pimpl->field_id_external_field.end() ? nullptr : it->second;
 }
 
 size_t shuriken::dex::DexEngine::get_number_of_fields() const {

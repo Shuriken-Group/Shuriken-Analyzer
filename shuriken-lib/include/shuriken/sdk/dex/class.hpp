@@ -18,11 +18,20 @@ class Dex;
 class Method;
 class Field;
 
+/**
+ * @brief Represents a Java/Kotlin class from a DEX file
+ * 
+ * This class provides access to class metadata, methods, fields, and cross-references.
+ * It acts as a lightweight wrapper around DexClassProvider containing the actual data.
+ */
 class Class {
 private:
     std::reference_wrapper<DexClassProvider> dex_class_provider;
 public:
-    // constructors & destructors
+    /**
+     * @brief Construct a new Class object
+     * @param provider Reference to the class provider containing the actual data
+     */
     Class(DexClassProvider &);
 
     ~Class() = default;
