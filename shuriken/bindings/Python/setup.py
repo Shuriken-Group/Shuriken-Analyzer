@@ -200,23 +200,63 @@ def download_and_extract_asset(asset_info: Dict[str, Any], install_dir: Path) ->
         
         logger.info(f"Downloaded {asset_name} successfully")
         
-        # Extract the archive
+        # Extract the archive to a temporary directory first
         logger.info(f"Extracting {asset_name}...")
+        temp_extract_dir = install_dir / "temp_extract"
+        temp_extract_dir.mkdir(exist_ok=True)
         
         if asset_name.endswith(('.zip', '.ZIP')):
             with zipfile.ZipFile(temp_file, 'r') as zip_ref:
-                zip_ref.extractall(install_dir)
+                zip_ref.extractall(temp_extract_dir)
         elif asset_name.endswith(('.tar.gz', '.tgz', '.tar.bz2', '.tar.xz')):
             with tarfile.open(temp_file, 'r:*') as tar_ref:
-                tar_ref.extractall(install_dir)
+                tar_ref.extractall(temp_extract_dir)
         else:
             logger.warning(f"Unknown archive format for {asset_name}")
             return False
         
-        # Remove the temporary archive file
-        temp_file.unlink()
+        # Find the extracted contents and move them to the proper locations
+        logger.info("Organizing extracted files...")
         
-        logger.info(f"Successfully extracted {asset_name} to {install_dir}")
+        # Look for the main extracted directory (usually named like shuriken-v1.0-linux-gcc)
+        extracted_dirs = [d for d in temp_extract_dir.iterdir() if d.is_dir()]
+        
+        if len(extracted_dirs) == 1:
+            source_dir = extracted_dirs[0]
+            logger.info(f"Found extracted directory: {source_dir.name}")
+            
+            # Move contents from source_dir to install_dir
+            for item in source_dir.rglob("*"):
+                if item.is_file():
+                    # Calculate relative path from source_dir
+                    rel_path = item.relative_to(source_dir)
+                    target_path = install_dir / rel_path
+                    
+                    # Create parent directories if needed
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    
+                    # Move or copy the file
+                    if not target_path.exists():
+                        shutil.move(str(item), str(target_path))
+                        logger.debug(f"Moved: {rel_path}")
+            
+            logger.info(f"Organized files into {install_dir}")
+        else:
+            logger.warning(f"Unexpected extraction structure: {[d.name for d in extracted_dirs]}")
+            # Fallback: just move everything
+            for item in temp_extract_dir.rglob("*"):
+                if item.is_file():
+                    rel_path = item.relative_to(temp_extract_dir)
+                    target_path = install_dir / rel_path
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    if not target_path.exists():
+                        shutil.move(str(item), str(target_path))
+        
+        # Clean up temporary files
+        temp_file.unlink()
+        shutil.rmtree(temp_extract_dir)
+        
+        logger.info(f"Successfully extracted and organized {asset_name} to {install_dir}")
         return True
         
     except Exception as e:
