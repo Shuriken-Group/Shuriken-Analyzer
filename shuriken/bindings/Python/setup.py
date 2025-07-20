@@ -1,7 +1,6 @@
 import os
 import platform
 import subprocess
-import requests
 import json
 import zipfile
 import tarfile
@@ -15,6 +14,13 @@ from setuptools.command.bdist_egg import bdist_egg as _bdist_egg
 from setuptools.command.install import install as _install
 import logging
 from typing import Optional, Dict, Any
+
+# Try to import requests, but don't fail if it's not available during build
+try:
+    import requests
+    HAS_REQUESTS = True
+except ImportError:
+    HAS_REQUESTS = False
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -108,6 +114,10 @@ def check_github_assets() -> Optional[Dict[str, Any]]:
     
     :return: Asset info dict if found, None otherwise
     """
+    if not HAS_REQUESTS:
+        logger.info("Requests module not available, skipping asset download")
+        return None
+        
     try:
         logger.info("Checking for downloadable assets on GitHub...")
         
@@ -149,14 +159,8 @@ def check_github_assets() -> Optional[Dict[str, Any]]:
         logger.info(f"Available assets: {available_assets}")
         return None
         
-    except requests.RequestException as e:
-        logger.warning(f"Failed to check GitHub assets: {e}")
-        return None
-    except json.JSONDecodeError as e:
-        logger.warning(f"Failed to parse GitHub API response: {e}")
-        return None
     except Exception as e:
-        logger.warning(f"Unexpected error checking GitHub assets: {e}")
+        logger.warning(f"Failed to check GitHub assets: {e}")
         return None
 
 
@@ -168,6 +172,10 @@ def download_and_extract_asset(asset_info: Dict[str, Any], install_dir: Path) ->
     :param install_dir: Directory to install the assets
     :return: True if successful, False otherwise
     """
+    if not HAS_REQUESTS:
+        logger.warning("Requests module not available, cannot download assets")
+        return False
+        
     try:
         asset_name = asset_info["name"]
         download_url = asset_info["download_url"]
@@ -211,14 +219,8 @@ def download_and_extract_asset(asset_info: Dict[str, Any], install_dir: Path) ->
         logger.info(f"Successfully extracted {asset_name} to {install_dir}")
         return True
         
-    except requests.RequestException as e:
-        logger.error(f"Failed to download asset: {e}")
-        return False
-    except (zipfile.BadZipFile, tarfile.TarError) as e:
-        logger.error(f"Failed to extract asset: {e}")
-        return False
     except Exception as e:
-        logger.error(f"Unexpected error downloading/extracting asset: {e}")
+        logger.error(f"Failed to download/extract asset: {e}")
         return False
 
 
