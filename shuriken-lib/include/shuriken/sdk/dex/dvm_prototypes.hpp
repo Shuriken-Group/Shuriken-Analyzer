@@ -5,22 +5,23 @@
 
 #pragma once
 
-#include <functional>
-#include <string_view>
-#include <string>
-
 #include "shuriken/sdk/dex/custom_types.hpp"
+
+#include <string_view>
+#include <memory>
+#include <string>
 
 namespace shuriken {
 namespace dex {
-class DVMPrototypeProvider;
 
 class DVMPrototype {
+public:
+    class Impl;
 private:
-    std::reference_wrapper<DVMPrototypeProvider> dvm_prototype_provider;
+    std::unique_ptr<Impl> impl;
 public:
     // constructors & destructors
-    DVMPrototype(DVMPrototypeProvider&);
+    DVMPrototype(Impl*);
     ~DVMPrototype() = default;
 
     /**

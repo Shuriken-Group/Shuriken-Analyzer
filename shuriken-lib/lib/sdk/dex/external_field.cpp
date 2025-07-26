@@ -3,34 +3,36 @@
 // @author Farenain <kunai.static.analysis@gmail.com>
 
 #include "shuriken/sdk/dex/external_field.hpp"
-#include "shuriken/internal/providers/dex/dex_external_field_provider.hpp"
+#include "shuriken/internal/sdk/dex/external_field_impl.hpp"
+
+#include <memory>
 
 using namespace shuriken::dex;
 
-ExternalField::ExternalField(DexExternalFieldProvider &external)
-        : dex_external_field_provider(external) {
+ExternalField::ExternalField(ExternalField::Impl * impl)
+        : impl(std::unique_ptr<ExternalField::Impl>(impl)) {
 }
 
 std::string_view ExternalField::get_class_name() const {
-    return dex_external_field_provider.get().get_class_name();
+    return impl.get()->get_class_name();
 }
 
 std::string ExternalField::get_class_name_string() const {
-    return dex_external_field_provider.get().get_class_name_string();
+    return impl.get()->get_class_name_string();
 }
 
 std::string_view ExternalField::get_name() const {
-    return dex_external_field_provider.get().get_name();
+    return impl.get()->get_name();
 }
 
 std::string ExternalField::get_name_string() const {
-    return dex_external_field_provider.get().get_name_string();
+    return impl.get()->get_name_string();
 }
 
 std::string_view ExternalField::get_descriptor() const {
-    return dex_external_field_provider.get().get_descriptor();
+    return impl.get()->get_descriptor();
 }
 
 std::string ExternalField::get_descriptor_string() const {
-    return dex_external_field_provider.get().get_descriptor_string();
+    return impl.get()->get_descriptor_string();
 }

@@ -4,45 +4,11 @@
 
 #pragma once
 
-#include <functional>
+#include <memory>
 #include <shuriken/sdk/dex/disassembly_constants.hpp>
 
 namespace shuriken {
 namespace dex {
-class InstructionProvider;
-class DalvikIncorrectInstructionProvider;
-class Instruction00xProvider;
-class Instruction10xProvider;
-class Instruction12xProvider;
-class Instruction11nProvider;
-class Instruction11xProvider;
-class Instruction10tProvider;
-class Instruction20tProvider;
-class Instruction20bcProvider;
-class Instruction22xProvider;
-class Instruction21tProvider;
-class Instruction21sProvider;
-class Instruction21hProvider;
-class Instruction21cProvider;
-class Instruction23xProvider;
-class Instruction22bProvider;
-class Instruction22tProvider;
-class Instruction22sProvider;
-class Instruction22cProvider;
-class Instruction22csProvider;
-class Instruction30tProvider;
-class Instruction32xProvider;
-class Instruction31iProvider;
-class Instruction31tProvider;
-class Instruction31cProvider;
-class Instruction35cProvider;
-class Instruction3rcProvider;
-class Instruction45ccProvider;
-class Instruction4rccProvider;
-class Instruction51lProvider;
-class PackedSwitchProvider;
-class SparseSwitchProvider;
-class FillArrayDataProvivder;
 
 class PackedSwitch;
 class SparseSwitch;
@@ -53,12 +19,13 @@ using switch_instr_t = std::variant<
         SparseSwitch*>;
 
 class Instruction {
-private:
-    std::reference_wrapper<InstructionProvider> instruction;
+protected:
+    class Impl;
+    std::unique_ptr<Impl> impl;
 public:
     // constructors & destructors
-    Instruction(InstructionProvider&);
-    ~Instruction() = default;
+    Instruction(Impl*);
+    virtual ~Instruction() = default;
 
     Instruction(const Instruction&) = delete;
     Instruction& operator=(const Instruction&) = delete;
@@ -80,31 +47,39 @@ public:
 };
 
 class DalvikIncorrectInstruction : public Instruction {
-private:
-    std::reference_wrapper<DalvikIncorrectInstructionProvider> instruction;
 public:
-    DalvikIncorrectInstruction(DalvikIncorrectInstructionProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    DalvikIncorrectInstruction(Impl*);
 };
 
 class Instruction00x : public Instruction {
-private:
-    std::reference_wrapper<Instruction00xProvider> instruction;
 public:
-    Instruction00x(Instruction00xProvider &);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction00x(Impl*);
 };
 
 class Instruction10x : public Instruction {
-private:
-    std::reference_wrapper<Instruction10xProvider> instruction;
 public:
-    Instruction10x(Instruction10xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction10x(Impl*);
 };
 
 class Instruction12x : public Instruction {
-private:
-    std::reference_wrapper<Instruction12xProvider> instruction;
 public:
-    Instruction12x(Instruction12xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction12x(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -113,10 +88,12 @@ public:
 };
 
 class Instruction11n : public Instruction {
-private:
-    std::reference_wrapper<Instruction11nProvider> instruction;
 public:
-    Instruction11n(Instruction11nProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction11n(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -125,40 +102,48 @@ public:
 };
 
 class Instruction11x : public Instruction {
-private:
-    std::reference_wrapper<Instruction11xProvider> instruction;
 public:
-    Instruction11x(Instruction11xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction11x(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
 };
 
 class Instruction10t : public Instruction {
-private:
-    std::reference_wrapper<Instruction10tProvider> instruction;
 public:
-    Instruction10t(Instruction10tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction10t(Impl*);
 
     std::int8_t getNAA() const;
     disassembler::operand_type get_nAA_type() const;
 };
 
 class Instruction20t : public Instruction {
-private:
-    std::reference_wrapper<Instruction20tProvider> instruction;
 public:
-    Instruction20t(Instruction20tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction20t(Impl*);
 
     std::int16_t getNAAAA() const;
     disassembler::operand_type get_nAAAA_type() const;
 };
 
 class Instruction20bc : public Instruction {
-private:
-    std::reference_wrapper<Instruction20bcProvider> instruction;
 public:
-    Instruction20bc(Instruction20bcProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction20bc(Impl*);
 
     std::uint8_t getNAA() const;
     disassembler::operand_type get_nAA_type() const;
@@ -167,10 +152,12 @@ public:
 };
 
 class Instruction22x : public Instruction {
-private:
-    std::reference_wrapper<Instruction22xProvider> instruction;
 public:
-    Instruction22x(Instruction22xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22x(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -179,10 +166,12 @@ public:
 };
 
 class Instruction21t : public Instruction {
-private:
-    std::reference_wrapper<Instruction21tProvider> instruction;
 public:
-    Instruction21t(Instruction21tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction21t(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -191,10 +180,12 @@ public:
 };
 
 class Instruction21s : public Instruction {
-private:
-    std::reference_wrapper<Instruction21sProvider> instruction;
 public:
-    Instruction21s(Instruction21sProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction21s(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -203,10 +194,12 @@ public:
 };
 
 class Instruction21h : public Instruction {
-private:
-    std::reference_wrapper<Instruction21hProvider> instruction;
 public:
-    Instruction21h(Instruction21hProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction21h(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -215,10 +208,12 @@ public:
 };
 
 class Instruction21c : public Instruction {
-private:
-    std::reference_wrapper<Instruction21cProvider> instruction;
 public:
-    Instruction21c(Instruction21cProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction21c(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -228,10 +223,12 @@ public:
 };
 
 class Instruction23x : public Instruction {
-private:
-    std::reference_wrapper<Instruction23xProvider> instruction;
 public:
-    Instruction23x(Instruction23xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction23x(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -242,10 +239,12 @@ public:
 };
 
 class Instruction22b : public Instruction {
-private:
-    std::reference_wrapper<Instruction22bProvider> instruction;
 public:
-    Instruction22b(Instruction22bProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22b(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -256,10 +255,12 @@ public:
 };
 
 class Instruction22t : public Instruction {
-private:
-    std::reference_wrapper<Instruction22tProvider> instruction;
 public:
-    Instruction22t(Instruction22tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22t(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -270,10 +271,12 @@ public:
 };
 
 class Instruction22s : public Instruction {
-private:
-    std::reference_wrapper<Instruction22sProvider> instruction;
 public:
-    Instruction22s(Instruction22sProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22s(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -284,10 +287,12 @@ public:
 };
 
 class Instruction22c : public Instruction {
-private:
-    std::reference_wrapper<Instruction22cProvider> instruction;
 public:
-    Instruction22c(Instruction22cProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22c(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -299,10 +304,12 @@ public:
 };
 
 class Instruction22cs : public Instruction {
-private:
-    std::reference_wrapper<Instruction22csProvider> instruction;
 public:
-    Instruction22cs(Instruction22csProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction22cs(Impl*);
 
     std::uint8_t getVA() const;
     disassembler::operand_type get_vA_type() const;
@@ -314,20 +321,24 @@ public:
 };
 
 class Instruction30t : public Instruction {
-private:
-    std::reference_wrapper<Instruction30tProvider> instruction;
 public:
-    Instruction30t(Instruction30tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction30t(Impl*);
 
     std::int32_t getNAAAAAAAA() const;
     disassembler::operand_type get_nAAAAAAAA_type() const;
 };
 
 class Instruction32x : public Instruction {
-private:
-    std::reference_wrapper<Instruction32xProvider> instruction;
 public:
-    Instruction32x(Instruction32xProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction32x(Impl*);
 
     std::uint16_t getVAAAA() const;
     disassembler::operand_type get_vAAAA_type() const;
@@ -336,10 +347,12 @@ public:
 };
 
 class Instruction31i : public Instruction {
-private:
-    std::reference_wrapper<Instruction31iProvider> instruction;
 public:
-    Instruction31i(Instruction31iProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction31i(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -349,10 +362,12 @@ public:
 };
 
 class Instruction31t : public Instruction {
-private:
-    std::reference_wrapper<Instruction31tProvider> instruction;
 public:
-    Instruction31t(Instruction31tProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction31t(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -360,13 +375,17 @@ public:
     disassembler::operand_type get_nBBBBBBBB_type() const;
     disassembler::type_of_switch_t get_type_of_switch() const;
     switch_instr_t get_switch() const;
+    void set_packed_switch(PackedSwitch*);
+    void set_sparse_switch(SparseSwitch*);
 };
 
 class Instruction31c : public Instruction {
-private:
-    std::reference_wrapper<Instruction31cProvider> instruction;
 public:
-    Instruction31c(Instruction31cProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction31c(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -377,10 +396,12 @@ public:
 };
 
 class Instruction35c : public Instruction {
-private:
-    std::reference_wrapper<Instruction35cProvider> instruction;
 public:
-    Instruction35c(Instruction35cProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction35c(Impl*);
 
     std::uint8_t get_number_of_registers() const;
     std::span<std::uint8_t> get_registers();
@@ -392,10 +413,12 @@ public:
 };
 
 class Instruction3rc : public Instruction {
-private:
-    std::reference_wrapper<Instruction3rcProvider> instruction;
 public:
-    Instruction3rc(Instruction3rcProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction3rc(Impl*);
 
     std::uint8_t get_registers_size() const;
     std::uint16_t get_index() const;
@@ -405,10 +428,12 @@ public:
 };
 
 class Instruction45cc : public Instruction {
-private:
-    std::reference_wrapper<Instruction45ccProvider> instruction;
 public:
-    Instruction45cc(Instruction45ccProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction45cc(Impl*);
 
     std::uint8_t get_number_of_registers() const;
     std::span<std::uint8_t> get_registers();
@@ -419,10 +444,12 @@ public:
 };
 
 class Instruction4rcc : public Instruction {
-private:
-    std::reference_wrapper<Instruction4rccProvider> instruction;
 public:
-    Instruction4rcc(Instruction4rccProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction4rcc(Impl*);
 
     std::uint8_t get_number_of_registers() const;
     std::span<std::uint16_t> get_registers();
@@ -433,10 +460,12 @@ public:
 };
 
 class Instruction51l : public Instruction {
-private:
-    std::reference_wrapper<Instruction51lProvider> instruction;
 public:
-    Instruction51l(Instruction51lProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    Instruction51l(Impl*);
 
     std::uint8_t getVAA() const;
     disassembler::operand_type get_vAA_type() const;
@@ -446,10 +475,12 @@ public:
 };
 
 class PackedSwitch : public Instruction {
-private:
-    std::reference_wrapper<PackedSwitchProvider> instruction;
 public:
-    PackedSwitch(PackedSwitchProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    PackedSwitch(Impl*);
 
     std::uint16_t get_number_of_targets() const;
     std::int32_t get_first_key() const;
@@ -457,20 +488,24 @@ public:
 };
 
 class SparseSwitch : public Instruction {
-private:
-    std::reference_wrapper<SparseSwitchProvider> instruction;
 public:
-    SparseSwitch(SparseSwitchProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    SparseSwitch(Impl*);
 
     std::uint16_t get_size_of_targets() const;
     std::span<std::pair<std::int32_t, std::int32_t>> get_keys_targets();
 };
 
 class FillArrayData : public Instruction {
-private:
-    std::reference_wrapper<FillArrayDataProvivder> instruction;
 public:
-    FillArrayData(FillArrayDataProvivder&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    FillArrayData(Impl*);
 
     std::uint16_t get_element_width() const;
     std::uint32_t get_size_of_data() const;

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include <shuriken/sdk/dex/dvm_types.hpp>
-#include <shuriken/sdk/dex/dvm_prototypes.hpp>
-#include <shuriken/internal/providers/dex/dvm_types_provider.hpp>
-#include <shuriken/internal/providers/dex/dvm_prototypes_provider.hpp>
+#include "shuriken/sdk/dex/dvm_types.hpp"
+#include "shuriken/sdk/dex/dvm_prototypes.hpp"
+#include "shuriken/internal/sdk/dex/types_impl.hpp"
+#include "shuriken/internal/sdk/dex/prototypes_impl.hpp"
 #include <memory>
 #include <vector>
 
@@ -12,21 +12,20 @@ using namespace shuriken::dex::types;
 class DVMPrototypeTest : public ::testing::Test {
 protected:
     // Type providers
-    DVMFundamentalProvider int_provider{"I", fundamental_e::INT};
-    DVMFundamentalProvider void_provider{"V", fundamental_e::VOID};
-    DVMFundamentalProvider bool_provider{"Z", fundamental_e::BOOLEAN};
-    DVMClassProvider string_provider{"Ljava/lang/String;"};
+    DVMFundamental int_provider{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMFundamental void_provider{new DVMFundamental::Impl("V", fundamental_e::VOID)};
+    DVMFundamental bool_provider{new DVMFundamental::Impl("Z", fundamental_e::BOOLEAN)};
+    DVMClass string_provider{new DVMClass::Impl("Ljava/lang/String;")};
 
     // Storage for our types
     std::vector<std::unique_ptr<DVMType>> type_storage;
 
     // Storage for our prototype objects
-    std::vector<std::unique_ptr<DVMPrototypeProvider>> prototype_provider_storage;
     std::vector<std::unique_ptr<DVMPrototype>> prototype_storage;
 
     // Helper method to create and store a type
     DVMType &create_and_store_type(auto &provider) {
-        auto type_ptr = std::make_unique<DVMType>(provider);
+        auto type_ptr = std::make_unique<DVMType>(&provider);
         type_storage.push_back(std::move(type_ptr));
         return *type_storage.back();
     }
@@ -52,12 +51,10 @@ TEST_F(DVMPrototypeTest, VoidMethodNoParams) {
     std::string shorty = "V";
     std::vector<dvmtype_t> params;
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_void_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_void_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 
@@ -88,12 +85,10 @@ TEST_F(DVMPrototypeTest, PrimitiveReturnAndParams) {
     params.emplace_back(std::ref(get_bool_type()));
     params.emplace_back(std::ref(get_int_type()));
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_int_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_int_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 
@@ -124,12 +119,10 @@ TEST_F(DVMPrototypeTest, ObjectReturnAndParams) {
     params.emplace_back(std::ref(get_string_type()));
     params.emplace_back(std::ref(get_bool_type()));
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_string_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_string_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 
@@ -155,14 +148,14 @@ TEST_F(DVMPrototypeTest, ObjectReturnAndParams) {
 // Test a method with array parameters
 TEST_F(DVMPrototypeTest, ArrayParameters) {
     // Create a new provider for the array to own - using new
-    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMFundamental intType{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMType * int_provider_ptr = new DVMType (&intType);
 
     // Create the array provider with the raw pointer
-    DVMArrayProvider array_provider{"[I", 1, int_provider_ptr};
+    DVMArray array_provider{new DVMArray::Impl("[I", 1, int_provider_ptr)};
 
     // Create and store the array type
-    auto array_type_ptr = std::make_unique<DVMType>(array_provider);
+    auto array_type_ptr = std::make_unique<DVMType>(&array_provider);
     DVMType& int_array_type = *array_type_ptr;
     type_storage.push_back(std::move(array_type_ptr));
 
@@ -173,12 +166,10 @@ TEST_F(DVMPrototypeTest, ArrayParameters) {
     params.emplace_back(std::ref(int_array_type));
     params.emplace_back(std::ref(get_string_type()));
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_void_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_void_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 
@@ -207,12 +198,11 @@ TEST_F(DVMPrototypeTest, ModifyPrototype) {
     std::string shorty = "V";
     std::vector<dvmtype_t> params;
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_void_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_void_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 
@@ -233,15 +223,15 @@ TEST_F(DVMPrototypeTest, ModifyPrototype) {
 
 // Test the deref_iterator_range functionality with prototype parameters
 TEST_F(DVMPrototypeTest, DerefIteratorRange) {
+    DVMFundamental intType{new DVMFundamental::Impl("I", fundamental_e::INT)};
     // Create array type for testing - using new for the provider
-    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMType * int_provider_ptr = new DVMType (&intType);
 
     // Create the array provider with the raw pointer
-    DVMArrayProvider array_provider{"[I", 1, int_provider_ptr};
+    DVMArray array_provider{new DVMArray::Impl("[I", 1, int_provider_ptr)};
 
     // Create and store the array type
-    auto array_type_ptr = std::make_unique<DVMType>(array_provider);
+    auto array_type_ptr = std::make_unique<DVMType>(&array_provider);
     DVMType& int_array_type = *array_type_ptr;
     type_storage.push_back(std::move(array_type_ptr));
 
@@ -255,12 +245,10 @@ TEST_F(DVMPrototypeTest, DerefIteratorRange) {
     params.emplace_back(std::ref(get_string_type()));
     params.emplace_back(std::ref(int_array_type));
 
-    auto provider = std::make_unique<DVMPrototypeProvider>(shorty, get_void_type(), params);
-    auto prototype = std::make_unique<DVMPrototype>(*provider);
+    auto provider = std::make_unique<DVMPrototype>(new DVMPrototype::Impl(shorty, get_void_type(), params));
 
     // Store for ownership
-    prototype_provider_storage.push_back(std::move(provider));
-    prototype_storage.push_back(std::move(prototype));
+    prototype_storage.push_back(std::move(provider));
 
     DVMPrototype& proto = *prototype_storage.back();
 

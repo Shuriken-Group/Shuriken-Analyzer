@@ -7,24 +7,20 @@
 #include <vector>
 #include <memory>
 
+#include <shuriken/sdk/dex/method.hpp>
 #include <shuriken/sdk/dex/custom_types.hpp>
-#include <shuriken/internal/providers/dex/custom_types.hpp>
 #include <shuriken/internal/io/shurikenstream.hpp>
+
 
 namespace shuriken {
 namespace dex {
 class Dex;
 class Class;
-class DexClassProvider;
-class Method;
-class DexMethodProvider;
 class Field;
-class DexFieldProvider;
 class FieldID;
 class MethodID;
 
 class DVMPrototype;
-class DVMPrototypeProvider;
 
 class DexEngine {
 private:
@@ -238,7 +234,7 @@ public:
      * @brief Disassemble a method and populate its instruction list
      * @param method The method provider to disassemble
      */
-    void disassemble_method(DexMethodProvider& method);
+    void disassemble_method(Method::Impl& method);
 
     /**
      * @brief Get all fields from the DEX file

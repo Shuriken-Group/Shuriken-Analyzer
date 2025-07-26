@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <shuriken/sdk/dex/dvm_types.hpp>
-#include <shuriken/internal/providers/dex/dvm_types_provider.hpp>
+#include "shuriken/sdk/dex/dvm_types.hpp"
+#include "shuriken/internal/sdk/dex/types_impl.hpp"
 #include <variant>
 #include <vector>
 
@@ -10,8 +10,8 @@ using namespace shuriken::dex::types;
 class DVMTypeTest : public ::testing::Test {
 protected:
     // Providers for the different types
-    DVMFundamentalProvider int_provider{"I", fundamental_e::INT};
-    DVMClassProvider string_provider{"Ljava/lang/String;"};
+    DVMFundamental int_provider{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMClass string_provider{new DVMClass::Impl("Ljava/lang/String;")};
 
     // Storage for DVMType instances
     std::vector<DVMType> types_storage;
@@ -22,8 +22,8 @@ protected:
     // Set up before each test
     void SetUp() override {
         // Create some base types to work with - use explicit variant construction
-        types_storage.emplace_back(int_provider);
-        types_storage.emplace_back(string_provider);
+        types_storage.emplace_back(&int_provider);
+        types_storage.emplace_back(&string_provider);
     }
 
     // Helper to get a reference to the stored type
@@ -39,7 +39,7 @@ protected:
 // Test fundamental type
 TEST_F(DVMTypeTest, FundamentalType) {
     // Create a fundamental type with explicit variant construction
-    DVMType type{int_provider};
+    DVMType type{&int_provider};
 
     // Test type identification
     EXPECT_EQ(get_type(type), type_e::FUNDAMENTAL);
@@ -59,7 +59,7 @@ TEST_F(DVMTypeTest, FundamentalType) {
 // Test class type
 TEST_F(DVMTypeTest, ClassType) {
     // Create a class type with explicit variant construction
-    DVMType type{string_provider};  // Explicit variant construction
+    DVMType type{&string_provider};  // Explicit variant construction
 
     // Test type identification
     EXPECT_EQ(get_type(type), type_e::CLASS);
@@ -76,13 +76,13 @@ TEST_F(DVMTypeTest, ClassType) {
 
 // Test array type
 TEST_F(DVMTypeTest, ArrayType) {
+    DVMFundamental intType{new DVMFundamental::Impl("I", fundamental_e::INT)};
     // Create a new provider for the array to own - using new without storing in any container
-    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMType * int_provider_ptr = new DVMType (&intType);
 
     // Create array provider - it will take ownership of int_provider_ptr
-    DVMArrayProvider array_provider{"[I", 1, int_provider_ptr};
-    DVMType array_type{array_provider};
+    DVMArray array_provider{new DVMArray::Impl("[I", 1, int_provider_ptr)};
+    DVMType array_type{&array_provider};
 
     // Test type identification
     EXPECT_EQ(get_type(array_type), type_e::ARRAY);
@@ -106,10 +106,10 @@ TEST_F(DVMTypeTest, ReferenceWrappers) {
     // Create a vector of DVMType objects
     std::vector<DVMType> type_objects;
 
-    DVMType type(int_provider);
+    DVMType type(&int_provider);
     type_objects.push_back(type);
 
-    DVMClass cls(string_provider);
+    DVMClass * cls{&string_provider};
     type_objects.push_back(DVMType(cls));
 
     // Create a vector of references to these objects
@@ -130,9 +130,9 @@ TEST_F(DVMTypeTest, ReferenceWrappers) {
 // Test handling of void type
 TEST_F(DVMTypeTest, VoidTypeHandling) {
     // Create a void fundamental type
-    DVMFundamentalProvider void_provider{"V", fundamental_e::VOID};
+    DVMFundamental void_provider{new DVMFundamental::Impl("V", fundamental_e::VOID)};
 
-    auto void_type = std::make_unique<DVMType>(void_provider);
+    auto void_type = std::make_unique<DVMType>(&void_provider);
     type_storage.push_back(std::move(void_type));
 
     DVMType& type = *type_storage.back();
@@ -150,21 +150,21 @@ TEST_F(DVMTypeTest, VoidTypeHandling) {
 // Test multi-dimensional arrays
 TEST_F(DVMTypeTest, MultiDimensionalArrays) {
     // Create a provider for int type - array will take ownership
-    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMFundamental intType{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMType * int_provider_ptr = new DVMType (&intType);
 
     // Create a 1D array provider
-    DVMArrayProvider array1d_provider{"[I", 1, int_provider_ptr};
-    auto array1d_type = std::make_unique<DVMType>(array1d_provider);
+    DVMArray array1d_provider{new DVMArray::Impl("[I", 1, int_provider_ptr)};
+    auto array1d_type = std::make_unique<DVMType>(&array1d_provider);
     type_storage.push_back(std::move(array1d_type));
 
     // Create a new provider for the 2D array (don't reuse int_provider_ptr - it's now owned)
-    DVMTypeProvider* new_int_provider = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMFundamental intType2{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMType * new_int_provider = new DVMType (&intType2);
 
     // Create a 2D array provider
-    DVMArrayProvider array2d_provider{"[[I", 2, new_int_provider};
-    auto array2d_type = std::make_unique<DVMType>(array2d_provider);
+    DVMArray array2d_provider{new DVMArray::Impl("[[I", 2, new_int_provider)};
+    auto array2d_type = std::make_unique<DVMType>(&array2d_provider);
     type_storage.push_back(std::move(array2d_type));
 
     // Get references for testing
@@ -184,12 +184,12 @@ TEST_F(DVMTypeTest, MultiDimensionalArrays) {
 // Test array of objects (not just primitives)
 TEST_F(DVMTypeTest, ArrayOfObjects) {
     // Create a provider for string type - array will take ownership
-    DVMTypeProvider* string_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMClassProvider>,
-                                                               "Ljava/lang/String;");
+    DVMClass stringClass{new DVMClass::Impl("Ljava/lang/String;")};
+    DVMType * string_provider_ptr = new DVMType (&stringClass);
 
     // Create an array of strings
-    DVMArrayProvider array_provider{"[Ljava/lang/String;", 1, string_provider_ptr};
-    auto array_type = std::make_unique<DVMType>(array_provider);
+    DVMArray array_provider{new DVMArray::Impl("[Ljava/lang/String;", 1, string_provider_ptr)};
+    auto array_type = std::make_unique<DVMType>(&array_provider);
     type_storage.push_back(std::move(array_type));
 
     DVMType& type = *type_storage.back();
@@ -211,9 +211,9 @@ TEST_F(DVMTypeTest, ArrayOfObjects) {
 
 // Test handling of boolean type
 TEST_F(DVMTypeTest, BooleanTypeHandling) {
-    DVMFundamentalProvider bool_provider{"Z", fundamental_e::BOOLEAN};
+    DVMFundamental bool_provider{new DVMFundamental::Impl("Z", fundamental_e::BOOLEAN)};
 
-    auto bool_type = std::make_unique<DVMType>(bool_provider);
+    auto bool_type = std::make_unique<DVMType>(&bool_provider);
     type_storage.push_back(std::move(bool_type));
 
     DVMType& type = *type_storage.back();
@@ -231,9 +231,9 @@ TEST_F(DVMTypeTest, BooleanTypeHandling) {
 // Test nested class names
 TEST_F(DVMTypeTest, NestedClassNames) {
     // Create a nested class type (e.g., OuterClass$InnerClass)
-    DVMClassProvider nested_provider{"Lcom/example/OuterClass$InnerClass;"};
+    DVMClass nested_provider{new DVMClass::Impl("Lcom/example/OuterClass$InnerClass;")};
 
-    auto nested_type = std::make_unique<DVMType>(nested_provider);
+    auto nested_type = std::make_unique<DVMType>(&nested_provider);
     type_storage.push_back(std::move(nested_type));
 
     DVMType& type = *type_storage.back();
@@ -247,18 +247,18 @@ TEST_F(DVMTypeTest, NestedClassNames) {
 // Test array of arrays
 TEST_F(DVMTypeTest, ArrayOfArrays) {
     // Create provider for int type
-    DVMTypeProvider* int_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMFundamentalProvider>,
-                                                            "I", fundamental_e::INT);
+    DVMFundamental intType{new DVMFundamental::Impl("I", fundamental_e::INT)};
+    DVMType * int_provider_ptr = new DVMType(&intType);
 
     // Create a 1D array provider
-    // Create a DVMTypeProvider from the 1D array provider
-    DVMTypeProvider* array1d_provider_ptr = new DVMTypeProvider(std::in_place_type<DVMArrayProvider>, "[I", 1, int_provider_ptr);
+    DVMArray array1d_provider{new DVMArray::Impl("[I", 1, int_provider_ptr)};
+    DVMType * array1d_provider_ptr = new DVMType(&array1d_provider);
 
     // Create a 2D array using the 1D array provider
-    DVMArrayProvider array2d_provider{"[[I", 1, array1d_provider_ptr};
+    DVMArray array2d_provider{new DVMArray::Impl("[[I", 1, array1d_provider_ptr)};
 
     // Create the type
-    auto array2d_type = std::make_unique<DVMType>(array2d_provider);
+    auto array2d_type = std::make_unique<DVMType>(&array2d_provider);
     type_storage.push_back(std::move(array2d_type));
 
     DVMType& type = *type_storage.back();
@@ -287,11 +287,11 @@ TEST_F(DVMTypeTest, TypeListOperations) {
     std::vector<std::unique_ptr<DVMType>> param_types;
 
     // Add int type
-    auto int_type = std::make_unique<DVMType>(int_provider);
+    auto int_type = std::make_unique<DVMType>(&int_provider);
     param_types.push_back(std::move(int_type));
 
     // Add string type
-    auto string_type = std::make_unique<DVMType>(string_provider);
+    auto string_type = std::make_unique<DVMType>(&string_provider);
     param_types.push_back(std::move(string_type));
 
     // Create references to these types

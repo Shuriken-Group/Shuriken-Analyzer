@@ -1,6 +1,7 @@
 
-#include <shuriken/internal/engine/dex/parser/parser.hpp>
-#include <shuriken/sdk/dex/constants.hpp>
+#include "shuriken/internal/engine/dex/parser/parser.hpp"
+#include "shuriken/internal/sdk/dex/types_impl.hpp"
+#include "shuriken/internal/sdk/dex/prototypes_impl.hpp"
 
 using namespace shuriken::dex;
 
@@ -55,28 +56,28 @@ Parser::parse_string_pool(shuriken::io::ShurikenStream &stream, std::uint32_t st
     return stream.good();
 }
 
-DVMTypeProvider *Parser::parse_type(std::string_view name) {
+DVMType Parser::parse_type(std::string_view name) {
     switch (name.at(0)) {
         case 'Z':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::BOOLEAN));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::BOOLEAN))};
         case 'B':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::BYTE));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::BYTE))};
         case 'C':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::CHAR));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::CHAR))};
         case 'D':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::DOUBLE));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::DOUBLE))};
         case 'F':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::FLOAT));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::FLOAT))};
         case 'I':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::INT));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::INT))};
         case 'J':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::LONG));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::LONG))};
         case 'S':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::SHORT));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::SHORT))};
         case 'V':
-            return new DVMTypeProvider(DVMFundamentalProvider(name, types::fundamental_e::VOID));
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl(name, types::fundamental_e::VOID))};
         case 'L':
-            return new DVMTypeProvider(DVMClassProvider(name));
+            return DVMType{new DVMClass(new DVMClass::Impl(name))};
         case '[': {
             size_t depth = 0;
             for (const auto &c: name) {
@@ -85,12 +86,11 @@ DVMTypeProvider *Parser::parse_type(std::string_view name) {
                     break;
             }
             std::string_view aux(name.begin() + depth, name.end());
-            DVMTypeProvider *aux_type = parse_type(aux);
-            return new DVMTypeProvider(std::in_place_type<DVMArrayProvider>,
-                                       name, depth, aux_type);
+            DVMType aux_type = parse_type(aux);
+            return DVMType{new DVMArray(new DVMArray::Impl(name, depth, &aux_type))};
         }
         default:
-            return nullptr;
+            return DVMType{new DVMFundamental(new DVMFundamental::Impl("V", types::fundamental_e::VOID))};
     }
 }
 
@@ -105,24 +105,10 @@ bool Parser::parse_types(shuriken::io::ShurikenStream &stream, std::uint32_t typ
 
         if (type_id > string_pool.size()) return false;
 
-        std::unique_ptr<DVMTypeProvider> type(parse_type(string_pool[type_id]));
-        std::unique_ptr<DVMType> base_type;
+        DVMType parsed_type = parse_type(string_pool[type_id]);
+        std::unique_ptr<DVMType> type = std::make_unique<DVMType>(std::move(parsed_type));
 
-        DVMTypeProvider &type_provider = *(type);
-
-        if (::get_type(type_provider) == types::type_e::FUNDAMENTAL) {
-            DVMFundamentalProvider *fundamental = ::as_fundamental(type_provider);
-            base_type = std::make_unique<DVMType>(DVMFundamental(*fundamental));
-        } else if (::get_type(type_provider) == types::type_e::CLASS) {
-            DVMClassProvider *class_provider = ::as_class(type_provider);
-            base_type = std::make_unique<DVMType>(DVMClass(*class_provider));
-        } else {
-            DVMArrayProvider *array_provider = ::as_array(type_provider);
-            base_type = std::make_unique<DVMType>(DVMArray(*array_provider));
-        }
-
-        types_pool.emplace_back(std::move(type));
-        dvm_types_pool.emplace_back(std::move(base_type));
+        dvm_types_pool.emplace_back(std::move(type));
     }
 
     stream.seek(current_offset);
@@ -170,14 +156,13 @@ Parser::parse_protos(shuriken::io::ShurikenStream &stream, std::uint32_t protos_
         DVMType &type = *(dvm_types_pool[return_type_idx].get());
         std::vector<dvmtype_t> params = parse_parameters(stream, parameters_off);
 
-        std::unique_ptr<DVMPrototypeProvider> proto = std::make_unique<DVMPrototypeProvider>(
+        DVMPrototype::Impl * impl = new DVMPrototype::Impl(
                 string_pool[shorty_idx],
                 type,
                 params
         );
-        std::unique_ptr<DVMPrototype> dvm_proto = std::make_unique<DVMPrototype>(*proto);
+        std::unique_ptr<DVMPrototype> dvm_proto = std::make_unique<DVMPrototype>(impl);
 
-        prototypes_pool.emplace_back(std::move(proto));
         dvm_prototype_pool.emplace_back(std::move(dvm_proto));
     }
 
@@ -261,16 +246,8 @@ std::vector<std::string> & Parser::get_strings_pool() {
     return string_pool;
 }
 
-std::vector<std::unique_ptr<DVMTypeProvider>> &Parser::get_types_pool() {
-    return types_pool;
-}
-
 std::vector<std::unique_ptr<DVMType>> &Parser::get_dvm_types_pool() {
     return dvm_types_pool;
-}
-
-std::vector<std::unique_ptr<DVMPrototypeProvider>> &Parser::get_prototypes_pool() {
-    return prototypes_pool;
 }
 
 std::vector<std::unique_ptr<DVMPrototype>> &Parser::get_dvm_prototype_pool() {

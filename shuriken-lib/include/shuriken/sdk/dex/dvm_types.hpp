@@ -5,22 +5,21 @@
 
 #pragma once
 
-#include <functional>
-
 #include <shuriken/sdk/dex/custom_types.hpp>
 #include <shuriken/sdk/dex/constants.hpp>
 
+#include <memory>
+
 namespace shuriken {
 namespace dex {
-class DVMFundamentalProvider;
-class DVMClassProvider;
-class DVMArrayProvider;
 
 class DVMFundamental {
-private:
-    std::reference_wrapper<DVMFundamentalProvider> dvm_fundamental_provider;
 public:
-    DVMFundamental(DVMFundamentalProvider &);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    DVMFundamental(Impl*);
     ~DVMFundamental() = default;
 
     /**
@@ -65,10 +64,12 @@ public:
 };
 
 class DVMClass {
-private:
-    std::reference_wrapper<DVMClassProvider> dvm_class_provider;
 public:
-    DVMClass(DVMClassProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    DVMClass(Impl*);
     ~DVMClass() = default;
 
     /**
@@ -107,10 +108,12 @@ public:
 };
 
 class DVMArray {
-private:
-    std::reference_wrapper<DVMArrayProvider> dvm_array_provider;
 public:
-    DVMArray(DVMArrayProvider&);
+    class Impl;
+private:
+    std::unique_ptr<Impl> impl;
+public:
+    DVMArray(Impl*);
     ~DVMArray() = default;
 
     /**

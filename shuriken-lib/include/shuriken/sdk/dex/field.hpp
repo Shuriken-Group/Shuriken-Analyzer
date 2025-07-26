@@ -5,19 +5,19 @@
 
 #pragma once
 
-#include <functional>
+#include "shuriken/sdk/common/iterator_range.hpp"
+
+#include "shuriken/sdk/dex/custom_types.hpp"
+#include "shuriken/sdk/dex/constants.hpp"
+
+#include <memory>
 #include <string>
 #include <string_view>
 
-#include <shuriken/sdk/common/iterator_range.hpp>
-
-#include <shuriken/sdk/dex/custom_types.hpp>
-#include <shuriken/sdk/dex/constants.hpp>
 
 namespace shuriken {
 namespace dex {
 
-class DexFieldProvider;
 class Dex;
 class Class;
 
@@ -28,14 +28,16 @@ class Class;
  * It acts as a lightweight wrapper around DexFieldProvider containing the actual data.
  */
 class Field {
+public:
+    class Impl;
 private:
-    std::reference_wrapper<DexFieldProvider> dex_field_provider;
+    std::unique_ptr<Impl> impl;
 public:
     /**
      * @brief Construct a new Field object
      * @param provider Reference to the field provider containing the actual data
      */
-    Field(DexFieldProvider &);
+    Field(Impl*);
 
     ~Field() = default;
 

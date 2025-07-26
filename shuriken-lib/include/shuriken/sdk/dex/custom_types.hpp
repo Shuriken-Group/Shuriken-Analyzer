@@ -39,7 +39,7 @@ using externalclass_t = std::reference_wrapper<ExternalClass>;
 using externalmethod_t = std::reference_wrapper<ExternalMethod>;
 using externalfield_t = std::reference_wrapper<ExternalField>;
 
-using DVMType = std::variant<DVMFundamental, DVMClass, DVMArray>;
+using DVMType = std::variant<DVMFundamental*, DVMClass*, DVMArray*>;
 using dvmtype_t = std::reference_wrapper<DVMType>;
 using dvmtypes_list_t = std::span<dvmtype_t>;
 using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;

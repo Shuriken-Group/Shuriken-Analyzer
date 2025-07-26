@@ -5,14 +5,12 @@
 
 #pragma once
 
-#include <functional>
 #include <string_view>
 #include <string>
+#include <memory>
 
 namespace shuriken {
 namespace dex {
-
-class DexExternalFieldProvider;
 
 /**
  * @brief Represents a field reference from another DEX file
@@ -22,14 +20,16 @@ class DexExternalFieldProvider;
  * implementation details since the actual field definition is in another file.
  */
 class ExternalField {
+public:
+    class Impl;
 private:
-    std::reference_wrapper<DexExternalFieldProvider> dex_external_field_provider;
+    std::unique_ptr<Impl> impl;
 public:
     /**
      * @brief Construct a new ExternalField object
      * @param external Reference to the external field provider containing the data
      */
-    ExternalField(DexExternalFieldProvider& external);
+    ExternalField(Impl*);
     ~ExternalField() = default;
 
     /**

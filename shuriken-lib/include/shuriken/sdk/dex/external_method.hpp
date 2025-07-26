@@ -2,17 +2,14 @@
 // Shuriken-Analyzer: library for bytecode analysis.
 // @author Farenain <kunai.static.analysis@gmail.com>
 
-
 #pragma once
 
-#include <functional>
+#include <memory>
 #include <string_view>
 #include <string>
 
 namespace shuriken {
 namespace dex {
-
-class DexExternalMethodProvider;
 
 /**
  * @brief Represents a method reference from another DEX file
@@ -22,14 +19,16 @@ class DexExternalMethodProvider;
  * implementation details since the actual method code is in another file.
  */
 class ExternalMethod {
+public:
+    class Impl;
 private:
-    std::reference_wrapper<DexExternalMethodProvider> dex_external_method_provider;
+    std::unique_ptr<Impl> impl;
 public:
     /**
      * @brief Construct a new ExternalMethod object
      * @param provider Reference to the external method provider containing the data
      */
-    ExternalMethod(DexExternalMethodProvider&);
+    ExternalMethod(Impl*);
     ~ExternalMethod() = default;
 
     /**

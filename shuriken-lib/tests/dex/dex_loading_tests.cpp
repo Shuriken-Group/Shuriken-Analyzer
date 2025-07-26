@@ -4,8 +4,6 @@
 #include <shuriken/sdk/dex/class.hpp>
 #include <shuriken/sdk/dex/method.hpp>
 #include <shuriken/sdk/dex/field.hpp>
-#include <shuriken/sdk/dex/dvm_prototypes.hpp>
-#include <shuriken/sdk/dex/dvm_types.hpp>
 
 class DexTest : public ::testing::Test {
 protected:

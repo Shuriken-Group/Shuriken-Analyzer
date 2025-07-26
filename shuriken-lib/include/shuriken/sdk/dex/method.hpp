@@ -18,7 +18,6 @@
 namespace shuriken {
 namespace dex {
 
-class DexMethodProvider;
 class Dex;
 class Class;
 class DVMPrototype;
@@ -31,14 +30,16 @@ class Instruction;
  * It acts as a lightweight wrapper around DexMethodProvider containing the actual data.
  */
 class Method {
+public:
+    class Impl;
 private:
-    std::reference_wrapper<DexMethodProvider> dex_method_provider;
+    std::unique_ptr<Impl> impl;
 public:
     /**
      * @brief Construct a new Method object
      * @param provider Reference to the method provider containing the actual data
      */
-    Method(DexMethodProvider&);
+    Method(Impl*);
     ~Method() = default;
 
     Method(const Method&) = delete;
@@ -130,7 +131,7 @@ public:
     /**
      * @return return the op_codes that belongs to the method
      */
-    std::span<const std::uint8_t> get_bytecode() const;
+    std::span<std::uint8_t> get_bytecode();
 
 
     // Disassembler information

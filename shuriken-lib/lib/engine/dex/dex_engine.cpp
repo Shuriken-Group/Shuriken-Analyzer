@@ -11,16 +11,15 @@
 
 #include "shuriken/sdk/dex/dex.hpp"
 #include "shuriken/sdk/dex/class.hpp"
-#include "shuriken/sdk/dex/method.hpp"
+#include "shuriken/internal/sdk/dex/class_impl.hpp"
+#include "shuriken/internal/sdk/dex/method_impl.hpp"
 #include "shuriken/sdk/dex/external_method.hpp"
-#include "shuriken/sdk/dex/field.hpp"
+#include "shuriken/internal/sdk/dex/external_method_impl.hpp"
+#include "shuriken/internal/sdk/dex/field_impl.hpp"
 #include "shuriken/sdk/dex/external_field.hpp"
-#include "shuriken/internal/providers/dex/dex_class_provider.hpp"
-#include "shuriken/internal/providers/dex/dex_method_provider.hpp"
-#include "shuriken/internal/providers/dex/dex_external_method_provider.hpp"
-#include "shuriken/internal/providers/dex/dex_field_provider.hpp"
-#include "shuriken/internal/providers/dex/dex_external_field_provider.hpp"
-#include "shuriken/internal/providers/dex/dvm_prototypes_provider.hpp"
+#include "shuriken/internal/sdk/dex/external_field_impl.hpp"
+#include "shuriken/internal/sdk/dex/instruction_impl.hpp"
+#include "shuriken/internal/sdk/dex/prototypes_impl.hpp"
 
 #include "shuriken/internal/engine/dex/parser/parser.hpp"
 #include "shuriken/internal/engine/dex/disassembler/internal_disassembler.hpp"
@@ -103,9 +102,6 @@ public:
     /// SDK interface objects for classes (user-facing lightweight handles)
     std::vector<std::unique_ptr<Class>> sdk_classes;
 
-    /// Provider objects containing actual class data and implementation
-    std::vector<std::unique_ptr<DexClassProvider>> dex_class_providers;
-
     // ========================================
     // Object Ownership - Methods
     // ========================================
@@ -113,14 +109,9 @@ public:
     /// SDK interface objects for methods (user-facing lightweight handles)
     std::vector<std::unique_ptr<Method>> sdk_methods;
 
-    /// Provider objects containing actual method data and implementation
-    std::vector<std::unique_ptr<DexMethodProvider>> dex_methods_providers;
 
     /// SDK interface objects for external methods (references to other DEX files)
     std::vector<std::unique_ptr<ExternalMethod>> sdk_external_methods;
-
-    /// Provider objects for external method implementations
-    std::vector<std::unique_ptr<DexExternalMethodProvider>> dex_external_methods_providers;
 
     // ========================================
     // Object Ownership - Fields
@@ -129,14 +120,8 @@ public:
     /// SDK interface objects for fields (user-facing lightweight handles)
     std::vector<std::unique_ptr<Field>> sdk_fields;
 
-    /// Provider objects containing actual field data and implementation
-    std::vector<std::unique_ptr<DexFieldProvider>> dex_fields_providers;
-
     /// SDK interface objects for external fields (references to other DEX files)
     std::vector<std::unique_ptr<ExternalField>> sdk_external_fields;
-
-    /// Provider objects for external field implementations
-    std::vector<std::unique_ptr<DexExternalFieldProvider>> dex_external_fields_providers;
 
     // ========================================
     // Object Ownership - Type System
@@ -145,14 +130,8 @@ public:
     /// SDK interface objects for method prototypes/signatures
     std::vector<std::unique_ptr<DVMPrototype>> sdk_prototypes;
 
-    /// Provider objects for prototype implementations
-    std::vector<std::unique_ptr<DVMPrototypeProvider>> dex_prototypes_providers;
-
     /// SDK interface objects for DVM types
     std::vector<std::unique_ptr<DVMType>> sdk_dvmtypes;
-
-    /// Provider objects for type implementations
-    std::vector<std::unique_ptr<DVMTypeProvider>> dex_type_providers;
 
     // ========================================
     // Reference Caches (for fast iteration without unique_ptr dereferencing)
@@ -160,29 +139,22 @@ public:
 
     /// Fast access reference wrappers for classes
     std::vector<std::reference_wrapper<Class>> ref_sdk_classes;
-    std::vector<std::reference_wrapper<DexClassProvider>> ref_dex_class_providers;
 
     /// Fast access reference wrappers for methods
     std::vector<std::reference_wrapper<Method>> ref_sdk_methods;
-    std::vector<std::reference_wrapper<DexMethodProvider>> ref_dex_methods_providers;
 
     /// Fast access reference wrappers for external methods
     std::vector<std::reference_wrapper<ExternalMethod>> ref_sdk_external_methods;
-    std::vector<std::reference_wrapper<DexExternalMethodProvider>> ref_dex_external_methods_providers;
 
     /// Fast access reference wrappers for other object types
     std::vector<std::reference_wrapper<Field>> ref_sdk_fields;
-    std::vector<std::reference_wrapper<DexFieldProvider>> ref_dex_fields_providers;
 
     /// Fast access reference wrappers for external fields
     std::vector<std::reference_wrapper<ExternalField>> ref_sdk_externals_fields;
-    std::vector<std::reference_wrapper<DexExternalFieldProvider>> ref_dex_externals_fields_providers;
 
 
     std::vector<std::reference_wrapper<DVMPrototype>> ref_sdk_prototypes;
-    std::vector<std::reference_wrapper<DVMPrototypeProvider>> ref_dex_prototypes_providers;
     std::vector<std::reference_wrapper<DVMType>> ref_sdk_dvmtypes;
-    std::vector<std::reference_wrapper<DVMTypeProvider>> ref_dex_type_providers;
 
     // ========================================
     // Method ID Mappings (for O(1) lookups from parser data to our objects)
@@ -191,15 +163,8 @@ public:
     /// Maps MethodID from DEX file to our SDK Method objects
     std::unordered_map<MethodID *, Method *> method_id_method;
 
-    /// Maps MethodID from DEX file to our Method provider implementations
-    std::unordered_map<MethodID *, DexMethodProvider *> method_id_method_provider;
-
     /// Maps MethodID from DEX file to our SDK ExternalMethod objects
     std::unordered_map<MethodID *, ExternalMethod *> method_id_external_method;
-
-    /// Maps MethodID from DEX file to our ExternalMethod provider implementations
-    std::unordered_map<MethodID *, DexExternalMethodProvider *> method_id_external_method_provider;
-
 
     // ========================================
     // Field ID Mappings (for O(1) lookups from parser data to our objects)
@@ -207,11 +172,7 @@ public:
 
     std::unordered_map<FieldID *, Field *> field_id_field;
 
-    std::unordered_map<FieldID *, DexFieldProvider *> field_id_field_provider;
-
     std::unordered_map<FieldID *, ExternalField *> field_id_external_field;
-
-    std::unordered_map<FieldID *, DexExternalFieldProvider *> field_id_external_field_provider;
 
     // ========================================
     // Constructor
@@ -229,12 +190,10 @@ public:
      * @brief Store a new class and its provider, maintaining all reference collections
      * @param new_class The provider containing class implementation
      */
-    void save_class(std::unique_ptr<DexClassProvider> &new_class) {
-        auto new_sdk_class = std::make_unique<Class>(*new_class);
-        this->dex_class_providers.push_back(std::move(new_class));
-        this->ref_dex_class_providers.push_back(std::ref(*this->dex_class_providers.back().get()));
-        this->sdk_classes.push_back(std::move(new_sdk_class));
+    std::reference_wrapper<Class> save_class(std::unique_ptr<Class> &new_class) {
+        this->sdk_classes.push_back(std::move(new_class));
         this->ref_sdk_classes.push_back(std::ref(*this->sdk_classes.back().get()));
+        return this->ref_sdk_classes.back();
     }
 
     /**
@@ -242,37 +201,26 @@ public:
      * @param method_provider The provider containing method implementation
      * @param method_id The MethodID from DEX file for creating lookup mappings
      */
-    void save_method(std::unique_ptr<DexMethodProvider> &method_provider, MethodID *method_id) {
-        auto method_sdk = std::make_unique<Method>(*method_provider.get());
-        this->dex_methods_providers.push_back(std::move(method_provider));
-        this->ref_dex_methods_providers.push_back(*this->dex_methods_providers.back());
-        this->method_id_method_provider[method_id] = &(this->ref_dex_methods_providers.back().get());
-
+    std::reference_wrapper<Method> save_method(std::unique_ptr<Method> &method_sdk, MethodID *method_id) {
         this->sdk_methods.push_back(std::move(method_sdk));
         this->ref_sdk_methods.push_back(*this->sdk_methods.back());
         this->method_id_method[method_id] = &(this->ref_sdk_methods.back().get());
-
-        this->dex_class_providers.back()->add_method(this->ref_sdk_methods.back());
+        return this->ref_sdk_methods.back();
     }
 
-    void save_external_method(MethodID *method_id, DexEngine &engine) {
+    std::reference_wrapper<ExternalMethod> save_external_method(MethodID *method_id) {
         auto descriptor = ::get_dalvik_format(method_id->get_class()) + "->" + method_id->get_name_string() +
                           method_id->get_prototype().get_descriptor_string();
-        auto external_method_provider = std::make_unique<DexExternalMethodProvider>(
+        ExternalMethod::Impl *impl = new ExternalMethod::Impl(
                 method_id->get_name_string(),
                 descriptor,
-                ::get_dalvik_format_string(method_id->get_class()),
-                engine
-        );
-        auto external_method = std::make_unique<ExternalMethod>(*external_method_provider.get());
-
-        this->dex_external_methods_providers.push_back(std::move(external_method_provider));
-        this->ref_dex_external_methods_providers.push_back(*this->dex_external_methods_providers.back());
-        this->method_id_external_method_provider[method_id] = &(this->ref_dex_external_methods_providers.back().get());
+                ::get_dalvik_format_string(method_id->get_class()));
+        auto external_method = std::make_unique<ExternalMethod>(impl);
 
         this->sdk_external_methods.push_back(std::move(external_method));
         this->ref_sdk_external_methods.push_back(*this->sdk_external_methods.back());
         this->method_id_external_method[method_id] = &(this->ref_sdk_external_methods.back().get());
+        return this->ref_sdk_external_methods.back();
     }
 
     /**
@@ -295,47 +243,35 @@ public:
 
         if (it_e != this->method_id_external_method.end()) return *it_e->second;
 
-        save_external_method(method_id, engine);
-
-        return *this->method_id_external_method[method_id];
+        return save_external_method(method_id);
     }
 
     /**
      * @brief Store a new field and its provider, maintaining all reference collections
      * @param field_provider The provider containing field implementation
      */
-    void save_field(std::unique_ptr<DexFieldProvider> &field_provider, FieldID *field_id) {
-        auto field_sdk = std::make_unique<Field>(*field_provider.get());
-
-        this->dex_fields_providers.push_back(std::move(field_provider));
-        this->ref_dex_fields_providers.push_back(*this->dex_fields_providers.back());
-        this->field_id_field_provider[field_id] = &(this->ref_dex_fields_providers.back().get());
-
+    std::reference_wrapper<Field> save_field(std::unique_ptr<Field> &field_sdk, FieldID *field_id) {
         this->sdk_fields.push_back(std::move(field_sdk));
         this->ref_sdk_fields.push_back(*this->sdk_fields.back());
         this->field_id_field[field_id] = &(this->ref_sdk_fields.back().get());
-
-        this->dex_class_providers.back()->add_field(this->ref_sdk_fields.back());
+        return this->ref_sdk_fields.back();
     }
 
-    void save_external_field(FieldID *field_id, DexEngine &engine) {
+    std::reference_wrapper<ExternalField> save_external_field(FieldID *field_id) {
         auto descriptor = ::get_dalvik_format(field_id->get_class()) + "->" + field_id->get_name_string() +
                           ::get_dalvik_format(field_id->get_type());
-        auto external_field_provider = std::make_unique<DexExternalFieldProvider>(
+
+        ExternalField::Impl *impl = new ExternalField::Impl(
                 field_id->get_name(),
                 descriptor,
-                ::get_dalvik_format_string(field_id->get_class()),
-                engine
-        );
-        auto external_field = std::make_unique<ExternalField>(*external_field_provider.get());
+                ::get_dalvik_format_string(field_id->get_class()));
 
-        this->dex_external_fields_providers.push_back(std::move(external_field_provider));
-        this->ref_dex_externals_fields_providers.push_back(*this->dex_external_fields_providers.back().get());
-        this->field_id_external_field_provider[field_id] = &(this->ref_dex_externals_fields_providers.back().get());
+        auto external_field = std::make_unique<ExternalField>(impl);
 
         this->sdk_external_fields.push_back(std::move(external_field));
         this->ref_sdk_externals_fields.push_back(*this->sdk_external_fields.back());
         this->field_id_external_field[field_id] = &(this->ref_sdk_externals_fields.back().get());
+        return this->ref_sdk_externals_fields.back();
     }
 
     /**
@@ -361,9 +297,7 @@ public:
 
         if (it_e != this->field_id_external_field.end()) return *it_e->second;
 
-        save_external_field(field_id, engine);
-
-        return *this->field_id_external_field[field_id];
+        return save_external_field(field_id);
     }
 };
 
@@ -407,11 +341,9 @@ shuriken::error::VoidResult DexEngine::parse() {
 
     // fill the data with the information from the header
     pimpl->strings_pool = std::move(parser.get_strings_pool());
-    pimpl->dex_type_providers = std::move(parser.get_types_pool());
     pimpl->sdk_dvmtypes = std::move(parser.get_dvm_types_pool());
     for (auto &dvm_type: pimpl->sdk_dvmtypes)
         pimpl->ref_sdk_dvmtypes.push_back(*dvm_type);
-    pimpl->dex_prototypes_providers = std::move(parser.get_prototypes_pool());
     pimpl->sdk_prototypes = std::move(parser.get_dvm_prototype_pool());
     for (auto &sdk_prototype: pimpl->sdk_prototypes)
         pimpl->ref_sdk_prototypes.push_back(*sdk_prototype);
@@ -431,7 +363,7 @@ shuriken::error::VoidResult DexEngine::parse() {
         }
         auto [package, class_name] = split_class_descriptor(class_id->get_dalvik_format());
 
-        auto new_class = std::make_unique<DexClassProvider>(
+        Class::Impl * c_impl = new Class::Impl(
                 class_name,
                 package,
                 class_id->get_dalvik_format(),
@@ -439,6 +371,8 @@ shuriken::error::VoidResult DexEngine::parse() {
                 parent_id->get_dalvik_format(),
                 interfaces
         );
+        // Create the class and add it to pimpl
+        auto new_class = std::make_unique<Class>(c_impl);
         pimpl->save_class(new_class);
 
         auto &class_data_item = class_def->get_class_data_item();
@@ -449,7 +383,7 @@ shuriken::error::VoidResult DexEngine::parse() {
 
         for (auto &encoded_method: class_data_item.get_direct_methods()) {
             MethodID &method_id = const_cast<MethodID &>(encoded_method.get_method_id());
-            auto method_provider = std::make_unique<DexMethodProvider>(
+            Method::Impl * m_impl = new Method::Impl(
                     method_id.get_name(),
                     encoded_method.get_access_flags(),
                     method_id.get_prototype(),
@@ -459,8 +393,9 @@ shuriken::error::VoidResult DexEngine::parse() {
                     *this,
                     encoded_method.get_code_items()->get_registers_size(),
                     encoded_method.get_code_items()->get_bytecode(),
-                    &encoded_method
-            );
+                    &encoded_method);
+            auto method_provider = std::make_unique<Method>(m_impl);
+            c_impl->add_method(*(method_provider.get()));
             pimpl->save_method(method_provider, &method_id);
         }
 
@@ -470,18 +405,18 @@ shuriken::error::VoidResult DexEngine::parse() {
 
         for (auto &encoded_method: class_data_item.get_virtual_methods()) {
             MethodID &method_id = const_cast<MethodID &>(encoded_method.get_method_id());
-            auto method_provider = std::make_unique<DexMethodProvider>(
-                    method_id.get_name(),
-                    encoded_method.get_access_flags(),
-                    method_id.get_prototype(),
-                    types::method_type_e::VIRTUAL_METHOD,
-                    pimpl->ref_sdk_classes.back(),
-                    pimpl->owner_dex,
-                    *this,
-                    encoded_method.get_code_items()->get_registers_size(),
-                    encoded_method.get_code_items()->get_bytecode(),
-                    &encoded_method
-            );
+            Method::Impl * m_impl = new Method::Impl(method_id.get_name(),
+                                                     encoded_method.get_access_flags(),
+                                                     method_id.get_prototype(),
+                                                     types::method_type_e::VIRTUAL_METHOD,
+                                                     pimpl->ref_sdk_classes.back(),
+                                                     pimpl->owner_dex,
+                                                     *this,
+                                                     encoded_method.get_code_items()->get_registers_size(),
+                                                     encoded_method.get_code_items()->get_bytecode(),
+                                                     &encoded_method);
+            auto method_provider = std::make_unique<Method>(m_impl);
+            c_impl->add_method(*(method_provider.get()));
             pimpl->save_method(method_provider, &method_id);
         }
 
@@ -491,15 +426,15 @@ shuriken::error::VoidResult DexEngine::parse() {
 
         for (auto &encoded_field: class_data_item.get_instance_fields()) {
             FieldID &field_id = const_cast<FieldID &>(encoded_field.get_field());
-            auto field_provider = std::make_unique<DexFieldProvider>(
+            Field::Impl * f_impl = new Field::Impl(
                     field_id.get_name_string(),
                     field_id.get_type(),
                     encoded_field.get_flags(),
                     types::field_type_e::INSTANCE_FIELD,
                     pimpl->ref_sdk_classes.back(),
-                    pimpl->owner_dex,
-                    *this
-            );
+                    pimpl->owner_dex);
+            auto field_provider = std::make_unique<Field>(f_impl);
+            c_impl->add_field(*(field_provider.get()));
             pimpl->save_field(field_provider, &field_id);
         }
 
@@ -509,23 +444,27 @@ shuriken::error::VoidResult DexEngine::parse() {
 
         for (auto &encoded_field: class_data_item.get_static_fields()) {
             FieldID &field_id = const_cast<FieldID &>(encoded_field.get_field());
-            auto field_provider = std::make_unique<DexFieldProvider>(
+            Field::Impl * f_impl = new Field::Impl(
                     field_id.get_name_string(),
                     field_id.get_type(),
                     encoded_field.get_flags(),
                     types::field_type_e::STATIC_FIELD,
                     pimpl->ref_sdk_classes.back(),
-                    pimpl->owner_dex,
-                    *this
-            );
+                    pimpl->owner_dex);
+            auto field_provider = std::make_unique<Field>(f_impl);
+            c_impl->add_field(*(field_provider.get()));
             pimpl->save_field(field_provider, &field_id);
         }
     }
 
+    // Create all those methods that were not created already
+    // these are the external methods
     for (auto &method_id: parser.get_methods_ids()) {
         pimpl->get_method_by_method_id(&method_id, *this);
     }
 
+    // create all those fields that were not created already
+    // these are external fields
     for (auto &field_id: parser.get_fields_ids()) {
         pimpl->get_field_by_field_id(&field_id, *this);
     }
@@ -775,10 +714,11 @@ Method *shuriken::dex::DexEngine::get_method_by_descriptor(std::string_view desc
 // Disassembly Service (converts bytecode to instruction objects)
 // ========================================
 
-void shuriken::dex::DexEngine::disassemble_method(DexMethodProvider &method) {
+void shuriken::dex::DexEngine::disassemble_method(Method::Impl &method) {
     auto instructions = this->pimpl->disassembler->disassemble(
-            method.get_bytecode_vector());
-    auto exceptions = this->pimpl->disassembler->determine_exception(method.get_encoded_method());
+            method.get_bytecode());
+    auto exceptions =
+            this->pimpl->disassembler->determine_exception(method.get_encoded_method());
     method.set_method_instructions(instructions);
     method.set_exceptions(exceptions);
 }

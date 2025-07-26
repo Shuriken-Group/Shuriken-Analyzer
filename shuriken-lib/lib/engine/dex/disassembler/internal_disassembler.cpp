@@ -4,26 +4,31 @@
 
 #include "shuriken/internal/engine/dex/disassembler/internal_disassembler.hpp"
 #include "shuriken/internal/engine/dex/parser/encoded_data.hpp"
+#include "shuriken/internal/sdk/dex/instruction_impl.hpp"
 
 #include <memory>
 
 using namespace shuriken::dex;
 
 namespace {
-    typedef std::unique_ptr<InstructionProvider> (*generator_func)(std::span<std::uint8_t>, std::size_t, DexEngine &);
+    typedef std::unique_ptr<Instruction> (*generator_func)(std::span<std::uint8_t>, std::size_t, DexEngine &);
 
-    typedef std::unique_ptr<InstructionProvider> (*generator_func_no_dex)(std::span<std::uint8_t>, std::size_t);
+    typedef std::unique_ptr<Instruction> (*generator_func_no_dex)(std::span<std::uint8_t>, std::size_t);
 
-    template<class T>
-    std::unique_ptr<InstructionProvider>
+    template<std::derived_from<Instruction> T>
+    std::unique_ptr<Instruction>
     get_instruction(std::span<uint8_t> bytecode, std::size_t index, DexEngine &dex) {
-        return std::make_unique<T>(bytecode, index, dex);
+        static_assert(std::is_base_of_v<Instruction, T>, "T must be derived from Instruction");
+        typename T::Impl *impl = new typename T::Impl(bytecode, index, dex);
+        return std::make_unique<T>(impl);
     }
 
-    template<class T>
-    std::unique_ptr<InstructionProvider>
+    template<std::derived_from<Instruction> T>
+    std::unique_ptr<Instruction>
     get_instruction_no_dex(std::span<uint8_t> bytecode, std::size_t index) {
-        return std::make_unique<T>(bytecode, index);
+        static_assert(std::is_base_of_v<Instruction, T>, "T must be derived from Instruction");
+        typename T::Impl *impl = new typename T::Impl(bytecode, index);
+        return std::make_unique<T>(impl);
     }
 
     std::unordered_map<disassembler::opcodes, std::pair<generator_func, generator_func_no_dex>> function_pointers = {
@@ -35,12 +40,15 @@ namespace {
 #undef INSTRUCTION_MAPPING
     };
 
-    std::unique_ptr<InstructionProvider>
+    std::unique_ptr<Instruction>
     get_instruction_generic(disassembler::opcodes opcode, std::span<uint8_t> bytecode, std::size_t index,
                             DexEngine *dex_engine) {
-        if (function_pointers.find(opcode) == function_pointers.end())
-            return std::make_unique<DalvikIncorrectInstructionProvider>(bytecode, index, "Error, opcode not recognized",
-                                                                        1, index, opcode);
+        if (function_pointers.find(opcode) == function_pointers.end()) {
+            DalvikIncorrectInstruction::Impl *impl = new DalvikIncorrectInstruction::Impl(bytecode, index,
+                                                                                          "Error, opcode not recognized",
+                                                                                          1, index, opcode);
+            return std::make_unique<DalvikIncorrectInstruction>(impl);
+        }
         return dex_engine == nullptr ? function_pointers[opcode].second(bytecode, index) :
                function_pointers[opcode].first(bytecode, index, *dex_engine);
     }
@@ -50,24 +58,24 @@ namespace {
 InternalDisassembler::InternalDisassembler(DexEngine *dex_engine) : dex_engine(dex_engine) {
 }
 
-std::unique_ptr<InstructionProvider> InternalDisassembler::disassemble_instruction(
+std::unique_ptr<Instruction> InternalDisassembler::disassemble_instruction(
         disassembler::opcodes opcode,
         std::span<uint8_t> bytecode,
         std::size_t index) {
-    std::unique_ptr<InstructionProvider> instr = nullptr;
+    std::unique_ptr<Instruction> instr = nullptr;
 
     if (disassembler::opcodes::OP_NOP == opcode) {
         auto second_opcode = bytecode[index + 1];
 
         if (second_opcode == 0x03) { // filled-array-data
-            instr = dex_engine == nullptr ? ::get_instruction_no_dex<FillArrayDataProvivder>(bytecode, index) :
-                    ::get_instruction<FillArrayDataProvivder>(bytecode, index, *dex_engine);
+            instr = dex_engine == nullptr ? ::get_instruction_no_dex<FillArrayData>(bytecode, index) :
+                    ::get_instruction<FillArrayData>(bytecode, index, *dex_engine);
         } else if (second_opcode == 0x01) { // packed-switch-data
-            instr = dex_engine == nullptr ? ::get_instruction_no_dex<PackedSwitchProvider>(bytecode, index) :
-                    ::get_instruction<PackedSwitchProvider>(bytecode, index, *dex_engine);
+            instr = dex_engine == nullptr ? ::get_instruction_no_dex<PackedSwitch>(bytecode, index) :
+                    ::get_instruction<PackedSwitch>(bytecode, index, *dex_engine);
         } else if (second_opcode == 0x02) { // sparse-switch-data
-            instr = dex_engine == nullptr ? ::get_instruction_no_dex<SparseSwitchProvider>(bytecode, index) :
-                    ::get_instruction<SparseSwitchProvider>(bytecode, index, *dex_engine);
+            instr = dex_engine == nullptr ? ::get_instruction_no_dex<SparseSwitch>(bytecode, index) :
+                    ::get_instruction<SparseSwitch>(bytecode, index, *dex_engine);
         } else {
             instr = ::get_instruction_generic(opcode, bytecode, index, dex_engine);
         }
@@ -75,12 +83,13 @@ std::unique_ptr<InstructionProvider> InternalDisassembler::disassemble_instructi
         instr = ::get_instruction_generic(opcode, bytecode, index, dex_engine);
     }
 
-    if (instr) last_instr = instr.get();
+    if (instr)
+        last_instr = instr.get();
 
     return instr;
 }
 
-std::vector<std::int64_t> InternalDisassembler::determine_next(InstructionProvider *instruction,
+std::vector<std::int64_t> InternalDisassembler::determine_next(Instruction *instruction,
                                                                std::uint64_t curr_idx) {
     if (!instruction) return {};
 
@@ -90,13 +99,13 @@ std::vector<std::int64_t> InternalDisassembler::determine_next(InstructionProvid
         std::int32_t offset = 0;
 
         if (op_code == disassembler::opcodes::OP_GOTO) {
-            auto *goto_instr = reinterpret_cast<Instruction10tProvider *>(instruction);
+            auto *goto_instr = reinterpret_cast<Instruction10t *>(instruction);
             offset = goto_instr->getNAA();
         } else if (op_code == disassembler::opcodes::OP_GOTO_16) {
-            auto *goto_instr = reinterpret_cast<Instruction20tProvider *>(instruction);
+            auto *goto_instr = reinterpret_cast<Instruction20t *>(instruction);
             offset = goto_instr->getNAAAA();
         } else if (op_code == disassembler::opcodes::OP_GOTO_32) {
-            auto *goto_instr = reinterpret_cast<Instruction30tProvider *>(instruction);
+            auto *goto_instr = reinterpret_cast<Instruction30t *>(instruction);
             offset = goto_instr->getNAAAAAAAA();
         }
 
@@ -109,11 +118,11 @@ std::vector<std::int64_t> InternalDisassembler::determine_next(InstructionProvid
 
         if (op_code >= disassembler::opcodes::OP_IF_EQ &&
             op_code <= disassembler::opcodes::OP_IF_LE) {
-            auto *if_instr = reinterpret_cast<Instruction22tProvider *>(instruction);
+            auto *if_instr = reinterpret_cast<Instruction22t *>(instruction);
             offset = if_instr->getNCCCC();
         } else if (op_code >= disassembler::opcodes::OP_IF_EQZ &&
                    op_code <= disassembler::opcodes::OP_IF_LEZ) {
-            auto *if_instr = reinterpret_cast<Instruction21tProvider *>(instruction);
+            auto *if_instr = reinterpret_cast<Instruction21t *>(instruction);
             offset = if_instr->getNBBBB();
         }
 
@@ -130,11 +139,11 @@ std::vector<std::int64_t> InternalDisassembler::determine_next(InstructionProvid
         std::vector<std::int64_t> x = {static_cast<std::int64_t>(curr_idx) +
                                        instruction->get_instruction_length()};
 
-        auto *switch_instr = reinterpret_cast<Instruction31tProvider *>(instruction);
+        auto *switch_instr = reinterpret_cast<Instruction31t *>(instruction);
 
         switch (switch_instr->get_type_of_switch()) {
             case disassembler::PACKED_SWITCH: {
-                auto *packed_switch = std::get<PackedSwitchProvider *>(switch_instr->get_switch());
+                auto *packed_switch = std::get<PackedSwitch *>(switch_instr->get_switch());
                 const auto &targets = packed_switch->get_targets();
 
                 for (auto &target: targets)
@@ -142,7 +151,7 @@ std::vector<std::int64_t> InternalDisassembler::determine_next(InstructionProvid
             }
                 break;
             case disassembler::SPARSE_SWITCH: {
-                auto *sparse_switch = std::get<SparseSwitchProvider *>(switch_instr->get_switch());
+                auto *sparse_switch = std::get<SparseSwitch *>(switch_instr->get_switch());
                 const auto &targets = sparse_switch->get_keys_targets();
 
                 for (auto &key_target: targets)
@@ -165,7 +174,7 @@ std::vector<std::int64_t> InternalDisassembler::determine_next(std::uint64_t cur
     return determine_next(last_instr, curr_idx);
 }
 
-std::int16_t InternalDisassembler::get_conditional_jump_target(InstructionProvider *instr) {
+std::int16_t InternalDisassembler::get_conditional_jump_target(Instruction *instr) {
     auto op_code = instr->get_instruction_opcode();
 
     switch (op_code) {
@@ -176,7 +185,7 @@ std::int16_t InternalDisassembler::get_conditional_jump_target(InstructionProvid
         case disassembler::opcodes::OP_IF_GT:// "if-gt"
         case disassembler::opcodes::OP_IF_LE:// "if-le"
         {
-            auto *i = reinterpret_cast<Instruction22tProvider *>(instr);
+            auto *i = reinterpret_cast<Instruction22t *>(instr);
             return i->getNCCCC();
         }
         case disassembler::opcodes::OP_IF_EQZ:// "if-eqz"
@@ -186,7 +195,7 @@ std::int16_t InternalDisassembler::get_conditional_jump_target(InstructionProvid
         case disassembler::opcodes::OP_IF_GTZ:// "if-gtz"
         case disassembler::opcodes::OP_IF_LEZ:// "if-lez"
         {
-            auto *i = reinterpret_cast<Instruction21tProvider *>(instr);
+            auto *i = reinterpret_cast<Instruction21t *>(instr);
             return i->getNBBBB();
         }
         default:
@@ -194,20 +203,20 @@ std::int16_t InternalDisassembler::get_conditional_jump_target(InstructionProvid
     }
 }
 
-std::int32_t InternalDisassembler::get_unconditional_jump_target(InstructionProvider *instr) {
+std::int32_t InternalDisassembler::get_unconditional_jump_target(Instruction *instr) {
     auto op_code = instr->get_instruction_opcode();
 
     switch (op_code) {
         case disassembler::opcodes::OP_GOTO: {
-            auto *goto_instr = reinterpret_cast<Instruction10tProvider *>(instr);
+            auto *goto_instr = reinterpret_cast<Instruction10t *>(instr);
             return goto_instr->getNAA();
         }
         case disassembler::opcodes::OP_GOTO_16: {
-            auto *goto16_instr = reinterpret_cast<Instruction20tProvider *>(instr);
+            auto *goto16_instr = reinterpret_cast<Instruction20t *>(instr);
             return goto16_instr->getNAAAA();
         }
         case disassembler::opcodes::OP_GOTO_32: {
-            auto *goto32_instr = reinterpret_cast<Instruction30tProvider *>(instr);
+            auto *goto32_instr = reinterpret_cast<Instruction30t *>(instr);
             return goto32_instr->getNAAAAAAAA();
         }
         default:
@@ -269,14 +278,14 @@ std::vector<disassembler::exception_data_t> InternalDisassembler::determine_exce
     return exceptions;
 }
 
-void InternalDisassembler::assign_switch_if_any(std::list<std::unique_ptr<InstructionProvider>> &instructions,
-                                                std::unordered_map<std::uint64_t, InstructionProvider *> &cache_instructions) {
+void InternalDisassembler::assign_switch_if_any(std::list<std::unique_ptr<Instruction>> &instructions,
+                                                std::unordered_map<std::uint64_t, Instruction *> &cache_instructions) {
     for (auto &instr: instructions) {
         auto op_code = instr->get_instruction_opcode();
 
         if (op_code == disassembler::opcodes::OP_PACKED_SWITCH ||
             op_code == disassembler::opcodes::OP_SPARSE_SWITCH) {
-            auto *instr31t = reinterpret_cast<Instruction31tProvider *>(instr.get());
+            auto *instr31t = reinterpret_cast<Instruction31t *>(instr.get());
 
             auto switch_idx = instr31t->get_address() + (instr31t->getNBBBBBBBB() * 2);
 
@@ -284,20 +293,20 @@ void InternalDisassembler::assign_switch_if_any(std::list<std::unique_ptr<Instru
 
             if (it != cache_instructions.end()) {
                 if (op_code == disassembler::opcodes::OP_PACKED_SWITCH)
-                    instr31t->set_packed_switch(reinterpret_cast<PackedSwitchProvider *>(it->second));
+                    instr31t->set_packed_switch(reinterpret_cast<PackedSwitch *>(it->second));
                 else// DexOpcodes::opcodes::OP_SPARSE_SWITCH
-                    instr31t->set_sparse_switch(reinterpret_cast<SparseSwitchProvider *>(it->second));
+                    instr31t->set_sparse_switch(reinterpret_cast<SparseSwitch *>(it->second));
             }
         }
     }
 }
 
-std::list<std::unique_ptr<InstructionProvider>>
+std::list<std::unique_ptr<Instruction>>
 InternalDisassembler::disassemble(std::span<std::uint8_t> buffer_bytes) {
-    std::unordered_map<std::uint64_t, InstructionProvider *> cache_instr;
+    std::unordered_map<std::uint64_t, Instruction *> cache_instr;
     std::uint64_t idx = 0;                                          // index of the instr
-    std::list<std::unique_ptr<InstructionProvider>> instructions;   // all the instructions from the method
-    std::unique_ptr<InstructionProvider> instr;                     // instruction to create
+    std::list<std::unique_ptr<Instruction>> instructions;           // all the instructions from the method
+    std::unique_ptr<Instruction> instr;                             // instruction to create
     auto buffer_size = buffer_bytes.size();                  // size of the buffer
     disassembler::opcodes opcode;                                   // opcode of the operations
     bool exist_switch = false;                                      // check a switch exist
@@ -315,13 +324,13 @@ InternalDisassembler::disassemble(std::span<std::uint8_t> buffer_bytes) {
                                         idx);
         if (instr) {
             if (!instr->is_instruction_valid()) {
-                instr = std::make_unique<DalvikIncorrectInstructionProvider>(
-                        buffer_bytes,
-                        idx,
-                        instr->get_error_message(),
-                        instr->get_instruction_length(),
-                        instr->get_address(),
-                        instr->get_instruction_opcode());
+                DalvikIncorrectInstruction::Impl *impl = new DalvikIncorrectInstruction::Impl(buffer_bytes,
+                                                                                              idx,
+                                                                                              instr->get_error_message(),
+                                                                                              instr->get_instruction_length(),
+                                                                                              instr->get_address(),
+                                                                                              instr->get_instruction_opcode());
+                instr = std::make_unique<DalvikIncorrectInstruction>(impl);
             }
             instr->set_address(idx);
             instructions.push_back(std::move(instr));
