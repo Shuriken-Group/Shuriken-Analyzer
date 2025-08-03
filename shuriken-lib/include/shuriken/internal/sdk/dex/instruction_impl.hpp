@@ -135,6 +135,19 @@ public:
         return instruction_type;
     }
 
+    virtual disassembler::operation_type get_operation_type() const {
+        if (opcodes_operation_type.find(opcode) == opcodes_operation_type.end())
+            return disassembler::operation_type::NONE_TYPE;
+        return opcodes_operation_type.at(opcode);
+    }
+
+    virtual bool is_jump_instruction() const {
+        auto operation_type = get_operation_type();
+        return (operation_type == disassembler::operation_type::CONDITIONAL_BRANCH_DVM_OPCODE
+                || operation_type == disassembler::operation_type::UNCONDITIONAL_BRANCH_DVM_OPCODE
+                || operation_type == disassembler::operation_type::MULTI_BRANCH_DVM_OPCODE);
+    }
+
     virtual std::uint32_t get_instruction_length() const {
         return length;
     }
@@ -1880,8 +1893,7 @@ public:
     }
 
     std::span<std::uint8_t> get_registers() {
-        static std::span regs{registers};
-        return regs;
+        return std::span{registers};
     }
 
     disassembler::operand_type get_registers_type() const {
@@ -1989,8 +2001,7 @@ public:
     }
 
     std::span<std::uint16_t> get_registers() {
-        static std::span<std::uint16_t> regs{registers};
-        return regs;
+        return std::span<std::uint16_t>{registers};
     }
 
     std::string_view print_instruction() {
@@ -2111,8 +2122,7 @@ public:
     }
 
     std::span<std::uint8_t> get_registers() {
-        static std::span<std::uint8_t> regs{registers};
-        return regs;
+        return std::span<std::uint8_t>{registers};
     }
 
     std::uint16_t get_method_reference() const {
@@ -2216,8 +2226,7 @@ public:
     }
 
     std::span<std::uint16_t> get_registers() {
-        static std::span<std::uint16_t> regs(registers);
-        return regs;
+        return std::span<std::uint16_t>{registers};
     }
 
     std::uint16_t get_method_reference() const {
@@ -2387,8 +2396,7 @@ public:
     }
 
     std::span<std::int32_t> get_targets() {
-        static std::span<std::int32_t> tgts{targets};
-        return tgts;
+        return std::span<std::int32_t>{targets};
     }
 
     std::string_view print_instruction() {
@@ -2481,8 +2489,7 @@ public:
     }
 
     std::span<std::pair<std::int32_t, std::int32_t>> get_keys_targets() {
-        static std::span<std::pair<std::int32_t, std::int32_t>> targets{keys_targets};
-        return targets;
+        return std::span<std::pair<std::int32_t, std::int32_t>>{keys_targets};
     }
 
     std::string_view print_instruction() {
@@ -2561,8 +2568,7 @@ public:
     }
 
     std::span<std::uint8_t> get_data() {
-        static std::span<std::uint8_t> data_read{data};
-        return data_read;
+        return std::span<std::uint8_t>{data};
     }
 
     std::string_view print_instruction() {

@@ -32,8 +32,12 @@ private:
     std::vector<std::string> implemented_classes;
     // @brief Methods from the class
     std::vector<method_t> methods;
+    std::span<method_t> methods_ref;
+    bool methods_ref_initialized = false;
     // @brief fields from the class
     std::vector<field_t> fields;
+    std::span<field_t> fields_ref;
+    bool fields_ref_initialized = false;
 public:
     Impl(std::string_view name, std::string_view package_name, std::string_view dalvik_format,
          std::string_view canonical_name,
@@ -89,8 +93,7 @@ public:
     }
 
     std::span<std::string> get_implemented_classes() {
-        static std::span<std::string> implemented{implemented_classes};
-        return implemented;
+        return std::span<std::string>{implemented_classes};
     }
 
     void add_method(method_t method) {
@@ -106,8 +109,8 @@ public:
     }
 
     method_deref_iterator_t get_methods() {
-        static std::span<method_t> m{methods};
-        return deref_iterator_range{m};
+        methods_ref = std::span<method_t>{methods};
+        return methods_ref;
     }
 
     const Method *
@@ -160,8 +163,8 @@ public:
     }
 
     fields_deref_iterator_t get_fields() {
-        static std::span<field_t> f{fields};
-        return f;
+        fields_ref = std::span<field_t>{fields};
+        return fields_ref;
     }
 
     const Field *get_field_by_name(std::string_view name) const {

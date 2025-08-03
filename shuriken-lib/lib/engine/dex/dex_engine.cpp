@@ -23,6 +23,7 @@
 
 #include "shuriken/internal/engine/dex/parser/parser.hpp"
 #include "shuriken/internal/engine/dex/disassembler/internal_disassembler.hpp"
+#include "shuriken/internal/engine/dex/analysis/control_flow_generator.hpp"
 
 using namespace shuriken::dex;
 
@@ -721,6 +722,14 @@ void shuriken::dex::DexEngine::disassemble_method(Method::Impl &method) {
             this->pimpl->disassembler->determine_exception(method.get_encoded_method());
     method.set_method_instructions(instructions);
     method.set_exceptions(exceptions);
+}
+
+
+void shuriken::dex::DexEngine::generate_cfgf(Method::Impl& method) {
+    ControlFlowGeneratorPass cfgp{};
+
+    std::unique_ptr<ControlFlowGraph> cfg = cfgp.generate_control_flow_graph(&method);
+    method.set_control_flow_graph(cfg);
 }
 
 // ========================================

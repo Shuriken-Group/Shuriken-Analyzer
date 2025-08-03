@@ -10,6 +10,10 @@
 #include "shuriken/sdk/dex/custom_types.hpp"
 #include "shuriken/sdk/dex/disassembly_constants.hpp"
 #include "shuriken/sdk/dex/instruction.hpp"
+#include "shuriken/sdk/dex/control_flow_graph.hpp"
+#include "shuriken/internal/sdk/dex/control_flow_graph_impl.hpp"
+
+
 #include "shuriken/internal/engine/dex/dex_engine.hpp"
 
 #include <iostream>
@@ -69,6 +73,9 @@ private:
     std::vector<std::uint8_t> bytecode;
     // @brief pointer to the EncodedMethod to extract information
     EncodedMethod * method;
+    // @brief unique pointer to the control flow graph structure
+    // generated with the instructions from the method
+    std::unique_ptr<ControlFlowGraph> control_flow_graph;
 
     // @brief flag to know
     bool disassembled = false;
@@ -175,8 +182,7 @@ public:
 
 
     std::span<std::uint8_t> get_bytecode() {
-        static std::span<std::uint8_t> data{bytecode};
-        return data;
+        return std::span<std::uint8_t>(bytecode);
     }
 
     std::vector<std::uint8_t> &get_bytecode_vector() {
@@ -187,12 +193,22 @@ public:
         return method;
     }
 
+    ControlFlowGraph& get_control_flow_graph() {
+        if (control_flow_graph == nullptr)
+            this->dex_engine.get().generate_cfgf(*this);
+        return *control_flow_graph.get();
+    }
+
     void set_method_instructions(std::list<std::unique_ptr<Instruction>> &insns) {
         this->instructions = std::move(insns);
     }
 
     void set_exceptions(disassembler::exceptions_data_t& exceptionsData) {
         this->exceptions = std::move(exceptionsData);
+    }
+
+    void set_control_flow_graph(std::unique_ptr<ControlFlowGraph> & cfg) {
+        this->control_flow_graph = std::move(cfg);
     }
 
     std::list<std::reference_wrapper<Instruction>> & get_method_instructions() {
@@ -205,6 +221,21 @@ public:
                 instructions_r.push_back(*instr);
         }
         return instructions_r;
+    }
+
+    std::list<std::reference_wrapper<Instruction>> get_instructions_in_range(std::uint64_t start_address, std::uint64_t end_address) {
+        std::list<std::reference_wrapper<Instruction>> result;
+        
+        auto & instructions_ref = get_method_instructions();
+        
+        for (auto & instr : instructions_ref) {
+            std::uint64_t instr_address = instr.get().get_address();
+            if (instr_address >= start_address && instr_address <= end_address) {
+                result.push_back(instr);
+            }
+        }
+        
+        return result;
     }
 
     disassembler::exceptions_data_t& get_exceptions() {

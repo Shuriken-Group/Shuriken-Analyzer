@@ -237,6 +237,13 @@ public:
     void disassemble_method(Method::Impl& method);
 
     /**
+     * @brief Use the control_flow_generator analysis to generate a
+     * control flow for a method.
+     * @param method The method provider to generate the CFG
+     */
+    void generate_cfgf(Method::Impl& method);
+
+    /**
      * @brief Get all fields from the DEX file
      * @return A reference iterator to all the fields from the DEX file
      */

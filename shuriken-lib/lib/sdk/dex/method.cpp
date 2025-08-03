@@ -70,8 +70,17 @@ std::span<std::uint8_t> Method::get_bytecode() {
     return impl.get()->get_bytecode();
 }
 
+ControlFlowGraph& Method::get_control_flow_graph() {
+    return impl.get()->get_control_flow_graph();
+}
+
 std::list<std::reference_wrapper<Instruction>> & Method::get_method_instructions() {
     return impl.get()->get_method_instructions();
+}
+
+std::list<std::reference_wrapper<Instruction>>
+    Method::get_instructions_in_range(std::uint64_t start_address, std::uint64_t end_address) {
+    return impl.get()->get_instructions_in_range(start_address, end_address);
 }
 
 disassembler::exceptions_data_t & Method::get_exceptions() {

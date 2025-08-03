@@ -9,5 +9,7 @@ target_sources(LIB_SHURIKEN PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/method_id.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/external_field.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/external_method.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/basic_blocks.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/control_flow_graph.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dex.cpp
 )

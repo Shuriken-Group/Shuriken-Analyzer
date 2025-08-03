@@ -11,12 +11,31 @@
 
 namespace shuriken {
 namespace dex {
+
+// ========================================
+// DEX File Format Constants
+// ========================================
+
+/// @brief Standard endianness marker for DEX files
 static const std::uint32_t ENDIAN_CONSTANT = 0x12345678;
+
+/// @brief Reverse endianness marker for DEX files  
 static const std::uint32_t REVERSE_ENDIAN_CONSTANT = 0x78563412;
+
+/// @brief Sentinel value indicating no index/invalid reference
 static const std::uint32_t NO_INDEX = 0xFFFFFFFF;
 
+/// @brief DEX file magic number prefix
 static const std::uint8_t dex_magic[] = {'d', 'e', 'x', '\n'};
 
+/**
+ * @namespace shuriken::dex::types
+ * @brief Type definitions and enumerations for DEX file analysis
+ * 
+ * This namespace contains all the type definitions, enumerations, and constants
+ * used throughout the DEX analysis framework. It includes access flags, value
+ * formats, reference types, and type classifications used in the Dalvik bytecode.
+ */
 namespace types {
     /// @brief Access flags used in class_def_item,
     /// encoded_field, encoded_method and InnerClass
@@ -93,7 +112,12 @@ namespace types {
         return result.empty() ? "NONE" : result;
     }
 
-    /// @brief Enumeration used for the types.
+    /**
+     * @brief Enumeration for encoded value formats in DEX files
+     * 
+     * These constants identify the type of data stored in encoded_value structures
+     * used in annotations, static field initializers, and other contexts.
+     */
     enum value_format : std::uint8_t {
         VALUE_BYTE = 0x0,          //! ubyte[1]
         VALUE_SHORT = 0x2,         //! ubyte[size]
@@ -115,8 +139,13 @@ namespace types {
         VALUE_BOOLEAN = 0x1F       //! None
     };
 
-    /// @brief References used in the xrefs of the classes
-    /// to store the type of references
+    /**
+     * @brief Reference types for cross-reference analysis
+     * 
+     * These constants identify different types of references between classes,
+     * methods, and fields. Used in cross-reference analysis to track how
+     * different elements of the DEX file interact with each other.
+     */
     enum class ref_type {
         REF_NEW_INSTANCE = 0x22,      // new instance of a class
         REF_CLASS_USAGE = 0x1c,       // class is used somewhere
@@ -133,12 +162,18 @@ namespace types {
         REF_INVOKE_INTERFACE_RANGE = 0x78
     };
 
+    /**
+     * @brief High-level type categories in the DVM type system
+     */
     enum class type_e {
         FUNDAMENTAL, //! fundamental type (int, float...)
         CLASS,       //! user defined classes
         ARRAY,       //! array types
     };
 
+    /**
+     * @brief Specific fundamental (primitive) types in the DVM
+     */
     enum class fundamental_e {
         BOOLEAN,
         BYTE,
@@ -151,14 +186,20 @@ namespace types {
         VOID
     };
 
+    /**
+     * @brief Method invocation types in Dalvik bytecode
+     */
     enum class method_type_e {
-        DIRECT_METHOD,
-        VIRTUAL_METHOD
+        DIRECT_METHOD,  //! Direct method calls (private, static, constructor)
+        VIRTUAL_METHOD  //! Virtual method calls (public, protected, package)
     };
 
+    /**
+     * @brief Field access types in class definitions
+     */
     enum class field_type_e {
-        STATIC_FIELD,
-        INSTANCE_FIELD,
+        STATIC_FIELD,   //! Class-level static fields
+        INSTANCE_FIELD, //! Object instance fields
     };
 
     const std::unordered_map<fundamental_e, std::string> fundamental_s =

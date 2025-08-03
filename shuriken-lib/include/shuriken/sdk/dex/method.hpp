@@ -22,6 +22,7 @@ class Dex;
 class Class;
 class DVMPrototype;
 class Instruction;
+class ControlFlowGraph;
 
 /**
  * @brief Represents a method from a DEX file
@@ -133,6 +134,8 @@ public:
      */
     std::span<std::uint8_t> get_bytecode();
 
+    ControlFlowGraph& get_control_flow_graph();
+
 
     // Disassembler information
     /**
@@ -140,6 +143,8 @@ public:
      * @return Reference to list of instruction references
      */
     std::list<std::reference_wrapper<Instruction>> & get_method_instructions();
+
+    std::list<std::reference_wrapper<Instruction>> get_instructions_in_range(std::uint64_t start_address, std::uint64_t end_address);
 
     /**
      * @brief Get exception handling information for this method

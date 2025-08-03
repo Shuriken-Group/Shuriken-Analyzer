@@ -92,7 +92,7 @@ enum operation_type {
     DATA_MOVEMENT_DVM_OPCODE,         //! move data instruction ["move", "move."]
     FIELD_READ_DVM_OPCODE,            //! read a field instruction [".get"]
     FIELD_WRITE_DVM_OPCODE,           //! write a field instruction [".put"]
-    NONE_OPCODE = 99                  //!
+    NONE_TYPE = 99                    //!
 };
 
 /// @brief Identify the kind of argument inside of a Dalvik instruction

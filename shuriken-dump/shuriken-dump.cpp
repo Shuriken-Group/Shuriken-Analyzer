@@ -14,6 +14,7 @@
 #include <shuriken/sdk/dex/field.hpp>
 #include <shuriken/sdk/dex/instruction.hpp>
 #include <shuriken/sdk/dex/disassembly_constants.hpp>
+#include <shuriken/sdk/dex/control_flow_graph.hpp>
 
 void show_help(std::string &prog_name) {
     fmt::println("USAGE: {} [-dex <dex_file_to_analyze>] [-h] [-m] [-b] [-D]", prog_name);
@@ -23,6 +24,7 @@ void show_help(std::string &prog_name) {
     fmt::println(" -m: show methods from classes (it needs -c)");
     fmt::println(" -b: show bytecode from methods (it needs -m)");
     fmt::println(" -D: show the disassembled code from methods (it needs -m)");
+    fmt::println(" -G: show the disassembled code in graph mode (it needs -m)");
 }
 
 std::string dex_file_str;
@@ -31,6 +33,7 @@ bool methods = false;
 bool fields = false;
 bool code = false;
 bool disassembly = false;
+bool graph = false;
 
 shuriken::error::Result<std::unique_ptr<shuriken::dex::Dex>> dex_file;
 
@@ -43,6 +46,8 @@ void print_method(shuriken::dex::Method &);
 void print_field(shuriken::dex::Field &);
 
 void print_code(shuriken::dex::Method &);
+
+void print_graph(shuriken::dex::Method &);
 
 int main(int argc, char **argv) {
     std::vector<std::string> args{argv, argv + argc};
@@ -60,6 +65,7 @@ int main(int argc, char **argv) {
             {"-f", [&]() { fields = true; }},
             {"-b", [&]() { code = true; }},
             {"-D", [&]() { disassembly = true; }},
+            {"-G", [&]() { graph = true; }}
     };
 
     std::unordered_map<std::string, std::function<void(std::string &)>> option_file{
@@ -144,6 +150,8 @@ void print_method(shuriken::dex::Method &method) {
 
     if (disassembly)
         print_code(method);
+    if (graph)
+        print_graph(method);
 }
 
 void print_field(shuriken::dex::Field &field) {
@@ -221,4 +229,10 @@ void print_code(shuriken::dex::Method &method) {
                 fmt::println("\t\tCaught exception: {}", shuriken::dex::get_canonical_name(*catch_info.handler_data));
         }
     }
+}
+
+void print_graph(shuriken::dex::Method &method) {
+    auto & cfg = method.get_control_flow_graph();
+
+    fmt::println("{}", cfg.toString());
 }
