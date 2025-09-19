@@ -38,6 +38,16 @@ private:
     std::vector<field_t> fields;
     std::span<field_t> fields_ref;
     bool fields_ref_initialized = false;
+
+    // Xrefs objects
+    classxref_t xrefto;
+
+    classxref_t xreffrom;
+
+    std::vector<method_idx_t> xrefnewinstance;
+
+    std::vector<method_idx_t> xrefconstclass;
+
 public:
     Impl(std::string_view name, std::string_view package_name, std::string_view dalvik_format,
          std::string_view canonical_name,
@@ -215,5 +225,26 @@ public:
         return matching_fields;
     }
 
+    void add_xref_to(types::ref_type ref_kind,
+                     class_external_class_t classobj,
+                     method_external_method_t methodobj,
+                     std::uint64_t offset) {
+        xrefto[classobj].insert(std::make_tuple(ref_kind, methodobj, offset));
+    }
+
+    void add_xref_from(types::ref_type ref_kind,
+                       class_external_class_t classobj,
+                       method_external_method_t methodobj,
+                       std::uint64_t offset) {
+        xreffrom[classobj].insert(std::make_tuple(ref_kind, methodobj, offset));
+    }
+
+    void add_xref_new_instance(method_external_method_t methodobj, std::uint64_t offset) {
+        xrefnewinstance.emplace_back(methodobj, offset);
+    }
+
+    void add_xref_const_class(method_external_method_t methodobj, std::uint64_t offset) {
+        xrefconstclass.emplace_back(methodobj, offset);
+    }
 };
 }

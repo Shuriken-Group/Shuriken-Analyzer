@@ -7,9 +7,18 @@
 #include <vector>
 #include <memory>
 
-#include <shuriken/sdk/dex/method.hpp>
-#include <shuriken/sdk/dex/custom_types.hpp>
-#include <shuriken/internal/io/shurikenstream.hpp>
+#include "shuriken/sdk/dex/method.hpp"
+#include "shuriken/sdk/dex/field.hpp"
+#include "shuriken/sdk/dex/external_method.hpp"
+#include "shuriken/sdk/dex/external_field.hpp"
+#include "shuriken/sdk/dex/external_class.hpp"
+
+#include "shuriken/sdk/dex/custom_types.hpp"
+#include "shuriken/internal/io/shurikenstream.hpp"
+
+#include "shuriken/internal/sdk/dex/class_impl.hpp"
+
+
 
 
 namespace shuriken {
@@ -19,6 +28,7 @@ class Class;
 class Field;
 class FieldID;
 class MethodID;
+
 
 class DVMPrototype;
 
@@ -155,6 +165,8 @@ public:
      */
     Class *get_class_by_descriptor(std::string_view descriptor);
 
+    Class::Impl * get_class_impl_by_class(Class * cls);
+
     /**
      * @brief Find classes matching a regular expression pattern
      * @param descriptor_regex Regular expression to match against class descriptors
@@ -162,6 +174,11 @@ public:
      */
     std::vector<Class *> find_classes_by_regex(std::string_view descriptor_regex);
 
+    ExternalClass * get_external_class_by_dvm_class(DVMClass * cls);
+
+    ExternalClass::Impl * get_external_class_impl_by_dvm_class(DVMClass * cls);
+
+    ExternalClass::Impl * get_external_class_impl_by_external_class(ExternalClass * cls);
 
     /**
      * @brief Get all methods from the DEX file
@@ -192,7 +209,13 @@ public:
 
     Method * get_method_object_by_method_id(MethodID * method);
 
+    Method::Impl * get_method_impl_by_method_id(MethodID * method);
+    Method::Impl * get_method_impl_by_method(Method * method);
+
     ExternalMethod * get_external_method_object_by_method_id(MethodID * method);
+
+    ExternalMethod::Impl * get_external_method_impl_by_method_id(MethodID * method);
+    ExternalMethod::Impl * get_external_method_impl_by_external_method(ExternalMethod * method);
 
     /**
      * @brief Get the total number of methods in the DEX file
@@ -271,7 +294,13 @@ public:
 
     Field * get_field_object_by_field_id(FieldID * field);
 
+    Field::Impl * get_field_impl_by_field_id(FieldID * field);
+    Field::Impl * get_field_impl_by_field(Field * field);
+
     ExternalField * get_external_field_object_by_field_id(FieldID * field);
+
+    ExternalField::Impl * get_external_field_impl_by_field_id(FieldID * field);
+    ExternalField::Impl * get_external_field_impl_by_external_field(ExternalField * field);
 
     /**
      * @brief Get the total number of fields in the DEX file

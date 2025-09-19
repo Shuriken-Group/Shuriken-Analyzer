@@ -13,7 +13,6 @@
 #include "shuriken/sdk/dex/control_flow_graph.hpp"
 #include "shuriken/internal/sdk/dex/control_flow_graph_impl.hpp"
 
-
 #include "shuriken/internal/engine/dex/dex_engine.hpp"
 
 #include <iostream>
@@ -87,6 +86,8 @@ private:
     // @brief List of exceptions for the method
     disassembler::exceptions_data_t exceptions;
 
+    std::vector<class_idx_t> xrefconstclass;
+    std::vector<class_idx_t> xrefnewinstance;
 public:
     Impl(std::string_view name,
          types::access_flags access_flags,
@@ -244,6 +245,15 @@ public:
             disassembled = true;
         }
         return exceptions;
+    }
+
+    // Xrefs
+    void add_xrefconstclass(class_external_class_t cls, std::uint64_t off) {
+        xrefconstclass.emplace_back(cls, off);
+    }
+
+    void add_xrefnewinstance(class_external_class_t cls, std::uint64_t off) {
+        xrefnewinstance.emplace_back(cls, off);
     }
 };
 

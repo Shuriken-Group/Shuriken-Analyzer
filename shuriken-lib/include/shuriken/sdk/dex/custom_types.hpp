@@ -46,9 +46,9 @@ using dvmtypes_list_deref_iterator_t = deref_iterator_range<dvmtypes_list_t>;
 
 
 
-using class_external_class_t = std::variant<class_t, externalclass_t, std::monostate>;
-using method_external_method_t = std::variant<method_t, externalmethod_t, std::monostate>;
-using field_external_field_t = std::variant<field_t, externalfield_t, std::monostate>;
+using class_external_class_t = std::variant<Class*, ExternalClass*, std::monostate>;
+using method_external_method_t = std::variant<Method*, ExternalMethod*, std::monostate>;
+using field_external_field_t = std::variant<Field*, ExternalField*, std::monostate>;
 
 // A type which points to an instruction in a given index, from
 // a specific method, from a specific class
